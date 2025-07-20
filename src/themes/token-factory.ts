@@ -11,23 +11,8 @@ export class TokenFactory {
     variant: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'ghost' = 'primary',
     size: 'small' | 'medium' | 'large' = 'medium'
   ): FlexibleDesignTokens {
-    const sizeTokens = {
-      small: { 
-        padding: '0.375rem 0.75rem', 
-        fontSize: '0.875rem',
-        minHeight: '2rem'
-      },
-      medium: { 
-        padding: '0.5rem 1rem', 
-        fontSize: '0.875rem',
-        minHeight: '2.5rem'
-      },
-      large: { 
-        padding: '0.75rem 1.5rem', 
-        fontSize: '1rem',
-        minHeight: '3rem'
-      }
-    }
+    // ✅ REMOVED: Layout properties (padding, fontSize, minHeight) 
+    // These should be handled by Tailwind classes, not design tokens
     
     const variantTokens = {
       primary: {
@@ -83,17 +68,13 @@ export class TokenFactory {
     
     return {
       root: {
-        ...sizeTokens[size],
         ...variantTokens[variant],
-        borderRadius: '0.5rem',
+        borderRadius: '{border.radius.md}',
         fontWeight: '500',
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
         border: '1px solid',
-        cursor: 'pointer',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '0.5rem',
+        // ✅ REMOVED: Layout properties (display, alignItems, justifyContent, gap)
+        // These should be handled by Tailwind classes
         '&:focus-visible': {
           outline: '2px solid {primary.color}',
           outlineOffset: '2px'

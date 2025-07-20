@@ -37,23 +37,26 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const computedTokens = computed(() => {
-  const baseTokens = TokenFactory.button(props.variant, props.size)
-  
-  // Override border radius if rounded
-  if (props.rounded) {
-    baseTokens.root = {
-      ...baseTokens.root,
-      borderRadius: '9999px'
-    }
-  }
-  
-  return baseTokens
+  // ✅ CLEAN: Only get styling tokens, layout handled by Tailwind classes
+  return TokenFactory.button(props.variant, props.size)
 })
 
 const computedClasses = computed(() => [
-  props.fullWidth ? 'w-full' : '',
+  // Layout classes (Tailwind responsibility)
   'inline-flex items-center justify-center gap-2',
-  'transition-all duration-200 ease-smooth',
+  'transition-all duration-200',
+  'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+  
+  // Size classes (Tailwind responsibility)
+  {
+    'px-2 py-1 text-sm min-h-[2rem]': props.size === 'small',
+    'px-4 py-2 text-sm min-h-[2.5rem]': props.size === 'medium', 
+    'px-6 py-3 text-base min-h-[3rem]': props.size === 'large'
+  },
+  
+  // Conditional classes
+  props.fullWidth ? 'w-full' : '',
+  props.rounded ? 'rounded-full' : 'rounded-md'
 ])
 </script>
 

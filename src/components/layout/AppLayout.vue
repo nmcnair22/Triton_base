@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-surface-50 dark:bg-surface-950 transition-colors">
+  <div class="min-h-screen bg-surface-0 dark:bg-surface-0 transition-colors">
     <!-- Header -->
     <header
       class="bg-surface-0 dark:bg-surface-900 border-b border-surface-200 dark:border-surface-700 sticky top-0 z-50 backdrop-blur-sm"
@@ -47,7 +47,7 @@
               size="small"
               :dt="themeToggleTokens"
               @click="toggleDarkMode"
-              class="relative"
+              class="!w-10 !h-10 !rounded-full relative"
             >
               <template #icon>
                 <i
@@ -168,9 +168,7 @@ const navigation = [
 
 const themeToggleTokens = {
   root: {
-    width: '2.5rem',
-    height: '2.5rem',
-    borderRadius: '50%',
+    // ✅ ONLY styling properties, NO layout (width, height, borderRadius)
     background: 'transparent',
     border: '1px solid {surface.300}',
     color: '{surface.600}',

@@ -6,7 +6,7 @@ import { AppButton, AppCard } from '@/components/ui'
   <div class="space-y-8">
     <!-- Welcome Hero -->
     <div
-      class="text-center py-12 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-xl"
+      class="text-center py-12 bg-surface-0 dark:bg-surface-50 rounded-xl border border-surface-200 dark:border-surface-700"
     >
       <div class="max-w-4xl mx-auto">
         <div class="mb-6">
