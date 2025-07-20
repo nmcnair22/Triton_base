@@ -37,41 +37,48 @@
       </div>
 
       <!-- Filter Tabs -->
-      <TabView v-model:activeIndex="activeTab">
-        <TabPanel header="All Presets" value="0">
-          <PresetGrid 
-            :presets="allPresets"
-            :active-preset-id="themeStore.activePreset?.id"
-            @activate="activatePreset"
-            @edit="editPreset"
-            @duplicate="duplicatePreset"
-            @delete="deletePreset"
-          />
-        </TabPanel>
-        
-        <TabPanel header="Built-in" value="1">
-          <PresetGrid 
-            :presets="themeStore.builtInPresets"
-            :active-preset-id="themeStore.activePreset?.id"
-            @activate="activatePreset"
-            @edit="editPreset"
-            @duplicate="duplicatePreset"
-            @delete="deletePreset"
-          />
-        </TabPanel>
-        
-        <TabPanel header="Custom" value="2">
-          <PresetGrid 
-            :presets="themeStore.userPresets"
-            :active-preset-id="themeStore.activePreset?.id"
-            @activate="activatePreset"
-            @edit="editPreset"
-            @duplicate="duplicatePreset"
-            @delete="deletePreset"
-            :show-empty-state="themeStore.userPresets.length === 0"
-          />
-        </TabPanel>
-      </TabView>
+      <Tabs value="all">
+        <TabList>
+          <Tab value="all">All Presets</Tab>
+          <Tab value="builtin">Built-in</Tab>
+          <Tab value="custom">Custom</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel value="all">
+            <PresetGrid 
+              :presets="allPresets"
+              :active-preset-id="themeStore.activePreset?.id"
+              @activate="activatePreset"
+              @edit="editPreset"
+              @duplicate="duplicatePreset"
+              @delete="deletePreset"
+            />
+          </TabPanel>
+          
+          <TabPanel value="builtin">
+            <PresetGrid 
+              :presets="themeStore.builtInPresets"
+              :active-preset-id="themeStore.activePreset?.id"
+              @activate="activatePreset"
+              @edit="editPreset"
+              @duplicate="duplicatePreset"
+              @delete="deletePreset"
+            />
+          </TabPanel>
+          
+          <TabPanel value="custom">
+            <PresetGrid 
+              :presets="themeStore.userPresets"
+              :active-preset-id="themeStore.activePreset?.id"
+              @activate="activatePreset"
+              @edit="editPreset"
+              @duplicate="duplicatePreset"
+              @delete="deletePreset"
+              :show-empty-state="themeStore.userPresets.length === 0"
+            />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </div>
     
     <!-- Hidden file input for import -->
@@ -182,7 +189,6 @@ const themeStore = useThemeStore()
 const toast = useToast()
 
 // Local state
-const activeTab = ref(0)
 const showEditDialog = ref(false)
 const editingPreset = ref<ThemePreset | null>(null)
 const fileInput = ref<HTMLInputElement>()
@@ -321,8 +327,7 @@ async function createNewPreset() {
       life: 3000
     })
     
-    // Switch to custom tab and edit the new preset
-    activeTab.value = 2
+    // Edit the new preset
     editPreset(newPreset)
   } catch (error) {
     toast.add({
@@ -355,8 +360,7 @@ async function handleFileImport(event: Event) {
       life: 3000
     })
     
-    // Switch to custom tab to show the imported preset
-    activeTab.value = 2
+    // Imported preset is ready
   } catch (error) {
     toast.add({
       severity: 'error',

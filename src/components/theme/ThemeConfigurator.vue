@@ -75,7 +75,7 @@
           />
         </div>
         
-        <Dropdown
+        <Select
           v-model="selectedPresetId"
           :options="themeStore.availablePresets"
           optionLabel="name"
@@ -117,14 +117,14 @@
               </div>
             </div>
           </template>
-        </Dropdown>
+        </Select>
       </div>
 
       <!-- Base Theme & Dark Mode -->
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium mb-2">Base Theme</label>
-          <Dropdown
+          <Select
             v-model="baseTheme"
             :options="baseThemeOptions"
             optionLabel="label"
@@ -151,27 +151,37 @@
       <div>
         <h4 class="text-sm font-medium mb-3">Color Tokens</h4>
         
-                 <TabView>
-           <TabPanel
-             v-for="(category, index) in colorCategories"
-             :key="category.id"
-             :value="index"
-             :header="category.label"
-           >
-             <div class="space-y-2">
-               <ColorTokenEditor
-                 v-for="token in themeConfig.tokensByCategory.value[category.id] || []"
-                 :key="token.id"
-                 :token="token"
-                 :value="themeStore.getTokenValue(token.id)"
-                 :is-edited="isTokenEdited(token.id)"
-                 @update="updateTokenColor"
-                 @reset="resetToken"
-                 @edit="startEditingToken"
-               />
-             </div>
-           </TabPanel>
-         </TabView>
+                         <Tabs value="brand">
+          <TabList>
+            <Tab
+              v-for="category in colorCategories"
+              :key="category.id"
+              :value="category.id"
+            >
+              {{ category.label }}
+            </Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel
+              v-for="category in colorCategories"
+              :key="category.id"
+              :value="category.id"
+            >
+              <div class="space-y-2">
+                <ColorTokenEditor
+                  v-for="token in themeConfig.tokensByCategory.value[category.id] || []"
+                  :key="token.id"
+                  :token="token"
+                  :value="themeStore.getTokenValue(token.id)"
+                  :is-edited="isTokenEdited(token.id)"
+                  @update="updateTokenColor"
+                  @reset="resetToken"
+                  @edit="startEditingToken"
+                />
+              </div>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </div>
 
       <!-- Color Harmony Tools -->

@@ -1,6 +1,6 @@
 import './assets/main.css'
 
-import { createApp } from 'vue'
+import { createApp, nextTick } from 'vue'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
 import ToastService from 'primevue/toastservice'
@@ -43,7 +43,7 @@ app.mount('#app')
 import { useThemeStore } from './stores/theme.store'
 
 // Wait for app to be ready, then initialize theme store
-app.config.globalProperties.$nextTick(() => {
+nextTick(() => {
   const themeStore = useThemeStore()
   themeStore.initialize().catch(console.error)
 })

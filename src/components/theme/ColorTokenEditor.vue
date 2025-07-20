@@ -52,7 +52,7 @@
     </div>
     
     <!-- Enhanced Color picker overlay -->
-    <OverlayPanel 
+    <Popover 
       ref="colorPickerPanel"
       @show="onColorPickerShow"
       @hide="onColorPickerHide"
@@ -81,72 +81,79 @@
         </div>
 
         <!-- Format Tabs -->
-        <TabView v-model:activeIndex="formatTab" class="mb-4">
-          <TabPanel header="Hex" value="0">
-            <InputText
-              v-model="hexValue"
-              class="w-full"
-              @input="updateFromHex"
-              placeholder="#000000"
-            />
-          </TabPanel>
-          <TabPanel header="RGB" value="1">
-            <div class="grid grid-cols-3 gap-2">
+        <Tabs value="hex" class="mb-4">
+          <TabList>
+            <Tab value="hex">Hex</Tab>
+            <Tab value="rgb">RGB</Tab>
+            <Tab value="hsl">HSL</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel value="hex">
               <InputText
-                v-model="rgbValue.r"
-                @input="updateFromRgb"
-                placeholder="R"
-                type="number"
-                min="0"
-                max="255"
+                v-model="hexValue"
+                class="w-full"
+                @input="updateFromHex"
+                placeholder="#000000"
               />
-              <InputText
-                v-model="rgbValue.g"
-                @input="updateFromRgb"
-                placeholder="G"
-                type="number"
-                min="0"
-                max="255"
-              />
-              <InputText
-                v-model="rgbValue.b"
-                @input="updateFromRgb"
-                placeholder="B"
-                type="number"
-                min="0"
-                max="255"
-              />
-            </div>
-          </TabPanel>
-          <TabPanel header="HSL" value="2">
-            <div class="grid grid-cols-3 gap-2">
-              <InputText
-                v-model="hslValue.h"
-                @input="updateFromHsl"
-                placeholder="H"
-                type="number"
-                min="0"
-                max="360"
-              />
-              <InputText
-                v-model="hslValue.s"
-                @input="updateFromHsl"
-                placeholder="S%"
-                type="number"
-                min="0"
-                max="100"
-              />
-              <InputText
-                v-model="hslValue.l"
-                @input="updateFromHsl"
-                placeholder="L%"
-                type="number"
-                min="0"
-                max="100"
-              />
-            </div>
-          </TabPanel>
-        </TabView>
+            </TabPanel>
+            <TabPanel value="rgb">
+              <div class="grid grid-cols-3 gap-2">
+                <InputText
+                  v-model="rgbValue.r"
+                  @input="updateFromRgb"
+                  placeholder="R"
+                  type="number"
+                  min="0"
+                  max="255"
+                />
+                <InputText
+                  v-model="rgbValue.g"
+                  @input="updateFromRgb"
+                  placeholder="G"
+                  type="number"
+                  min="0"
+                  max="255"
+                />
+                <InputText
+                  v-model="rgbValue.b"
+                  @input="updateFromRgb"
+                  placeholder="B"
+                  type="number"
+                  min="0"
+                  max="255"
+                />
+              </div>
+            </TabPanel>
+            <TabPanel value="hsl">
+              <div class="grid grid-cols-3 gap-2">
+                <InputText
+                  v-model="hslValue.h"
+                  @input="updateFromHsl"
+                  placeholder="H"
+                  type="number"
+                  min="0"
+                  max="360"
+                />
+                <InputText
+                  v-model="hslValue.s"
+                  @input="updateFromHsl"
+                  placeholder="S%"
+                  type="number"
+                  min="0"
+                  max="100"
+                />
+                <InputText
+                  v-model="hslValue.l"
+                  @input="updateFromHsl"
+                  placeholder="L%"
+                  type="number"
+                  min="0"
+                  max="100"
+                />
+              </div>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
 
         <!-- Quick Color Presets -->
         <div class="mb-4">
@@ -197,7 +204,7 @@
           />
         </div>
       </div>
-    </OverlayPanel>
+    </Popover>
   </div>
 </template>
 
@@ -234,7 +241,6 @@ const colorPickerPanel = ref()
 const localValue = ref('')
 const isColorPickerOpen = ref(false)
 const colorError = ref('')
-const formatTab = ref(0)
 
 // Color format values  
 const hexValue = ref('')
