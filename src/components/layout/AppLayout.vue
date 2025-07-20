@@ -42,21 +42,20 @@
           <!-- Actions -->
           <div class="flex items-center space-x-2">
             <!-- Theme Toggle -->
-            <AppButton
-              variant="ghost"
-              size="small"
-              :dt="themeToggleTokens"
-              @click="toggleDarkMode"
-              class="!w-10 !h-10 !rounded-full relative"
+            <button
+              @click="() => toggleDarkMode()"
+              class="w-10 h-10 rounded-full border border-surface-300 dark:border-surface-600 
+                     bg-transparent hover:bg-surface-100 dark:hover:bg-surface-800
+                     text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100
+                     transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+                     flex items-center justify-center relative"
             >
-              <template #icon>
-                <i
-                  :class="isDark ? 'pi pi-sun' : 'pi pi-moon'"
-                  class="transition-transform duration-300"
-                  :style="{ transform: isDark ? 'rotate(180deg)' : 'rotate(0deg)' }"
-                />
-              </template>
-            </AppButton>
+              <i
+                :class="isDark ? 'pi pi-sun' : 'pi pi-moon'"
+                class="transition-transform duration-300"
+                :style="{ transform: isDark ? 'rotate(180deg)' : 'rotate(0deg)' }"
+              />
+            </button>
 
             <!-- Mobile Menu Button -->
             <AppButton
@@ -166,34 +165,7 @@ const navigation = [
   { name: 'Tables', to: '/tables', icon: 'pi pi-table' },
 ]
 
-const themeToggleTokens = {
-  root: {
-    // ✅ ONLY styling properties, NO layout (width, height, borderRadius)
-    background: 'transparent',
-    border: '1px solid {surface.300}',
-    color: '{surface.600}',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    '&:hover:not(:disabled)': {
-      background: '{surface.100}',
-      color: '{surface.900}',
-      borderColor: '{surface.400}',
-      transform: 'scale(1.05)',
-    },
-  },
-  colorScheme: {
-    dark: {
-      root: {
-        borderColor: '{surface.600}',
-        color: '{surface.400}',
-        '&:hover:not(:disabled)': {
-          background: '{surface.800}',
-          color: '{surface.100}',
-          borderColor: '{surface.500}',
-        },
-      },
-    },
-  },
-}
+// ✅ REMOVED: themeToggleTokens - now using pure Tailwind classes for dark mode toggle
 
 // Close mobile menu when route changes
 watch(
