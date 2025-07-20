@@ -35,6 +35,21 @@ export const CustomPreset = definePreset(Material, {
       950: '{navy.950}',
     },
     
+    // Secondary color mapping (Accent Blue)
+    secondary: {
+      50: '{blue.50}',
+      100: '{blue.100}',
+      200: '{blue.200}',
+      300: '{blue.300}',
+      400: '{blue.400}',
+      500: '{blue.500}',         // #297FB7 - Accent blue for secondary
+      600: '{blue.600}',
+      700: '{blue.700}',
+      800: '{blue.800}',
+      900: '{blue.900}',
+      950: '{blue.950}',
+    },
+    
     // Status colors
     success: {
       50: '{blue.50}',
@@ -100,6 +115,12 @@ export const CustomPreset = definePreset(Material, {
           hoverColor: '{navy.600}',
           activeColor: '{navy.700}',
         },
+        secondary: {
+          color: '{blue.500}',             // #297FB7 - Accent blue
+          contrastColor: '#ffffff',
+          hoverColor: '{blue.600}',
+          activeColor: '{blue.700}',
+        },
         surface: {
           0: '#ffffff',                    // White background
           50: '#fafafa',                   // Very light gray
@@ -122,6 +143,12 @@ export const CustomPreset = definePreset(Material, {
           hoverColor: '{navy.300}',
           activeColor: '{navy.200}',
         },
+        secondary: {
+          color: '{blue.400}',             // Lighter blue for dark mode
+          contrastColor: '{blue.950}',
+          hoverColor: '{blue.300}',
+          activeColor: '{blue.200}',
+        },
         surface: {
           0: '{navy.500}',                 // #0B2244 as dark background!
           50: '{navy.400}',                // Lighter navy tints
@@ -138,5 +165,59 @@ export const CustomPreset = definePreset(Material, {
         },
       },
     },
+  },
+  
+  // ✅ COMPONENT-LEVEL OVERRIDES: Fix button secondary styling
+  components: {
+    button: {
+      colorScheme: {
+        light: {
+          outlined: {
+            secondary: {
+              hoverBackground: '{blue.50}',           // Light blue hover
+              activeBackground: '{blue.100}',         // Slightly darker blue active
+              borderColor: '{blue.500}',              // #297FB7 border
+              color: '{blue.500}',                    // #297FB7 text
+            }
+          },
+          root: {
+            secondary: {
+              background: 'transparent',              // Override default gray background
+              hoverBackground: '{blue.50}',
+              activeBackground: '{blue.100}',
+              borderColor: '{blue.500}',
+              hoverBorderColor: '{blue.600}',
+              activeBorderColor: '{blue.700}',
+              color: '{blue.500}',
+              hoverColor: '{blue.600}',
+              activeColor: '{blue.700}',
+            }
+          }
+        },
+        dark: {
+          outlined: {
+            secondary: {
+              hoverBackground: 'rgba(41, 127, 183, 0.1)', // Blue with transparency
+              activeBackground: 'rgba(41, 127, 183, 0.2)',
+              borderColor: '{blue.400}',              // Lighter blue for dark mode
+              color: '{blue.400}',
+            }
+          },
+          root: {
+            secondary: {
+              background: 'transparent',
+              hoverBackground: 'rgba(41, 127, 183, 0.1)',
+              activeBackground: 'rgba(41, 127, 183, 0.2)',
+              borderColor: '{blue.400}',
+              hoverBorderColor: '{blue.300}',
+              activeBorderColor: '{blue.200}',
+              color: '{blue.400}',
+              hoverColor: '{blue.300}',
+              activeColor: '{blue.200}',
+            }
+          }
+        }
+      }
+    }
   },
 })

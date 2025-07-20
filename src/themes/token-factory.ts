@@ -11,70 +11,19 @@ export class TokenFactory {
     variant: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'ghost' = 'primary',
     size: 'small' | 'medium' | 'large' = 'medium'
   ): FlexibleDesignTokens {
-    // ✅ REMOVED: Layout properties (padding, fontSize, minHeight) 
-    // These should be handled by Tailwind classes, not design tokens
-    
-    const variantTokens = {
-      primary: {
-        background: '{primary.color}',
-        color: '{primary.contrastColor}',
-        borderColor: '{primary.color}',
-        '&:hover:not(:disabled)': {
-          background: '{primary.hoverColor}'
-        }
-      },
-      secondary: {
-        background: 'transparent',
-        color: '{primary.color}',
-        borderColor: '{primary.color}',
-        '&:hover:not(:disabled)': {
-          background: '{primary.50}'
-        }
-      },
-      success: {
-        background: '{green.500}',
-        color: '{white}',
-        borderColor: '{green.500}',
-        '&:hover:not(:disabled)': {
-          background: '{green.600}'
-        }
-      },
-      warning: {
-        background: '{yellow.500}',
-        color: '{yellow.950}',
-        borderColor: '{yellow.500}',
-        '&:hover:not(:disabled)': {
-          background: '{yellow.600}'
-        }
-      },
-      danger: {
-        background: '{red.500}',
-        color: '{white}',
-        borderColor: '{red.500}',
-        '&:hover:not(:disabled)': {
-          background: '{red.600}'
-        }
-      },
-      ghost: {
-        background: 'transparent',
-        color: '{surface.600}',
-        borderColor: 'transparent',
-        '&:hover:not(:disabled)': {
-          background: '{surface.100}',
-          color: '{surface.900}'
-        }
-      }
-    }
+    // ✅ MINIMAL TOKENS: Let PrimeVue handle colors via severity prop
+    // Only override non-color properties for consistency
     
     return {
       root: {
-        ...variantTokens[variant],
+        // ✅ KEEP: Typography and layout consistency
         borderRadius: '{border.radius.md}',
         fontWeight: '500',
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-        border: '1px solid',
-        // ✅ REMOVED: Layout properties (display, alignItems, justifyContent, gap)
-        // These should be handled by Tailwind classes
+        
+        // ✅ REMOVED: All color overrides - let PrimeVue handle these via severity
+        // background, color, borderColor, hover states are now handled by severity prop
+        
         '&:focus-visible': {
           outline: '2px solid {primary.color}',
           outlineOffset: '2px'
