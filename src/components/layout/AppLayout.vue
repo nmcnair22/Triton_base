@@ -41,6 +41,25 @@
 
           <!-- Actions -->
           <div class="flex items-center space-x-2">
+            <!-- Theme Configuration -->
+            <button
+              @click="themeStore.toggleConfig"
+              class="w-10 h-10 rounded-full border border-surface-300 dark:border-surface-600 
+                     bg-transparent hover:bg-surface-100 dark:hover:bg-surface-800
+                     text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100
+                     transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+                     flex items-center justify-center relative"
+              :class="{ 'bg-primary/10 text-primary border-primary/20': themeStore.isConfigOpen }"
+              title="Theme Configuration"
+            >
+              <i class="pi pi-palette text-sm" />
+              <div
+                v-if="themeStore.canSave"
+                class="absolute -top-1 -right-1 w-3 h-3 bg-warning rounded-full border-2 border-surface-0 dark:border-surface-900"
+                title="Unsaved changes"
+              />
+            </button>
+            
             <!-- Theme Toggle -->
             <button
               @click="() => toggleDarkMode()"
@@ -145,18 +164,41 @@
         </div>
       </div>
     </footer>
+
+    <!-- Theme Configuration System -->
+    <ThemeConfigurator />
+    
+    <!-- Toast Messages for theme notifications -->
+    <Toast />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useDarkMode } from '@/composables'
+import { useThemeStore } from '@/stores/theme.store'
 import { AppButton } from '@/components/ui'
+import ThemeConfigurator from '@/components/theme/ThemeConfigurator.vue'
+import Toast from 'primevue/toast'
 
 const route = useRoute()
-const { isDark, toggleDarkMode } = useDarkMode()
+const { isDark, toggle: toggleDarkMode, initialize: initializeDarkMode } = useDarkMode()
+const themeStore = useThemeStore()
 const mobileMenuOpen = ref(false)
+
+// Initialize theme system on mount
+onMounted(async () => {
+  console.log('🎨 Initializing AppLayout theme system...')
+  
+  // Initialize dark mode
+  initializeDarkMode()
+  
+  // Initialize theme store
+  await themeStore.initialize()
+  
+  console.log('✅ AppLayout theme system ready!')
+})
 
 const navigation = [
   { name: 'Dashboard', to: '/', icon: 'pi pi-home' },

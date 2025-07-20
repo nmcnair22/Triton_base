@@ -221,3 +221,50 @@ export const CustomPreset = definePreset(Material, {
     }
   },
 })
+
+// Enhanced metadata for theme system integration
+export const CustomPresetMetadata = {
+  id: 'triton-custom-default',
+  name: 'Triton Custom',
+  description: 'Original Triton custom theme with navy primary and blue accents',
+  baseTheme: 'Material' as const,
+  version: '1.0.0',
+  author: 'Triton Team',
+  created: '2024-01-01T00:00:00Z',
+  isBuiltIn: true,
+  isDefault: false,
+  tags: ['custom', 'navy', 'professional'],
+  
+  // Color token mappings for theme configurator
+  colorMappings: {
+    primary: '#0B2244',      // Navy blue
+    secondary: '#297FB7',    // Light blue
+    success: '#10B981',      // Green (Emerald 500)
+    info: '#297FB7',         // Light blue (same as secondary)
+    warning: '#FFB400',      // Amber
+    danger: '#F60D03',       // Bright red
+  }
+}
+
+// Helper function to convert to ThemePreset format
+export function createThemePresetFromCustom() {
+  return {
+    id: CustomPresetMetadata.id,
+    name: CustomPresetMetadata.name,
+    description: CustomPresetMetadata.description,
+    baseTheme: CustomPresetMetadata.baseTheme,
+    colorOverrides: Object.entries(CustomPresetMetadata.colorMappings).map(([tokenId, value]) => ({
+      tokenId,
+      value
+    })),
+    metadata: {
+      created: CustomPresetMetadata.created,
+      modified: CustomPresetMetadata.created,
+      author: CustomPresetMetadata.author,
+      version: CustomPresetMetadata.version,
+      tags: CustomPresetMetadata.tags,
+      isDefault: CustomPresetMetadata.isDefault,
+      isBuiltIn: CustomPresetMetadata.isBuiltIn
+    }
+  }
+}
