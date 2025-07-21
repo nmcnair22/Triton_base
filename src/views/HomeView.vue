@@ -48,12 +48,20 @@ import { AppButton, AppCard } from '@/components/ui'
       <div class="space-y-8">
         <!-- Optimal Path: Framework API -->
         <div>
-          <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100 mb-4 flex items-center">
-            <span class="w-6 h-6 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded text-sm flex items-center justify-center mr-2">✓</span>
+          <h3
+            class="text-lg font-semibold text-surface-900 dark:text-surface-100 mb-4 flex items-center"
+          >
+            <span
+              class="w-6 h-6 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded text-sm flex items-center justify-center mr-2"
+              >✓</span
+            >
             Optimal Path: Framework API
           </h3>
           <p class="text-sm text-surface-600 dark:text-surface-400 mb-4">
-            Uses PrimeVue's intended API with <code class="bg-surface-200 dark:bg-surface-700 px-1 rounded">label</code> and <code class="bg-surface-200 dark:bg-surface-700 px-1 rounded">icon</code> props. No style fixes needed.
+            Uses PrimeVue's intended API with
+            <code class="bg-surface-200 dark:bg-surface-700 px-1 rounded">label</code> and
+            <code class="bg-surface-200 dark:bg-surface-700 px-1 rounded">icon</code> props. No
+            style fixes needed.
           </p>
           <div class="flex flex-wrap gap-3">
             <AppButton label="Primary" icon="pi pi-check" variant="primary" />
@@ -66,8 +74,13 @@ import { AppButton, AppCard } from '@/components/ui'
 
         <!-- Flexible Path: Custom Content -->
         <div>
-          <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100 mb-4 flex items-center">
-            <span class="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded text-sm flex items-center justify-center mr-2">⚡</span>
+          <h3
+            class="text-lg font-semibold text-surface-900 dark:text-surface-100 mb-4 flex items-center"
+          >
+            <span
+              class="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded text-sm flex items-center justify-center mr-2"
+              >⚡</span
+            >
             Flexible Path: Custom Content
           </h3>
           <p class="text-sm text-surface-600 dark:text-surface-400 mb-4">
@@ -80,7 +93,9 @@ import { AppButton, AppCard } from '@/components/ui'
             </AppButton>
             <AppButton variant="secondary">
               <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.219-5.175 1.219-5.175s-.219-.438-.219-1.087c0-1.018.477-1.775 1.072-1.775.506 0 .751.38.751.835 0 .508-.323 1.268-.492 1.969-.141.593.297 1.075.882 1.075 1.06 0 1.914-1.472 1.914-3.618 0-1.492-1.029-2.616-2.313-2.616-1.681 0-2.754 1.241-2.754 2.616 0 .5.185.851.477 1.105.055.063.063.119.047.185-.051.214-.165.68-.187.775-.029.126-.094.153-.217.093-1.06-.486-1.755-1.684-1.755-3.894 0-2.264 1.687-4.934 5.051-4.934 2.68 0 4.61 1.866 4.61 4.159 0 2.702-1.464 4.669-3.611 4.669-.726 0-1.410-.404-1.643-.884l-.454 1.79c-.17.654-.629 1.473-.937 1.971.705.218 1.453.329 2.241.329 6.624 0 11.99-5.367 11.99-11.99C24.007 5.367 18.641.001 12.017.001z"/>
+                <path
+                  d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.219-5.175 1.219-5.175s-.219-.438-.219-1.087c0-1.018.477-1.775 1.072-1.775.506 0 .751.38.751.835 0 .508-.323 1.268-.492 1.969-.141.593.297 1.075.882 1.075 1.06 0 1.914-1.472 1.914-3.618 0-1.492-1.029-2.616-2.313-2.616-1.681 0-2.754 1.241-2.754 2.616 0 .5.185.851.477 1.105.055.063.063.119.047.185-.051.214-.165.68-.187.775-.029.126-.094.153-.217.093-1.06-.486-1.755-1.684-1.755-3.894 0-2.264 1.687-4.934 5.051-4.934 2.68 0 4.61 1.866 4.61 4.159 0 2.702-1.464 4.669-3.611 4.669-.726 0-1.410-.404-1.643-.884l-.454 1.79c-.17.654-.629 1.473-.937 1.971.705.218 1.453.329 2.241.329 6.624 0 11.99-5.367 11.99-11.99C24.007 5.367 18.641.001 12.017.001z"
+                />
               </svg>
               <span>Pinterest</span>
             </AppButton>
@@ -93,8 +108,13 @@ import { AppButton, AppCard } from '@/components/ui'
 
         <!-- Complex Path: Rich Content -->
         <div>
-          <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100 mb-4 flex items-center">
-            <span class="w-6 h-6 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded text-sm flex items-center justify-center mr-2">⚙</span>
+          <h3
+            class="text-lg font-semibold text-surface-900 dark:text-surface-100 mb-4 flex items-center"
+          >
+            <span
+              class="w-6 h-6 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded text-sm flex items-center justify-center mr-2"
+              >⚙</span
+            >
             Complex Path: Rich Content
           </h3>
           <p class="text-sm text-surface-600 dark:text-surface-400 mb-4">
@@ -111,7 +131,9 @@ import { AppButton, AppCard } from '@/components/ui'
             </AppButton>
             <AppButton variant="secondary">
               <div class="flex items-center gap-2">
-                <span class="px-2 py-1 bg-primary/10 text-primary rounded text-xs font-bold">NEW</span>
+                <span class="px-2 py-1 bg-primary/10 text-primary rounded text-xs font-bold"
+                  >NEW</span
+                >
                 <span>Feature Preview</span>
               </div>
             </AppButton>
@@ -127,8 +149,13 @@ import { AppButton, AppCard } from '@/components/ui'
 
         <!-- Size Variants -->
         <div>
-          <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100 mb-4 flex items-center">
-            <span class="w-6 h-6 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded text-sm flex items-center justify-center mr-2">📏</span>
+          <h3
+            class="text-lg font-semibold text-surface-900 dark:text-surface-100 mb-4 flex items-center"
+          >
+            <span
+              class="w-6 h-6 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded text-sm flex items-center justify-center mr-2"
+              >📏</span
+            >
             Size Variants
           </h3>
           <p class="text-sm text-surface-600 dark:text-surface-400 mb-4">
@@ -143,14 +170,19 @@ import { AppButton, AppCard } from '@/components/ui'
 
         <!-- Layout Examples -->
         <div>
-          <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100 mb-4 flex items-center">
-            <span class="w-6 h-6 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 rounded text-sm flex items-center justify-center mr-2">📱</span>
+          <h3
+            class="text-lg font-semibold text-surface-900 dark:text-surface-100 mb-4 flex items-center"
+          >
+            <span
+              class="w-6 h-6 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 rounded text-sm flex items-center justify-center mr-2"
+              >📱</span
+            >
             Responsive Layout Examples
           </h3>
           <p class="text-sm text-surface-600 dark:text-surface-400 mb-4">
             Container handles responsive behavior using Tailwind CSS layout classes.
           </p>
-          
+
           <!-- Mobile-first responsive grid -->
           <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4 mb-4">
             <AppButton label="Action 1" icon="pi pi-home" variant="primary" full-width />
@@ -161,9 +193,24 @@ import { AppButton, AppCard } from '@/components/ui'
 
           <!-- Flexible button group -->
           <div class="flex flex-wrap gap-2 sm:gap-4">
-            <AppButton label="Save" icon="pi pi-check" variant="primary" class="flex-1 sm:flex-none" />
-            <AppButton label="Cancel" icon="pi pi-times" variant="secondary" class="flex-1 sm:flex-none" />
-            <AppButton label="Preview" icon="pi pi-eye" variant="ghost" class="flex-1 sm:flex-none" />
+            <AppButton
+              label="Save"
+              icon="pi pi-check"
+              variant="primary"
+              class="flex-1 sm:flex-none"
+            />
+            <AppButton
+              label="Cancel"
+              icon="pi pi-times"
+              variant="secondary"
+              class="flex-1 sm:flex-none"
+            />
+            <AppButton
+              label="Preview"
+              icon="pi pi-eye"
+              variant="ghost"
+              class="flex-1 sm:flex-none"
+            />
           </div>
         </div>
       </div>

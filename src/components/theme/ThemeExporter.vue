@@ -11,7 +11,7 @@
         :disabled="!themeStore.activePreset"
       />
     </div>
-    
+
     <div>
       <h5 class="text-sm font-medium mb-2">Import Theme</h5>
       <FileUpload
@@ -24,7 +24,7 @@
         class="w-full"
       />
     </div>
-    
+
     <div class="text-xs text-muted">
       Themes are exported as JSON files that can be shared with others.
     </div>
@@ -46,7 +46,7 @@ async function exportTheme() {
         severity: 'success',
         summary: 'Theme Exported',
         detail: 'Theme file downloaded successfully',
-        life: 3000
+        life: 3000,
       })
     }
   } catch (error) {
@@ -54,7 +54,7 @@ async function exportTheme() {
       severity: 'error',
       summary: 'Export Failed',
       detail: error instanceof Error ? error.message : 'Unknown error',
-      life: 5000
+      life: 5000,
     })
   }
 }
@@ -68,7 +68,7 @@ async function importTheme(event: any) {
         severity: 'success',
         summary: 'Theme Imported',
         detail: 'Theme imported and activated successfully',
-        life: 3000
+        life: 3000,
       })
     }
   } catch (error) {
@@ -76,7 +76,7 @@ async function importTheme(event: any) {
       severity: 'error',
       summary: 'Import Failed',
       detail: error instanceof Error ? error.message : 'Unknown error',
-      life: 5000
+      life: 5000,
     })
   }
 }
@@ -86,4 +86,4 @@ async function importTheme(event: any) {
 .space-y-4 > * + * {
   margin-top: 1rem;
 }
-</style> 
+</style>

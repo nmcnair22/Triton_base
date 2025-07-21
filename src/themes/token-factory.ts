@@ -9,88 +9,88 @@ interface FlexibleDesignTokens {
 export class TokenFactory {
   static button(
     variant: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'ghost' = 'primary',
-    size: 'small' | 'medium' | 'large' = 'medium'
+    size: 'small' | 'medium' | 'large' = 'medium',
   ): FlexibleDesignTokens {
     // ✅ MINIMAL TOKENS: Let PrimeVue handle colors via severity prop
     // Only override non-color properties for consistency
-    
+
     return {
       root: {
         // ✅ KEEP: Typography and layout consistency
         borderRadius: '{border.radius.md}',
         fontWeight: '500',
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-        
+
         // ✅ REMOVED: All color overrides - let PrimeVue handle these via severity
         // background, color, borderColor, hover states are now handled by severity prop
-        
+
         '&:focus-visible': {
           outline: '2px solid {primary.color}',
-          outlineOffset: '2px'
+          outlineOffset: '2px',
         },
         '&:disabled': {
           opacity: '0.5',
-          cursor: 'not-allowed'
-        }
-      }
+          cursor: 'not-allowed',
+        },
+      },
     }
   }
-  
+
   static card(elevation: 'flat' | 'low' | 'medium' | 'high' = 'medium'): FlexibleDesignTokens {
     const elevationTokens = {
-      flat: { 
+      flat: {
         shadow: 'none',
-        border: '1px solid {surface.200}'
+        border: '1px solid {surface.200}',
       },
-      low: { 
+      low: {
         shadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-        border: '1px solid {surface.200}'
+        border: '1px solid {surface.200}',
       },
-      medium: { 
+      medium: {
         shadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        border: '1px solid {surface.200}'
+        border: '1px solid {surface.200}',
       },
-      high: { 
+      high: {
         shadow: '0 20px 25px rgba(0, 0, 0, 0.15)',
-        border: '1px solid {surface.300}'
-      }
+        border: '1px solid {surface.300}',
+      },
     }
-    
+
     return {
       root: {
         background: '{surface.0}',
         borderRadius: '0.75rem',
         padding: '1.5rem',
-        ...elevationTokens[elevation]
-      }
+        ...elevationTokens[elevation],
+      },
     }
   }
-  
+
   static input(state: 'default' | 'error' | 'success' = 'default'): FlexibleDesignTokens {
     const stateTokens = {
       default: {
         borderColor: '{surface.300}',
         '&:focus': {
           borderColor: '{primary.color}',
-          outline: '2px solid {primary.color}/20'
-        }
+          outline: '2px solid {primary.color}/20',
+        },
       },
       error: {
         borderColor: '{red.500}',
         '&:focus': {
           borderColor: '{red.500}',
-          outline: '2px solid {red.500}/20'
-        }
+          outline: '2px solid {red.500}/20',
+        },
       },
       success: {
         borderColor: '{green.500}',
         '&:focus': {
           borderColor: '{green.500}',
-          outline: '2px solid {green.500}/20'
-        }
-      }
+          outline: '2px solid {green.500}/20',
+        },
+      },
     }
-    
+
     return {
       root: {
         background: '{surface.0}',
@@ -100,8 +100,8 @@ export class TokenFactory {
         fontSize: '1rem',
         color: '{surface.900}',
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-        ...stateTokens[state]
-      }
+        ...stateTokens[state],
+      },
     }
   }
 

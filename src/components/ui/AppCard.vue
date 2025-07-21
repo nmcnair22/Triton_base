@@ -48,7 +48,7 @@ const computedTokens = computed(() => {
   // Update padding
   tokens.root = {
     ...tokens.root,
-    padding: paddingValues[props.padding]
+    padding: paddingValues[props.padding],
   }
 
   // Add hover effect if hoverable
@@ -59,7 +59,7 @@ const computedTokens = computed(() => {
       '&:hover': {
         transform: 'translateY(-2px)',
         shadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
-      }
+      },
     }
   }
 
@@ -68,5 +68,3 @@ const computedTokens = computed(() => {
 
 const computedClasses = computed(() => ['animate-fade-in', props.hoverable ? 'cursor-pointer' : ''])
 </script>
-
-

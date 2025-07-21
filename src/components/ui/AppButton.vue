@@ -53,7 +53,7 @@ const needsWidthFix = computed(() => hasSlotContent.value && !props.label)
 // ✅ CONDITIONAL WIDTH FIX: Only applied when using slot content without label
 const widthFixStyles = {
   whiteSpace: 'nowrap' as const,
-  minWidth: 'fit-content'
+  minWidth: 'fit-content',
 }
 
 // ✅ CLEAN TOKENS: Only styling properties, no layout
@@ -65,8 +65,8 @@ const computedTokens = computed(() => {
 const primeVueSize = computed(() => {
   const sizeMap = {
     small: 'small' as const,
-    medium: undefined,  // Default size in PrimeVue
-    large: 'large' as const
+    medium: undefined, // Default size in PrimeVue
+    large: 'large' as const,
   }
   return sizeMap[props.size]
 })
@@ -74,12 +74,12 @@ const primeVueSize = computed(() => {
 // ✅ PRIMEVUE SEVERITY MAPPING: Convert our variant to PrimeVue's severity
 const primeVueSeverity = computed(() => {
   const severityMap = {
-    primary: undefined,     // Default severity in PrimeVue
+    primary: undefined, // Default severity in PrimeVue
     secondary: 'secondary' as const,
     success: 'success' as const,
     warning: 'warn' as const,
     danger: 'danger' as const,
-    ghost: 'help' as const  // Map ghost to help for now
+    ghost: 'help' as const, // Map ghost to help for now
   }
   return severityMap[props.variant]
 })
@@ -89,11 +89,11 @@ const computedClasses = computed(() => [
   // Transitions and focus states (safe)
   'transition-all duration-200',
   'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
-  
+
   // Layout modifiers (safe)
   props.fullWidth ? 'w-full' : '',
   props.rounded ? '!rounded-full' : '',
-  
+
   // NOTE: Removed conflicting layout classes:
   // ❌ 'inline-flex', 'items-center', 'justify-center', 'gap-2'
   // These interfere with PrimeVue's internal button layout
@@ -123,5 +123,3 @@ const computedClasses = computed(() => [
   gap: 0.5rem;
 }
 </style>
-
-

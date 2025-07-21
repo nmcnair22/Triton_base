@@ -44,12 +44,12 @@ export interface ThemeConfig {
   activePresetId: string
   baseTheme: BaseTheme
   darkMode: boolean
-  
+
   // User preferences
   autoSave: boolean
   syncAcrossTabs: boolean
   smoothTransitions: boolean
-  
+
   // Storage settings
   storageKey: string
   maxSavedPresets: number
@@ -59,4 +59,4 @@ export interface ThemeState {
   configSidebarVisible: boolean
   isDirty: boolean
   isLoading: boolean
-} 
+}

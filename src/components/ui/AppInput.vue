@@ -1,6 +1,10 @@
 <template>
   <div class="space-y-2">
-    <label v-if="label" :for="inputId" class="block text-sm font-medium text-surface-700 dark:text-surface-300">
+    <label
+      v-if="label"
+      :for="inputId"
+      class="block text-sm font-medium text-surface-700 dark:text-surface-300"
+    >
       {{ label }}
       <span v-if="required" class="text-red-500 ml-1">*</span>
     </label>
@@ -91,5 +95,3 @@ const handleFocus = (event: FocusEvent) => {
   emit('focus', event)
 }
 </script>
-
-
