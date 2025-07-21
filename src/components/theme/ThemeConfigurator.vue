@@ -6,7 +6,7 @@
     :style="{ width: '420px' }"
     :modal="false"
     :dismissable="true"
-    :show-close-icon="true"
+    :show-close-icon="false"
     class="theme-configurator"
     @click.stop
   >
@@ -332,20 +332,9 @@ function isTokenEdited(tokenId: string): boolean {
 
 // Event handlers
 function handleVisibilityChange(visible: boolean) {
-  console.log('🎯 handleVisibilityChange called', { 
-    visible,
-    currentState: themeStore.isConfigOpen,
-    stackTrace: new Error().stack?.split('\n').slice(1, 4)
-  })
-  
-  // Don't close drawer automatically - only allow manual close
-  // This prevents Popover interactions from closing the drawer
-  console.log('🎯 Ignoring automatic visibility change')
-}
-
-function closeDrawer() {
-  console.log('🎯 Manual close triggered')
-  themeStore.toggleConfig()
+  // Ignore all automatic visibility changes to prevent unwanted drawer closure
+  // Only manual close button should close the drawer
+  console.log('🎯 Ignoring automatic visibility change:', visible)
 }
 
 async function onPresetChange(event: any) {
