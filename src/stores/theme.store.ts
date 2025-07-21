@@ -181,7 +181,14 @@ export const useThemeStore = defineStore('theme', () => {
    * Toggle configuration sidebar
    */
   function toggleConfig() {
+    console.log('🎯 toggleConfig called, current state:', state.value.configSidebarVisible)
     state.value.configSidebarVisible = !state.value.configSidebarVisible
+    console.log('🎯 toggleConfig new state:', state.value.configSidebarVisible)
+  }
+
+  function setConfigVisible(visible: boolean) {
+    console.log('🎯 setConfigVisible called', { visible, currentState: state.value.configSidebarVisible })
+    state.value.configSidebarVisible = visible
   }
   
   /**
@@ -527,6 +534,7 @@ export const useThemeStore = defineStore('theme', () => {
       applyTheme,
       toggleDarkMode,
       toggleConfig,
+      setConfigVisible,
       getTokenValue,
       
       // Preset Management

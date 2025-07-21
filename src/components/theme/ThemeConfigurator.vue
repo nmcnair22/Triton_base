@@ -1,12 +1,14 @@
 <template>
   <Drawer
     :visible="themeStore.isConfigOpen"
-    @update:visible="themeStore.toggleConfig"
+    @update:visible="handleVisibilityChange"
     position="right"
     :style="{ width: '420px' }"
     :modal="false"
     :dismissable="true"
+    :show-close-icon="true"
     class="theme-configurator"
+    @click.stop
   >
     <!-- Header with actions -->
     <template #header>
@@ -329,6 +331,23 @@ function isTokenEdited(tokenId: string): boolean {
 }
 
 // Event handlers
+function handleVisibilityChange(visible: boolean) {
+  console.log('🎯 handleVisibilityChange called', { 
+    visible,
+    currentState: themeStore.isConfigOpen,
+    stackTrace: new Error().stack?.split('\n').slice(1, 4)
+  })
+  
+  // Don't close drawer automatically - only allow manual close
+  // This prevents Popover interactions from closing the drawer
+  console.log('🎯 Ignoring automatic visibility change')
+}
+
+function closeDrawer() {
+  console.log('🎯 Manual close triggered')
+  themeStore.toggleConfig()
+}
+
 async function onPresetChange(event: any) {
   const preset = themeStore.availablePresets.find(p => p.id === event.value)
   if (preset) {
@@ -355,7 +374,9 @@ async function onBaseThemeChange() {
 }
 
 async function updateTokenColor(tokenId: string, value: string) {
+  console.log('🎯 updateTokenColor called', { tokenId, value })
   await themeConfig.updateTokenColor(tokenId, value)
+  console.log('🎯 updateTokenColor completed')
 }
 
 async function resetToken(tokenId: string) {

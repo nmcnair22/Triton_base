@@ -5,7 +5,7 @@
         <div
           class="w-6 h-6 rounded border border-surface-300 cursor-pointer"
           :style="{ backgroundColor: value }"
-          @click.stop="openColorPicker"
+          @click="openColorPicker"
         />
         
         <div>
@@ -57,7 +57,8 @@
       @show="onColorPickerShow"
       @hide="onColorPickerHide"
       :style="{ width: '320px' }"
-      @click.stop
+      :dismissable="false"
+      :modal="false"
     >
       <div class="p-4">
         <!-- Color Input -->
@@ -165,7 +166,7 @@
               :key="quickColor"
               class="w-6 h-6 rounded border border-surface-300 dark:border-surface-600 cursor-pointer hover:scale-110 transition-transform"
               :style="{ backgroundColor: quickColor }"
-              @click="selectQuickColor(quickColor)"
+              @click.stop="(event) => selectQuickColor(quickColor, event)"
               :title="quickColor"
             />
           </div>
@@ -179,7 +180,7 @@
               v-for="variation in colorVariations"
               :key="variation.value"
               class="flex flex-col items-center cursor-pointer hover:bg-surface-50 dark:hover:bg-surface-800 p-1 rounded"
-              @click.stop="selectQuickColor(variation.value)"
+              @click.stop="(event) => selectQuickColor(variation.value, event)"
             >
               <div
                 class="w-6 h-6 rounded border border-surface-300 dark:border-surface-600"
@@ -275,23 +276,57 @@ const colorVariations = computed(() => {
 
 // Watch for prop changes
 watch(() => props.value, (newValue) => {
+  console.log('🎨 props.value changed', { 
+    tokenId: props.token.id,
+    oldValue: localValue.value,
+    newValue,
+    isColorPickerOpen: isColorPickerOpen.value 
+  })
   localValue.value = newValue
 }, { immediate: true })
 
 function openColorPicker(event: Event) {
+  console.log('🎨 openColorPicker called', { 
+    tokenId: props.token.id, 
+    propsValue: props.value, 
+    localValue: localValue.value,
+    event: event.type 
+  })
   localValue.value = props.value
-  colorPickerPanel.value.toggle(event)
+  
+  // Add debugging for popover
+  console.log('🎨 Attempting to toggle popover', {
+    panelRef: !!colorPickerPanel.value,
+    panelVisible: colorPickerPanel.value?.visible
+  })
+  
+  try {
+    colorPickerPanel.value.show(event)
+    console.log('🎨 Show completed')
+  } catch (error) {
+    console.error('🎨 Show failed:', error)
+    // Fallback to toggle
+    try {
+      colorPickerPanel.value.toggle(event)
+      console.log('🎨 Fallback toggle completed')
+    } catch (toggleError) {
+      console.error('🎨 Fallback toggle failed:', toggleError)
+    }
+  }
 }
 
 function closeColorPicker() {
+  console.log('🎨 closeColorPicker called')
   colorPickerPanel.value.hide()
 }
 
 function onColorPickerShow() {
+  console.log('🎨 onColorPickerShow called - Color picker is now visible')
   isColorPickerOpen.value = true
 }
 
 function onColorPickerHide() {
+  console.log('🎨 onColorPickerHide called - Color picker is now hidden')
   isColorPickerOpen.value = false
 }
 
@@ -399,14 +434,33 @@ function updateFromHsl() {
   }
 }
 
-function selectQuickColor(color: string) {
+function selectQuickColor(color: string, event?: Event) {
+  console.log('🎨 selectQuickColor START', { 
+    tokenId: props.token.id, 
+    color,
+    localValue: localValue.value,
+    event: event?.type 
+  })
+  
+  // Prevent any event bubbling
+  if (event) {
+    event.stopPropagation()
+    event.preventDefault()
+  }
+  
   localValue.value = color
   onColorChange()
   // Apply the color immediately for real-time preview
+  console.log('🎨 About to emit update event', { tokenId: props.token.id, color })
   emit('update', props.token.id, color)
+  console.log('🎨 selectQuickColor END - Update emitted')
 }
 
 function applyColor() {
+  console.log('🎨 applyColor called', { 
+    tokenId: props.token.id, 
+    value: localValue.value 
+  })
   emit('update', props.token.id, localValue.value)
   closeColorPicker()
 }
