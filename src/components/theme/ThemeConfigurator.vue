@@ -40,6 +40,7 @@
             severity="success"
             @click="saveCurrentPreset"
             v-tooltip="'Save current changes'"
+            class="text-xs"
           />
           
           <Button
@@ -65,11 +66,11 @@
       </div>
     </template>
 
-    <div class="space-y-6 p-2">
+    <div class="space-y-4 p-2">
       <!-- Quick Theme Selection -->
       <div>
-        <div class="flex items-center justify-between mb-3">
-          <h4 class="text-sm font-medium m-0">Active Theme</h4>
+        <div class="flex items-center justify-between mb-2">
+          <h4 class="text-xs font-medium m-0">Active Theme</h4>
           <Button
             label="Manage"
             size="small"
@@ -84,7 +85,8 @@
           optionLabel="name"
           optionValue="id"
           placeholder="Select a theme"
-          class="w-full"
+          class="w-full text-sm"
+          size="small"
           @change="onPresetChange"
           :loading="themeStore.state.isLoading"
         >
@@ -96,7 +98,7 @@
                   :style="{ backgroundColor: getPresetPrimaryColor(option) }"
                 />
                 <div>
-                  <div class="font-medium">{{ option.name }}</div>
+                  <div class="text-sm font-medium">{{ option.name }}</div>
                   <div class="text-xs text-muted">
                     {{ option.baseTheme }}
                     <span v-if="option.metadata.isBuiltIn" class="ml-1">
@@ -126,25 +128,27 @@
       <!-- Base Theme & Dark Mode -->
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium mb-2">Base Theme</label>
+          <label class="block text-xs font-medium mb-1">Base Theme</label>
           <Select
             v-model="baseTheme"
             :options="baseThemeOptions"
             optionLabel="label"
             optionValue="value"
-            class="w-full"
+            class="w-full text-sm"
+            size="small"
             @change="onBaseThemeChange"
           />
         </div>
         
         <div>
-          <label class="block text-sm font-medium mb-2">Mode</label>
-                     <div class="flex items-center justify-between p-3 border border-surface-300 rounded">
-             <span class="text-sm">{{ darkMode.isDark.value ? 'Dark' : 'Light' }}</span>
+          <label class="block text-xs font-medium mb-1">Mode</label>
+                     <div class="flex items-center justify-between p-2 border border-surface-300 rounded">
+             <span class="text-xs">{{ darkMode.isDark.value ? 'Dark' : 'Light' }}</span>
              <ToggleSwitch
                :modelValue="darkMode.isDark.value"
                @update:modelValue="darkMode.toggle"
                :disabled="darkMode.isTransitioning.value"
+               size="small"
              />
            </div>
         </div>
@@ -152,7 +156,7 @@
 
       <!-- Color Token Editor Tabs -->
       <div>
-        <h4 class="text-sm font-medium mb-3">Color Tokens</h4>
+        <h4 class="text-xs font-medium mb-2">Color Tokens</h4>
         
                          <Tabs value="brand">
           <TabList>
@@ -189,7 +193,7 @@
 
       <!-- Color Harmony Tools -->
       <div>
-        <h4 class="text-sm font-medium mb-3">Color Tools</h4>
+        <h4 class="text-xs font-medium mb-2">Color Tools</h4>
         
         <div class="grid grid-cols-2 gap-2">
           <Button
@@ -230,18 +234,18 @@
           <AccordionContent>
             <div class="space-y-3">
               <div class="flex items-center justify-between">
-                <span class="text-sm">Auto-save changes</span>
-                <ToggleSwitch v-model="themeStore.config.autoSave" />
+                <span class="text-xs">Auto-save changes</span>
+                <ToggleSwitch v-model="themeStore.config.autoSave" size="small" />
               </div>
               
               <div class="flex items-center justify-between">
-                <span class="text-sm">Sync across tabs</span>
-                <ToggleSwitch v-model="themeStore.config.syncAcrossTabs" />
+                <span class="text-xs">Sync across tabs</span>
+                <ToggleSwitch v-model="themeStore.config.syncAcrossTabs" size="small" />
               </div>
               
               <div class="flex items-center justify-between">
-                <span class="text-sm">Smooth transitions</span>
-                <ToggleSwitch v-model="themeStore.config.smoothTransitions" />
+                <span class="text-xs">Smooth transitions</span>
+                <ToggleSwitch v-model="themeStore.config.smoothTransitions" size="small" />
               </div>
             </div>
           </AccordionContent>
@@ -257,7 +261,7 @@
         <AccordionPanel value="storage">
           <AccordionHeader>Storage Info</AccordionHeader>
           <AccordionContent>
-            <div class="space-y-2 text-sm">
+            <div class="space-y-1 text-xs">
               <div class="flex justify-between">
                 <span>User Presets:</span>
                 <span>{{ themeStore.userPresets.length }} / {{ themeStore.config.maxSavedPresets }}</span>

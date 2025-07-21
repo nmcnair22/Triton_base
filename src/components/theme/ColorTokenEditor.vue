@@ -1,15 +1,15 @@
 <template>
   <div class="color-token-editor">
-    <div class="flex items-center justify-between p-3 border border-surface-200 rounded">
-      <div class="flex items-center gap-3">
+    <div class="flex items-center justify-between p-2 border border-surface-200 rounded">
+      <div class="flex items-center gap-2">
         <div
-          class="w-6 h-6 rounded border border-surface-300 cursor-pointer"
+          class="w-5 h-5 rounded border border-surface-300 cursor-pointer"
           :style="{ backgroundColor: value }"
           @click="openColorPicker"
         />
         
         <div>
-          <div class="font-medium text-sm">{{ token.label }}</div>
+          <div class="font-medium text-xs">{{ token.label }}</div>
           <div class="text-xs text-muted">{{ value }}</div>
         </div>
         
@@ -60,14 +60,15 @@
       :dismissable="false"
       :modal="false"
     >
-      <div class="p-4">
+      <div class="p-3">
         <!-- Color Input -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-2">Color Value</label>
+        <div class="mb-3">
+          <label class="block text-xs font-medium mb-1">Color Value</label>
           <div class="flex gap-2">
             <InputText
               v-model="localValue"
-              class="flex-1"
+              class="flex-1 text-xs"
+              size="small"
               @input="onColorChange"
               @keyup.enter="applyColor"
               placeholder="#000000"
@@ -83,7 +84,7 @@
         </div>
 
         <!-- Format Tabs -->
-        <Tabs value="hex" class="mb-4">
+        <Tabs value="hex" class="mb-3">
           <TabList>
             <Tab value="hex">Hex</Tab>
             <Tab value="rgb">RGB</Tab>
@@ -93,7 +94,8 @@
             <TabPanel value="hex">
               <InputText
                 v-model="hexValue"
-                class="w-full"
+                class="w-full text-xs"
+                size="small"
                 @input="updateFromHex"
                 placeholder="#000000"
               />
@@ -107,6 +109,8 @@
                   type="number"
                   min="0"
                   max="255"
+                  class="text-xs"
+                  size="small"
                 />
                 <InputText
                   v-model="rgbValue.g"
@@ -115,6 +119,8 @@
                   type="number"
                   min="0"
                   max="255"
+                  class="text-xs"
+                  size="small"
                 />
                 <InputText
                   v-model="rgbValue.b"
@@ -123,6 +129,8 @@
                   type="number"
                   min="0"
                   max="255"
+                  class="text-xs"
+                  size="small"
                 />
               </div>
             </TabPanel>
@@ -135,6 +143,8 @@
                   type="number"
                   min="0"
                   max="360"
+                  class="text-xs"
+                  size="small"
                 />
                 <InputText
                   v-model="hslValue.s"
@@ -143,6 +153,8 @@
                   type="number"
                   min="0"
                   max="100"
+                  class="text-xs"
+                  size="small"
                 />
                 <InputText
                   v-model="hslValue.l"
@@ -151,6 +163,8 @@
                   type="number"
                   min="0"
                   max="100"
+                  class="text-xs"
+                  size="small"
                 />
               </div>
             </TabPanel>
@@ -158,13 +172,13 @@
         </Tabs>
 
         <!-- Quick Color Presets -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-2">Quick Colors</label>
+        <div class="mb-3">
+          <label class="block text-xs font-medium mb-1">Quick Colors</label>
           <div class="grid grid-cols-8 gap-1">
             <div
               v-for="quickColor in quickColors"
               :key="quickColor"
-              class="w-6 h-6 rounded border border-surface-300 dark:border-surface-600 cursor-pointer hover:scale-110 transition-transform"
+              class="w-5 h-5 rounded border border-surface-300 dark:border-surface-600 cursor-pointer hover:scale-110 transition-transform"
               :style="{ backgroundColor: quickColor }"
               @click.stop="(event) => selectQuickColor(quickColor, event)"
               :title="quickColor"
@@ -173,8 +187,8 @@
         </div>
 
         <!-- Color Variations -->
-        <div v-if="colorVariations.length > 0" class="mb-4">
-          <label class="block text-sm font-medium mb-2">Variations</label>
+        <div v-if="colorVariations.length > 0" class="mb-3">
+          <label class="block text-xs font-medium mb-1">Variations</label>
           <div class="grid grid-cols-5 gap-1">
             <div
               v-for="variation in colorVariations"
@@ -183,7 +197,7 @@
               @click.stop="(event) => selectQuickColor(variation.value, event)"
             >
               <div
-                class="w-6 h-6 rounded border border-surface-300 dark:border-surface-600"
+                class="w-5 h-5 rounded border border-surface-300 dark:border-surface-600"
                 :style="{ backgroundColor: variation.value }"
               />
               <span class="text-xs text-muted mt-1">{{ variation.name }}</span>
