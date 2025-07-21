@@ -7,9 +7,6 @@
 /* Import Tailwind CSS 4 */
 @import 'tailwindcss';
 
-/* Import PrimeUI plugin for Tailwind */
-@plugin "tailwindcss-primeui";
-
 /* CSS-First Theme Configuration */
 @theme {
   /* Typography */
@@ -19,6 +16,21 @@
   /* Custom breakpoints */
   --breakpoint-3xl: 1920px;
   --breakpoint-4xl: 2560px;
+
+  /* Base spacing system */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
 
   /* Brand colors using modern OKLCH color space */
   --color-brand-50: oklch(0.98 0.02 250);
@@ -33,22 +45,105 @@
   --color-brand-900: oklch(0.22 0.1 250);
   --color-brand-950: oklch(0.12 0.05 250);
 
+  /* Primary color (maps to PrimeVue primary) */
+  --color-primary-50: oklch(0.98 0.02 250);
+  --color-primary-100: oklch(0.95 0.05 250);
+  --color-primary-200: oklch(0.9 0.1 250);
+  --color-primary-300: oklch(0.82 0.15 250);
+  --color-primary-400: oklch(0.72 0.2 250);
+  --color-primary-500: oklch(0.62 0.25 250);
+  --color-primary-600: oklch(0.52 0.22 250);
+  --color-primary-700: oklch(0.42 0.18 250);
+  --color-primary-800: oklch(0.32 0.14 250);
+  --color-primary-900: oklch(0.22 0.1 250);
+  --color-primary-950: oklch(0.12 0.05 250);
+
   /* Surface colors for light/dark compatibility */
-  --color-surface-50: oklch(0.99 0 0);
-  --color-surface-100: oklch(0.97 0 0);
-  --color-surface-200: oklch(0.94 0 0);
-  --color-surface-300: oklch(0.91 0 0);
-  --color-surface-400: oklch(0.82 0 0);
-  --color-surface-500: oklch(0.65 0 0);
-  --color-surface-600: oklch(0.53 0 0);
-  --color-surface-700: oklch(0.41 0 0);
-  --color-surface-800: oklch(0.27 0 0);
-  --color-surface-900: oklch(0.15 0 0);
-  --color-surface-950: oklch(0.08 0 0);
+  --color-surface-0: #ffffff;
+  --color-surface-50: #fafafa;
+  --color-surface-100: #f5f5f5;
+  --color-surface-200: #e5e5e5;
+  --color-surface-300: #d4d4d4;
+  --color-surface-400: #a3a3a3;
+  --color-surface-500: #737373;
+  --color-surface-600: #525252;
+  --color-surface-700: #404040;
+  --color-surface-800: #262626;
+  --color-surface-900: #171717;
+  --color-surface-950: #0a0a0a;
+
+  /* Gray scale */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+
+  /* Semantic colors */
+  --color-success-50: #f0fdf4;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
+
+  --color-warning-50: #fefce8;
+  --color-warning-500: #eab308;
+  --color-warning-600: #ca8a04;
+
+  --color-danger-50: #fef2f2;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+
+  --color-info-50: #eff6ff;
+  --color-info-500: #3b82f6;
+  --color-info-600: #2563eb;
 
   /* Animation easing functions */
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* PrimeVue Design Token Bridge - Map Tailwind to PrimeVue */
+  --p-primary-50: var(--color-primary-50);
+  --p-primary-100: var(--color-primary-100);
+  --p-primary-200: var(--color-primary-200);
+  --p-primary-300: var(--color-primary-300);
+  --p-primary-400: var(--color-primary-400);
+  --p-primary-500: var(--color-primary-500);
+  --p-primary-600: var(--color-primary-600);
+  --p-primary-700: var(--color-primary-700);
+  --p-primary-800: var(--color-primary-800);
+  --p-primary-900: var(--color-primary-900);
+  --p-primary-950: var(--color-primary-950);
+
+  --p-surface-0: var(--color-surface-0);
+  --p-surface-50: var(--color-surface-50);
+  --p-surface-100: var(--color-surface-100);
+  --p-surface-200: var(--color-surface-200);
+  --p-surface-300: var(--color-surface-300);
+  --p-surface-400: var(--color-surface-400);
+  --p-surface-500: var(--color-surface-500);
+  --p-surface-600: var(--color-surface-600);
+  --p-surface-700: var(--color-surface-700);
+  --p-surface-800: var(--color-surface-800);
+  --p-surface-900: var(--color-surface-900);
+  --p-surface-950: var(--color-surface-950);
+
+  --p-gray-50: var(--color-gray-50);
+  --p-gray-100: var(--color-gray-100);
+  --p-gray-200: var(--color-gray-200);
+  --p-gray-300: var(--color-gray-300);
+  --p-gray-400: var(--color-gray-400);
+  --p-gray-500: var(--color-gray-500);
+  --p-gray-600: var(--color-gray-600);
+  --p-gray-700: var(--color-gray-700);
+  --p-gray-800: var(--color-gray-800);
+  --p-gray-900: var(--color-gray-900);
+  --p-gray-950: var(--color-gray-950);
 }
 
 /* Dark mode variant */
