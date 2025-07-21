@@ -1,6 +1,7 @@
 <template>
   <Drawer
-    v-model:visible="themeStore.isConfigOpen"
+    :visible="themeStore.isConfigOpen"
+    @update:visible="themeStore.toggleConfig"
     position="right"
     :style="{ width: '420px' }"
     :modal="false"
@@ -221,42 +222,51 @@
       </div>
 
       <!-- Advanced Options -->
-      <Accordion>
-        <AccordionTab header="Preferences">
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-sm">Auto-save changes</span>
-              <ToggleSwitch v-model="themeStore.config.autoSave" />
+      <Accordion value="preferences">
+        <AccordionPanel value="preferences">
+          <AccordionHeader>Preferences</AccordionHeader>
+          <AccordionContent>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-sm">Auto-save changes</span>
+                <ToggleSwitch v-model="themeStore.config.autoSave" />
+              </div>
+              
+              <div class="flex items-center justify-between">
+                <span class="text-sm">Sync across tabs</span>
+                <ToggleSwitch v-model="themeStore.config.syncAcrossTabs" />
+              </div>
+              
+              <div class="flex items-center justify-between">
+                <span class="text-sm">Smooth transitions</span>
+                <ToggleSwitch v-model="themeStore.config.smoothTransitions" />
+              </div>
             </div>
-            
-            <div class="flex items-center justify-between">
-              <span class="text-sm">Sync across tabs</span>
-              <ToggleSwitch v-model="themeStore.config.syncAcrossTabs" />
-            </div>
-            
-            <div class="flex items-center justify-between">
-              <span class="text-sm">Smooth transitions</span>
-              <ToggleSwitch v-model="themeStore.config.smoothTransitions" />
-            </div>
-          </div>
-        </AccordionTab>
+          </AccordionContent>
+        </AccordionPanel>
         
-        <AccordionTab header="Import / Export">
-          <ThemeExporter />
-        </AccordionTab>
+        <AccordionPanel value="export">
+          <AccordionHeader>Import / Export</AccordionHeader>
+          <AccordionContent>
+            <ThemeExporter />
+          </AccordionContent>
+        </AccordionPanel>
         
-        <AccordionTab header="Storage Info">
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between">
-              <span>User Presets:</span>
-              <span>{{ themeStore.userPresets.length }} / {{ themeStore.config.maxSavedPresets }}</span>
+        <AccordionPanel value="storage">
+          <AccordionHeader>Storage Info</AccordionHeader>
+          <AccordionContent>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span>User Presets:</span>
+                <span>{{ themeStore.userPresets.length }} / {{ themeStore.config.maxSavedPresets }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Built-in Presets:</span>
+                <span>{{ themeStore.builtInPresets.length }}</span>
+              </div>
             </div>
-            <div class="flex justify-between">
-              <span>Built-in Presets:</span>
-              <span>{{ themeStore.builtInPresets.length }}</span>
-            </div>
-          </div>
-        </AccordionTab>
+          </AccordionContent>
+        </AccordionPanel>
       </Accordion>
 
       <!-- Live Preview -->

@@ -5,7 +5,7 @@
         <div
           class="w-6 h-6 rounded border border-surface-300 cursor-pointer"
           :style="{ backgroundColor: value }"
-          @click="openColorPicker"
+          @click.stop="openColorPicker"
         />
         
         <div>
@@ -57,6 +57,7 @@
       @show="onColorPickerShow"
       @hide="onColorPickerHide"
       :style="{ width: '320px' }"
+      @click.stop
     >
       <div class="p-4">
         <!-- Color Input -->
@@ -178,7 +179,7 @@
               v-for="variation in colorVariations"
               :key="variation.value"
               class="flex flex-col items-center cursor-pointer hover:bg-surface-50 dark:hover:bg-surface-800 p-1 rounded"
-              @click="selectQuickColor(variation.value)"
+              @click.stop="selectQuickColor(variation.value)"
             >
               <div
                 class="w-6 h-6 rounded border border-surface-300 dark:border-surface-600"
@@ -194,12 +195,12 @@
             label="Cancel"
             size="small"
             severity="secondary"
-            @click="closeColorPicker"
+            @click.stop="closeColorPicker"
           />
           <Button
             label="Apply"
             size="small"
-            @click="applyColor"
+            @click.stop="applyColor"
             :disabled="!!colorError"
           />
         </div>
@@ -342,6 +343,8 @@ function updateFromHex() {
   if (isValidColor(hexValue.value)) {
     localValue.value = hexValue.value
     onColorChange()
+    // Apply immediately for real-time preview
+    emit('update', props.token.id, hexValue.value)
   }
 }
 
@@ -350,6 +353,8 @@ function updateFromRgb() {
     const hex = rgbToHex(Number(rgbValue.value.r), Number(rgbValue.value.g), Number(rgbValue.value.b))
     localValue.value = hex
     onColorChange()
+    // Apply immediately for real-time preview
+    emit('update', props.token.id, hex)
   } catch (error) {
     console.warn('Failed to update from RGB:', error)
   }
@@ -387,6 +392,8 @@ function updateFromHsl() {
     const hex = rgbToHex(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255))
     localValue.value = hex
     onColorChange()
+    // Apply immediately for real-time preview
+    emit('update', props.token.id, hex)
   } catch (error) {
     console.warn('Failed to update from HSL:', error)
   }
@@ -395,6 +402,8 @@ function updateFromHsl() {
 function selectQuickColor(color: string) {
   localValue.value = color
   onColorChange()
+  // Apply the color immediately for real-time preview
+  emit('update', props.token.id, color)
 }
 
 function applyColor() {
