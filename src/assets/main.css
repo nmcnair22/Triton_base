@@ -309,3 +309,38 @@
 .layout-sidebar.bg-primary-600 .menu-label {
   color: #dbeafe !important; /* primary-100 */
 }
+
+/* 🚀 HORIZONTAL MENU RESPONSIVE FIXES */
+
+/* Horizontal menu responsive */
+@media (max-width: 991px) {
+  .horizontal-nav {
+    display: none !important;
+  }
+  
+  /* Show mobile menu button in horizontal mode */
+  .layout-horizontal .mobile-menu-button {
+    display: flex;
+  }
+}
+
+/* Ensure proper spacing for horizontal mode */
+.layout-horizontal .layout-main {
+  margin-left: 0 !important;
+  padding-top: 0;
+}
+
+/* Hide sidebar completely in horizontal mode */
+.layout-horizontal .layout-sidebar {
+  display: none !important;
+}
+
+/* Topbar adjustments for horizontal mode */
+.layout-horizontal .layout-topbar {
+  border-bottom: 1px solid var(--surface-border, #e5e7eb);
+}
+
+/* Horizontal menu z-index */
+.horizontal-nav {
+  z-index: 100;
+}

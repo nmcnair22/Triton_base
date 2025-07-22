@@ -97,17 +97,20 @@ export function useLayoutEnhanced() {
 
   // Main content classes - FIXED to match Demo_Frontend logic
   const mainContentClasses = computed(() => {
-    const classes = ['layout-main', 'min-h-screen', 'transition-all', 'duration-300']
+    const classes = ['layout-main', 'flex', 'flex-col', 'flex-1', 'transition-all', 'duration-300']
     
+    // Horizontal has no left margin
+    if (isHorizontal.value) {
+      classes.push('ml-0')
+    }
     // Fix static mode - should push content
-    if (isStatic.value) {
+    else if (isStatic.value) {
       if (isDesktop.value && !layoutState.value.staticMenuDesktopInactive) {
         classes.push('lg:ml-64')
       } else if (!isDesktop.value && layoutState.value.staticMenuMobileActive) {
         classes.push('ml-64')
       }
     }
-    
     // Fix slim/compact - should push content when expanded
     else if ((isSlim.value || isCompact.value) && isDesktop.value) {
       if (layoutState.value.menuHoverActive) {
@@ -115,11 +118,6 @@ export function useLayoutEnhanced() {
       } else {
         classes.push(isSlim.value ? 'lg:ml-16' : 'lg:ml-20')
       }
-    }
-    
-    // Horizontal has no margin but needs space for menu
-    else if (isHorizontal.value) {
-      classes.push('pt-16') // Space for horizontal menu
     }
 
     return classes
@@ -132,6 +130,12 @@ export function useLayoutEnhanced() {
       'fixed', 'top-0', 'left-0', 'h-full', 'z-40',
       'transition-all', 'duration-300', 'ease-in-out'
     ]
+
+    // Hide sidebar completely in horizontal mode
+    if (isHorizontal.value) {
+      classes.push('hidden')
+      return classes
+    }
 
     // Width classes
     if (isSlim.value && !layoutState.value.menuHoverActive) {

@@ -1,15 +1,12 @@
 <template>
   <div class="layout-wrapper min-h-screen bg-surface-0 dark:bg-surface-50 transition-colors">
-    <!-- Enhanced Sidebar -->
+    <!-- Sidebar - hide in horizontal mode -->
     <AppSidebarEnhanced v-if="!isHorizontal" />
-    
-    <!-- Horizontal Navigation (when in horizontal mode) -->
-    <AppTopbar v-if="isHorizontal" />
     
     <!-- Main Content Area -->
     <div :class="mainContentClasses">
-      <!-- Topbar (for non-horizontal modes) -->
-      <AppTopbar v-if="!isHorizontal" />
+      <!-- Topbar - ALWAYS visible -->
+      <AppTopbar />
       
       <!-- Page Content -->
       <main class="layout-content flex-1 overflow-auto">

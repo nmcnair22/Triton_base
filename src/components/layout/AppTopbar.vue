@@ -1,8 +1,9 @@
 <template>
   <div class="layout-topbar">
     <div class="topbar-left">
-      <!-- Menu Toggle Button -->
+      <!-- Menu Toggle Button (not for horizontal mode) -->
       <button 
+        v-if="!isHorizontal"
         class="menu-button" 
         @click="handleMenuToggle"
         title="Toggle menu"
@@ -10,20 +11,25 @@
         <i class="pi pi-bars"></i>
       </button>
       
-      <!-- Logo for horizontal mode -->
-      <div v-if="isHorizontal" class="horizontal-logo">
-        <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 bg-gradient-to-br from-primary to-primary/70 rounded-lg flex items-center justify-center">
-            <i class="pi pi-bolt text-white text-sm font-bold"></i>
-          </div>
-          <div>
-            <h1 class="text-lg font-bold text-surface-900 dark:text-surface-100">Triton</h1>
-          </div>
+      <!-- Logo (only in horizontal mode) -->
+      <router-link 
+        v-if="isHorizontal"
+        to="/"
+        class="horizontal-logo flex items-center space-x-3 mr-6"
+      >
+        <div class="w-8 h-8 bg-gradient-to-br from-primary to-primary/70 rounded-lg flex items-center justify-center">
+          <i class="pi pi-bolt text-white text-sm font-bold"></i>
         </div>
-      </div>
+        <h1 class="text-lg font-bold text-surface-900 dark:text-surface-100">Triton</h1>
+      </router-link>
       
-      <!-- Breadcrumb placeholder -->
-      <div class="breadcrumb">
+      <!-- HORIZONTAL MENU HERE -->
+      <nav v-if="isHorizontal && isDesktop" class="horizontal-nav flex-1">
+        <AppHorizontalMenu />
+      </nav>
+      
+      <!-- Breadcrumb (non-horizontal modes) -->
+      <div v-else class="breadcrumb">
         <span class="text-surface-500 dark:text-surface-400">{{ $route.path }}</span>
       </div>
     </div>
@@ -60,11 +66,13 @@
 <script setup lang="ts">
 import { useLayoutEnhanced } from '@/composables/layout/useLayoutEnhanced'
 import { useThemeStore } from '@/stores/theme.store'
+import AppHorizontalMenu from './sidebar/AppHorizontalMenu.vue'
 
 const {
   toggleMenu,
   toggleConfigSidebar,
-  isHorizontal
+  isHorizontal,
+  isDesktop
 } = useLayoutEnhanced()
 const themeStore = useThemeStore()
 
