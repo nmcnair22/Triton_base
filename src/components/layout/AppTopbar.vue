@@ -53,12 +53,8 @@
         <i class="pi pi-palette"></i>
       </button>
       
-      <!-- User Profile placeholder -->
-      <div class="user-profile">
-        <button class="topbar-button">
-          <i class="pi pi-user"></i>
-        </button>
-      </div>
+      <!-- User Menu -->
+      <AppUserMenu :show-name="!isHorizontal" />
     </div>
   </div>
 </template>

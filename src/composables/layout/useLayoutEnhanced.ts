@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 
 // Enhanced layout configuration types
@@ -128,8 +128,9 @@ export function useLayoutEnhanced() {
     const classes = [
       'layout-sidebar',
       'fixed', 'top-0', 'left-0', 'h-full', 'z-40',
-      'transition-all', 'duration-300', 'ease-in-out'
-    ]
+      'transition-all', 'duration-300', 'ease-in-out',
+      sidebarAnimationClass.value // Add animation class
+    ].filter(Boolean)
 
     // Hide sidebar completely in horizontal mode
     if (isHorizontal.value) {
@@ -181,6 +182,19 @@ export function useLayoutEnhanced() {
     }
 
     return classes
+  })
+
+  // Add animation class based on mode change
+  const sidebarAnimationClass = ref('')
+
+  // Watch for mode changes and apply animation
+  watch(() => layoutConfig.value.menuMode, (newMode, oldMode) => {
+    if (oldMode && newMode !== oldMode) {
+      sidebarAnimationClass.value = `mode-transition-${newMode}`
+      setTimeout(() => {
+        sidebarAnimationClass.value = ''
+      }, 400)
+    }
   })
 
   // Mouse interaction handlers - FIXED to match Demo_Frontend

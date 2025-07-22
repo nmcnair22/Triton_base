@@ -27,6 +27,11 @@
     <!-- Configuration Content -->
     <ScrollPanel class="config-content h-full">
       <div class="p-4 space-y-6">
+        <!-- Layout Presets -->
+        <div class="config-section">
+          <LayoutPresetSelector />
+        </div>
+        
         <!-- Menu Mode Selection -->
         <div class="config-section">
           <h3 class="config-section-title">Menu Mode</h3>
