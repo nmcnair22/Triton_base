@@ -216,7 +216,7 @@
 import { ref } from 'vue'
 import { useForm, validators } from '@/composables/forms'
 import { Form } from '@primevue/forms'
-import { zodResolver } from '@primevue/forms/resolvers'
+import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { z } from 'zod'
 import AppCard from '@/components/ui/AppCard.vue'
 import AppInput from '@/components/ui/AppInput.vue'

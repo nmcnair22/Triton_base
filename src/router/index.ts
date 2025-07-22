@@ -29,6 +29,22 @@ const router = createRouter({
       },
     },
     {
+      path: '/forms-comparison',
+      name: 'forms-comparison',
+      component: () => import('../views/FormsDemoComparison.vue'),
+      meta: {
+        title: 'Forms Migration Comparison - Triton Design System',
+      },
+    },
+    {
+      path: '/forms-primevue',
+      name: 'forms-primevue',
+      component: () => import('../views/FormsDemoPrimeVue.vue'),
+      meta: {
+        title: 'PrimeVue Forms Demo - Triton Design System',
+      },
+    },
+    {
       path: '/tables',
       name: 'tables',
       component: () => import('../views/TablesDemo.vue'),
