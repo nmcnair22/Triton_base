@@ -39,7 +39,9 @@ function createColorMemoizer<T extends (...args: any[]) => any>(fn: T, cacheSize
     // Implement LRU cache eviction
     if (cache.size >= cacheSize) {
       const firstKey = cache.keys().next().value
-      cache.delete(firstKey)
+      if (firstKey !== undefined) {
+        cache.delete(firstKey)
+      }
     }
     
     cache.set(key, result)

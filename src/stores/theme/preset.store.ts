@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { ThemePreset } from '@/themes/presets/preset.types'
+import type { ThemePreset, BaseTheme } from '@/themes/presets/preset.types'
 import { PresetManager } from '@/themes/presets/preset-manager'
 import { ThemeValidator } from '@/themes/utils/validation'
 import { useThemeConfigStore } from './config.store'
@@ -77,7 +77,7 @@ export const useThemePresetStore = defineStore('theme-preset', () => {
     uiStore.setDirty(false)
   }
   
-  async function createPreset(name: string, description?: string, baseTheme?: 'light' | 'dark'): Promise<ThemePreset> {
+  async function createPreset(name: string, description?: string, baseTheme?: BaseTheme): Promise<ThemePreset> {
     console.log(`🎨 Creating new preset: ${name}`)
     
     const newPreset: ThemePreset = {

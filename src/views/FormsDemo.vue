@@ -20,18 +20,18 @@
       <form @submit="contactForm.handleSubmit" class="space-y-6">
         <div class="grid md:grid-cols-2 gap-6">
           <AppInput
-            v-bind="contactForm.getFieldProps('firstName', {
+            v-bind="resolveFieldProps(contactForm.getFieldProps('firstName', {
               validators: [validators.required('First name is required')]
-            })"
+            }))"
             label="First Name"
             placeholder="Enter your first name"
             required
           />
 
           <AppInput
-            v-bind="contactForm.getFieldProps('lastName', {
+            v-bind="resolveFieldProps(contactForm.getFieldProps('lastName', {
               validators: [validators.required('Last name is required')]
-            })"
+            }))"
             label="Last Name"
             placeholder="Enter your last name"
             required
@@ -39,35 +39,35 @@
         </div>
 
         <AppInput
-          v-bind="contactForm.getFieldProps('email', {
+          v-bind="resolveFieldProps(contactForm.getFieldProps('email', {
             validators: [
               validators.required('Email is required'),
               validators.email('Please enter a valid email address')
             ]
-          })"
+          }))"
           label="Email Address"
           placeholder="Enter your email"
           required
         />
 
         <AppInput
-          v-bind="contactForm.getFieldProps('phone', {
+          v-bind="resolveFieldProps(contactForm.getFieldProps('phone', {
             validators: [
               validators.phone('Please enter a valid phone number')
             ]
-          })"
+          }))"
           label="Phone Number"
           placeholder="(555) 123-4567"
           help-text="Optional - we'll only call if necessary"
         />
 
         <AppInput
-          v-bind="contactForm.getFieldProps('message', {
+          v-bind="resolveFieldProps(contactForm.getFieldProps('message', {
             validators: [
               validators.required('Message is required'),
               validators.minLength(10, 'Message must be at least 10 characters')
             ]
-          })"
+          }))"
           label="Message"
           placeholder="Enter your message..."
           help-text="Tell us how we can help you"
@@ -231,6 +231,13 @@ import { useToast } from 'primevue/usetoast'
 
 const toast = useToast()
 const showDebug = ref(false)
+
+// Helper to resolve computed refs for v-bind
+const resolveFieldProps = (props: any) => ({
+  ...props,
+  errorMessage: props.errorMessage?.value || '',
+  state: props.state?.value || 'default'
+})
 
 // Form composable example
 const contactForm = useForm({

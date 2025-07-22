@@ -15,6 +15,7 @@ export interface ErrorHandlerOptions {
   severity?: 'error' | 'warn' | 'info'
   life?: number
   throwError?: boolean
+  metadata?: Record<string, any>
 }
 
 export interface ErrorRecord {
@@ -73,7 +74,8 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
         metadata: {
           userAgent: navigator.userAgent,
           url: window.location.href,
-          ...extractErrorMetadata(error)
+          ...extractErrorMetadata(error),
+          ...opts.metadata
         }
       }
       

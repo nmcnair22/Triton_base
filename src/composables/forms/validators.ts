@@ -83,7 +83,7 @@ export const integer = (message = 'Must be a whole number'): ValidatorFn =>
  */
 export const min = (minValue: number, message?: string): ValidatorFn<number> => 
   (value: number) => {
-    if (value === null || value === undefined || value === '') return true
+    if (value === null || value === undefined) return true
     const msg = message || `Must be at least ${minValue}`
     return Number(value) >= minValue || msg
   }
@@ -93,7 +93,7 @@ export const min = (minValue: number, message?: string): ValidatorFn<number> =>
  */
 export const max = (maxValue: number, message?: string): ValidatorFn<number> => 
   (value: number) => {
-    if (value === null || value === undefined || value === '') return true
+    if (value === null || value === undefined) return true
     const msg = message || `Must be no more than ${maxValue}`
     return Number(value) <= maxValue || msg
   }
@@ -103,7 +103,7 @@ export const max = (maxValue: number, message?: string): ValidatorFn<number> =>
  */
 export const between = (minValue: number, maxValue: number, message?: string): ValidatorFn<number> => 
   (value: number) => {
-    if (value === null || value === undefined || value === '') return true
+    if (value === null || value === undefined) return true
     const msg = message || `Must be between ${minValue} and ${maxValue}`
     const numValue = Number(value)
     return (numValue >= minValue && numValue <= maxValue) || msg
