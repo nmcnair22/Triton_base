@@ -58,23 +58,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
 import { useLayoutEnhanced } from '@/composables/layout/useLayoutEnhanced'
 import { useThemeStore } from '@/stores/theme.store'
-import { useDarkMode } from '@/composables/useDarkMode'
 
-const route = useRoute()
 const {
   toggleMenu,
   toggleConfigSidebar,
-  isDesktop,
-  isHorizontal,
-  isOverlay,
-  isDrawer
+  isHorizontal
 } = useLayoutEnhanced()
 const themeStore = useThemeStore()
-const { isDark, toggleDarkMode } = useDarkMode()
 
 // Add debug functions for troubleshooting
 function handleMenuToggle() {
@@ -92,23 +84,6 @@ function handleConfigToggle() {
 function toggleThemeConfig() {
   themeStore.toggleConfig()
 }
-
-// Generate breadcrumb from route
-const breadcrumbItems = computed(() => {
-  const items = [{ label: 'Home', to: '/' }]
-
-  if (route.path !== '/') {
-    const segments = route.path.split('/').filter(Boolean)
-    segments.forEach((segment, index) => {
-      items.push({
-        label: segment.charAt(0).toUpperCase() + segment.slice(1).replace('-', ' '),
-        to: '/' + segments.slice(0, index + 1).join('/')
-      })
-    })
-  }
-
-  return items
-})
 </script>
 
 <style scoped>
