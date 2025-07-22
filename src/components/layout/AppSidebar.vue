@@ -1,20 +1,22 @@
 <template>
-  <div 
+  <div
     class="layout-sidebar"
-    @mouseenter="onMouseEnter" 
+    @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
     :class="[
       {
         'layout-sidebar-active': layoutState.sidebarActive,
-        'layout-sidebar-anchored': layoutState.anchored
-      }
+        'layout-sidebar-anchored': layoutState.anchored,
+      },
     ]"
   >
     <!-- Sidebar Header -->
     <div class="sidebar-header">
-              <router-link :to="{ name: 'home' }" class="logo">
+      <router-link :to="{ name: 'home' }" class="logo">
         <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 bg-gradient-to-br from-primary to-primary/70 rounded-lg flex items-center justify-center">
+          <div
+            class="w-8 h-8 bg-gradient-to-br from-primary to-primary/70 rounded-lg flex items-center justify-center"
+          >
             <i class="pi pi-bolt text-white text-sm font-bold"></i>
           </div>
           <div v-if="!isCompact || layoutState.sidebarActive">
@@ -23,12 +25,12 @@
           </div>
         </div>
       </router-link>
-      
+
       <!-- Anchor Toggle Button -->
-      <button 
+      <button
         v-if="!isHorizontal"
-        class="layout-sidebar-anchor" 
-        type="button" 
+        class="layout-sidebar-anchor"
+        type="button"
         @click="onAnchorToggle"
         :title="layoutState.anchored ? 'Unpin sidebar' : 'Pin sidebar'"
       >
@@ -168,10 +170,10 @@ function onAnchorToggle() {
     @apply fixed;
     transform: translateX(-100%);
   }
-  
+
   .layout-sidebar.layout-sidebar-active {
     transform: translateX(0);
     @apply shadow-xl;
   }
 }
-</style> 
+</style>

@@ -21,12 +21,7 @@ export interface LayoutPreset {
 
 export const useLayoutPresets = () => {
   const toast = useToast()
-  const {
-    setMenuMode,
-    setSidebarTheme,
-    setPrimaryColor,
-    layoutConfig
-  } = useLayoutEnhanced()
+  const { setMenuMode, setSidebarTheme, setPrimaryColor, layoutConfig } = useLayoutEnhanced()
 
   // Predefined presets
   const presets: LayoutPreset[] = [
@@ -42,10 +37,10 @@ export const useLayoutPresets = () => {
         inputStyle: 'outlined',
         scale: 14,
         ripple: true,
-        menuProfile: true
+        menuProfile: true,
       },
       tags: ['modern', 'professional', 'clean'],
-      preview: '/images/presets/modern-dashboard.png'
+      preview: '/images/presets/modern-dashboard.png',
     },
     {
       id: 'enterprise-classic',
@@ -59,9 +54,9 @@ export const useLayoutPresets = () => {
         inputStyle: 'filled',
         scale: 16,
         ripple: true,
-        menuProfile: false
+        menuProfile: false,
       },
-      tags: ['enterprise', 'classic', 'traditional']
+      tags: ['enterprise', 'classic', 'traditional'],
     },
     {
       id: 'creative-studio',
@@ -75,9 +70,9 @@ export const useLayoutPresets = () => {
         inputStyle: 'outlined',
         scale: 15,
         ripple: true,
-        menuProfile: true
+        menuProfile: true,
       },
-      tags: ['creative', 'bold', 'modern']
+      tags: ['creative', 'bold', 'modern'],
     },
     {
       id: 'mobile-first',
@@ -91,9 +86,9 @@ export const useLayoutPresets = () => {
         inputStyle: 'outlined',
         scale: 14,
         ripple: true,
-        menuProfile: false
+        menuProfile: false,
       },
-      tags: ['mobile', 'responsive', 'touch']
+      tags: ['mobile', 'responsive', 'touch'],
     },
     {
       id: 'data-analytics',
@@ -107,9 +102,9 @@ export const useLayoutPresets = () => {
         inputStyle: 'outlined',
         scale: 13,
         ripple: false,
-        menuProfile: false
+        menuProfile: false,
       },
-      tags: ['data', 'analytics', 'compact']
+      tags: ['data', 'analytics', 'compact'],
     },
     {
       id: 'minimal-focus',
@@ -123,10 +118,10 @@ export const useLayoutPresets = () => {
         inputStyle: 'outlined',
         scale: 14,
         ripple: false,
-        menuProfile: false
+        menuProfile: false,
       },
-      tags: ['minimal', 'focus', 'clean']
-    }
+      tags: ['minimal', 'focus', 'clean'],
+    },
   ]
 
   // Apply preset
@@ -138,7 +133,7 @@ export const useLayoutPresets = () => {
     setMenuMode(preset.config.menuMode as any)
     setSidebarTheme(preset.config.menuTheme as any)
     setPrimaryColor(preset.config.primaryColor)
-    
+
     // Apply other settings
     layoutConfig.value.inputStyle = preset.config.inputStyle as any
     layoutConfig.value.scale = preset.config.scale
@@ -160,7 +155,7 @@ export const useLayoutPresets = () => {
       severity: 'success',
       summary: 'Preset Applied',
       detail: `${preset.name} layout has been applied`,
-      life: 3000
+      life: 3000,
     })
   }
 
@@ -178,9 +173,9 @@ export const useLayoutPresets = () => {
         inputStyle: layoutConfig.value.inputStyle,
         scale: layoutConfig.value.scale,
         ripple: layoutConfig.value.ripple,
-        menuProfile: layoutConfig.value.menuProfile
+        menuProfile: layoutConfig.value.menuProfile,
       },
-      tags: ['custom']
+      tags: ['custom'],
     }
 
     // Save to localStorage
@@ -193,7 +188,7 @@ export const useLayoutPresets = () => {
       severity: 'success',
       summary: 'Preset Saved',
       detail: `${name} has been saved to your custom presets`,
-      life: 3000
+      life: 3000,
     })
 
     return customPreset
@@ -219,7 +214,7 @@ export const useLayoutPresets = () => {
       severity: 'info',
       summary: 'Preset Deleted',
       detail: 'Custom preset has been removed',
-      life: 3000
+      life: 3000,
     })
   }
 
@@ -228,6 +223,6 @@ export const useLayoutPresets = () => {
     applyPreset,
     saveAsPreset,
     getAllPresets,
-    deleteCustomPreset
+    deleteCustomPreset,
   }
-} 
+}

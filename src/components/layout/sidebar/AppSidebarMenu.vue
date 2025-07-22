@@ -2,12 +2,7 @@
   <nav class="layout-menu p-2">
     <ul class="menu-list space-y-1">
       <template v-for="(item, i) in menuItems" :key="item.label || i">
-        <AppSidebarMenuItem 
-          v-if="!item.separator"
-          :item="item" 
-          :index="i"
-          :root="true"
-        />
+        <AppSidebarMenuItem v-if="!item.separator" :item="item" :index="i" :root="true" />
         <li v-else class="menu-separator my-3">
           <hr class="border-current border-opacity-20" />
         </li>
@@ -23,12 +18,12 @@ const menuItems = ref([
   {
     label: 'Dashboard',
     icon: 'pi pi-home',
-    to: '/'
+    to: '/',
   },
   {
     label: 'Layout Demo',
     icon: 'pi pi-th-large',
-    to: '/layout-demo'
+    to: '/layout-demo',
   },
   {
     label: 'Components',
@@ -37,19 +32,19 @@ const menuItems = ref([
       {
         label: 'Form Demo',
         icon: 'pi pi-fw pi-list',
-        to: '/forms'
+        to: '/forms',
       },
       {
-        label: 'Components Demo', 
+        label: 'Components Demo',
         icon: 'pi pi-fw pi-cog',
-        to: '/components'
+        to: '/components',
       },
       {
         label: 'Tables Demo',
         icon: 'pi pi-fw pi-table',
-        to: '/tables'
-      }
-    ]
+        to: '/tables',
+      },
+    ],
   },
   { separator: true },
   {
@@ -59,21 +54,21 @@ const menuItems = ref([
       {
         label: 'Theme Configurator',
         icon: 'pi pi-fw pi-paint-bucket',
-        to: '/theme-config'
+        to: '/theme-config',
       },
       {
         label: 'Color Tokens',
         icon: 'pi pi-fw pi-circle',
-        to: '/color-tokens'
-      }
-    ]
+        to: '/color-tokens',
+      },
+    ],
   },
   { separator: true },
   {
     label: 'About',
     icon: 'pi pi-info-circle',
-    to: '/components'
-  }
+    to: '/components',
+  },
 ])
 </script>
 
@@ -85,4 +80,4 @@ const menuItems = ref([
 .menu-separator {
   margin: 0.75rem 0;
 }
-</style> 
+</style>

@@ -46,7 +46,7 @@ const defaultLayoutConfig: LayoutConfig = {
   primaryColor: 'blue',
   surface: null,
   cardStyle: 'transparent',
-  menuProfile: true
+  menuProfile: true,
 }
 
 const defaultLayoutState: LayoutState = {
@@ -62,7 +62,7 @@ const defaultLayoutState: LayoutState = {
   searchBarActive: false,
   activeMenuItem: null,
   mouseEnterTimeout: null,
-  mouseLeaveTimeout: null
+  mouseLeaveTimeout: null,
 }
 
 // Global state
@@ -78,27 +78,26 @@ export function useLayoutEnhanced() {
   const isHorizontal = computed(() => layoutConfig.value.menuMode === 'horizontal')
   const isReveal = computed(() => layoutConfig.value.menuMode === 'reveal')
   const isDrawer = computed(() => layoutConfig.value.menuMode === 'drawer')
-  
+
   // SSR-safe window access
-  const isDesktop = computed(() => 
-    typeof window !== 'undefined' ? window.innerWidth > 991 : true
-  )
-  const isMobile = computed(() => 
+  const isDesktop = computed(() => (typeof window !== 'undefined' ? window.innerWidth > 991 : true))
+  const isMobile = computed(() =>
     typeof window !== 'undefined' ? window.innerWidth <= 991 : false
   )
 
   // Enhanced sidebar logic
-  const isSidebarActive = computed(() => 
-    layoutState.value.overlayMenuActive || 
-    layoutState.value.staticMenuMobileActive || 
-    layoutState.value.overlaySubmenuActive ||
-    (isReveal.value && layoutState.value.sidebarActive)
+  const isSidebarActive = computed(
+    () =>
+      layoutState.value.overlayMenuActive ||
+      layoutState.value.staticMenuMobileActive ||
+      layoutState.value.overlaySubmenuActive ||
+      (isReveal.value && layoutState.value.sidebarActive)
   )
 
   // Main content classes - FIXED to match Demo_Frontend logic
   const mainContentClasses = computed(() => {
     const classes = ['layout-main', 'flex', 'flex-col', 'flex-1', 'transition-all', 'duration-300']
-    
+
     // Horizontal has no left margin
     if (isHorizontal.value) {
       classes.push('ml-0')
@@ -127,9 +126,15 @@ export function useLayoutEnhanced() {
   const sidebarClasses = computed(() => {
     const classes = [
       'layout-sidebar',
-      'fixed', 'top-0', 'left-0', 'h-full', 'z-40',
-      'transition-all', 'duration-300', 'ease-in-out',
-      sidebarAnimationClass.value // Add animation class
+      'fixed',
+      'top-0',
+      'left-0',
+      'h-full',
+      'z-40',
+      'transition-all',
+      'duration-300',
+      'ease-in-out',
+      sidebarAnimationClass.value, // Add animation class
     ].filter(Boolean)
 
     // Hide sidebar completely in horizontal mode
@@ -188,14 +193,17 @@ export function useLayoutEnhanced() {
   const sidebarAnimationClass = ref('')
 
   // Watch for mode changes and apply animation
-  watch(() => layoutConfig.value.menuMode, (newMode, oldMode) => {
-    if (oldMode && newMode !== oldMode) {
-      sidebarAnimationClass.value = `mode-transition-${newMode}`
-      setTimeout(() => {
-        sidebarAnimationClass.value = ''
-      }, 400)
+  watch(
+    () => layoutConfig.value.menuMode,
+    (newMode, oldMode) => {
+      if (oldMode && newMode !== oldMode) {
+        sidebarAnimationClass.value = `mode-transition-${newMode}`
+        setTimeout(() => {
+          sidebarAnimationClass.value = ''
+        }, 400)
+      }
     }
-  })
+  )
 
   // Mouse interaction handlers - FIXED to match Demo_Frontend
   function handleSidebarMouseEnter() {
@@ -231,7 +239,7 @@ export function useLayoutEnhanced() {
   // Anchor toggle functionality
   function toggleAnchor() {
     layoutState.value.anchored = !layoutState.value.anchored
-    
+
     if (!layoutState.value.anchored && (isReveal.value || isSlim.value)) {
       layoutState.value.sidebarActive = false
       layoutState.value.menuHoverActive = false
@@ -265,50 +273,50 @@ export function useLayoutEnhanced() {
       label: 'Static',
       value: 'static',
       icon: 'pi pi-bars',
-      description: 'Fixed sidebar that stays open'
+      description: 'Fixed sidebar that stays open',
     },
     {
       label: 'Overlay',
-      value: 'overlay', 
+      value: 'overlay',
       icon: 'pi pi-window-maximize',
-      description: 'Sidebar overlays content'
+      description: 'Sidebar overlays content',
     },
     {
       label: 'Slim',
       value: 'slim',
       icon: 'pi pi-arrow-right',
-      description: 'Collapsed sidebar that expands on hover'
+      description: 'Collapsed sidebar that expands on hover',
     },
     {
       label: 'Compact',
       value: 'compact',
       icon: 'pi pi-minus',
-      description: 'Reduced width sidebar'
+      description: 'Reduced width sidebar',
     },
     {
       label: 'Horizontal',
       value: 'horizontal',
       icon: 'pi pi-ellipsis-h',
-      description: 'Top horizontal navigation'
+      description: 'Top horizontal navigation',
     },
     {
       label: 'Reveal',
       value: 'reveal',
       icon: 'pi pi-eye',
-      description: 'Hidden sidebar that slides in'
+      description: 'Hidden sidebar that slides in',
     },
     {
       label: 'Drawer',
       value: 'drawer',
       icon: 'pi pi-window-minimize',
-      description: 'Mobile-style drawer'
-    }
+      description: 'Mobile-style drawer',
+    },
   ])
 
   const sidebarThemeOptions = computed(() => [
     { label: 'Light', value: 'light' },
     { label: 'Dark', value: 'dark' },
-    { label: 'Primary', value: 'primary' }
+    { label: 'Primary', value: 'primary' },
   ])
 
   const primaryColorOptions = computed(() => [
@@ -319,7 +327,7 @@ export function useLayoutEnhanced() {
     { label: 'Pink', value: 'pink', color: '#ec4899' },
     { label: 'Teal', value: 'teal', color: '#14b8a6' },
     { label: 'Indigo', value: 'indigo', color: '#6366f1' },
-    { label: 'Red', value: 'red', color: '#ef4444' }
+    { label: 'Red', value: 'red', color: '#ef4444' },
   ])
 
   // Configuration setters
@@ -329,7 +337,7 @@ export function useLayoutEnhanced() {
     layoutState.value.overlayMenuActive = false
     layoutState.value.sidebarActive = false
     layoutState.value.menuHoverActive = false
-    
+
     if (mode === 'reveal' || mode === 'slim') {
       layoutState.value.anchored = false
     } else {
@@ -358,7 +366,7 @@ export function useLayoutEnhanced() {
     // State
     layoutConfig,
     layoutState,
-    
+
     // Computed
     isStatic,
     isOverlay,
@@ -372,33 +380,34 @@ export function useLayoutEnhanced() {
     isSidebarActive,
     mainContentClasses,
     sidebarClasses,
-    
+
     // Options
     menuModeOptions,
     sidebarThemeOptions,
     primaryColorOptions,
-    
+
     // Actions
     toggleMenu,
     toggleAnchor,
     handleSidebarMouseEnter,
     handleSidebarMouseLeave,
     setActiveMenuItem,
-    
+
     // Config actions
     setMenuMode,
     setSidebarTheme,
     setPrimaryColor,
     resetConfig,
-    
+
     // Legacy compatibility
-    toggleConfigSidebar: () => layoutState.value.configSidebarVisible = !layoutState.value.configSidebarVisible,
+    toggleConfigSidebar: () =>
+      (layoutState.value.configSidebarVisible = !layoutState.value.configSidebarVisible),
     configSidebarVisible: computed(() => layoutState.value.configSidebarVisible),
     menuMode: computed(() => layoutConfig.value.menuMode),
     sidebarTheme: computed(() => layoutConfig.value.menuTheme),
     primaryColor: computed(() => layoutConfig.value.primaryColor),
     menuProfile: computed(() => layoutConfig.value.menuProfile),
     inputStyle: computed(() => layoutConfig.value.inputStyle),
-    ripple: computed(() => layoutConfig.value.ripple)
+    ripple: computed(() => layoutConfig.value.ripple),
   }
-} 
+}

@@ -1,6 +1,6 @@
 /**
  * Async data fetching composable with error handling and loading states
- * 
+ *
  * Provides a consistent pattern for handling asynchronous operations
  * with automatic error handling, loading states, and retry logic.
  */
@@ -47,9 +47,9 @@ export function useAsyncData<T = any>(
     retryDelay = 1000,
     cacheTime = 0,
     transform,
-    validateData
+    validateData,
   } = options
-  
+
   // State
   const data = ref<T | null>(defaultValue as T | null)
   const error = ref<Error | null>(null)
@@ -57,22 +57,22 @@ export function useAsyncData<T = any>(
   const lastFetchTime = ref<number>(0)
   const lastParams = ref<any>(undefined)
   const currentRetries = ref(0)
-  
+
   // Error and loading handlers
   const { handleError } = useErrorHandler({ showToast: true })
   const { withLoading } = useLoadingState()
-  
+
   // Computed states
   const isSuccess = computed(() => data.value !== null && error.value === null)
   const isError = computed(() => error.value !== null)
   const isIdle = computed(() => !loading.value && data.value === null && error.value === null)
-  
+
   // Check if cache is still valid
   const isCacheValid = computed(() => {
     if (cacheTime <= 0) return false
     return Date.now() - lastFetchTime.value < cacheTime
   })
-  
+
   /**
    * Execute the async operation
    */
@@ -81,90 +81,88 @@ export function useAsyncData<T = any>(
     if (isCacheValid.value && data.value !== null && params === lastParams.value) {
       return data.value
     }
-    
+
     // Reset state
     error.value = null
     currentRetries.value = 0
     lastParams.value = params
-    
+
     // Execute with retries
     return executeWithRetry(params)
   }
-  
+
   /**
    * Execute with retry logic
    */
   const executeWithRetry = async (params?: any): Promise<T | null> => {
     loading.value = true
-    
+
     try {
       // Fetch data
       const rawData = await fetcher(params)
-      
+
       // Transform data if transformer is provided
       const processedData = transform ? transform(rawData) : rawData
-      
+
       // Validate data if validator is provided
       if (validateData) {
         const validationResult = validateData(processedData)
         if (validationResult !== true) {
           throw new Error(
-            typeof validationResult === 'string' 
-              ? validationResult 
-              : 'Data validation failed'
+            typeof validationResult === 'string' ? validationResult : 'Data validation failed'
           )
         }
       }
-      
+
       // Success
       data.value = processedData
       error.value = null
       lastFetchTime.value = Date.now()
-      
+
       // Call success callback
       if (onSuccess) {
         onSuccess(processedData)
       }
-      
+
       return processedData
     } catch (err) {
       const errorObj = err instanceof Error ? err : new Error(String(err))
-      
+
       // Check if we should retry
       if (currentRetries.value < retryCount) {
         currentRetries.value++
         console.warn(
           `Retrying operation (${currentRetries.value}/${retryCount}) after ${retryDelay}ms...`
         )
-        
+
         // Wait before retry
         await new Promise(resolve => setTimeout(resolve, retryDelay))
-        
+
         // Retry
         return executeWithRetry(params)
       }
-      
+
       // Final failure
       error.value = errorObj
       data.value = defaultValue as T | null
-      
+
       // Handle error
       handleError(errorObj, {
         context: 'Async Data Fetch',
-        showToast: !onError // Show toast only if no custom error handler
+        showToast: !onError, // Show toast only if no custom error handler
       })
-      
+
       // Call error callback
       if (onError) {
         onError(errorObj)
       }
-      
+
       return null
     } finally {
       loading.value = false
     }
   }
-  
+
   /**
    * Refresh data (re-execute with last params)
    */
@@ -172,7 +170,7 @@ export function useAsyncData<T = any>(
     lastFetchTime.value = 0 // Invalidate cache
     return execute(lastParams.value)
   }
-  
+
   /**
    * Retry last failed operation
    */
@@ -184,7 +182,7 @@ export function useAsyncData<T = any>(
     currentRetries.value = 0 // Reset retry count
     return execute(lastParams.value)
   }
-  
+
   /**
    * Reset all state
    */
@@ -196,12 +194,12 @@ export function useAsyncData<T = any>(
     lastParams.value = undefined
     currentRetries.value = 0
   }
-  
+
   // Execute immediately if requested
   if (immediate) {
     execute()
   }
-  
+
   return {
     data: computed(() => data.value),
     error: computed(() => error.value),
@@ -212,7 +210,7 @@ export function useAsyncData<T = any>(
     retry,
     isSuccess,
     isError,
-    isIdle
+    isIdle,
   }
 }
 
@@ -220,7 +218,11 @@ export function useAsyncData<T = any>(
  * Composable for handling paginated async data
  */
 export function usePaginatedAsyncData<T = any>(
-  fetcher: (page: number, pageSize: number, params?: any) => Promise<{
+  fetcher: (
+    page: number,
+    pageSize: number,
+    params?: any
+  ) => Promise<{
     data: T[]
     total: number
     page: number
@@ -234,28 +236,25 @@ export function usePaginatedAsyncData<T = any>(
   const pageSize = ref(options.pageSize || 10)
   const totalItems = ref(0)
   const totalPages = computed(() => Math.ceil(totalItems.value / pageSize.value))
-  
+
   // Use async data composable
-  const asyncData = useAsyncData(
-    async (params?: any) => {
-      const result = await fetcher(currentPage.value, pageSize.value, params)
-      totalItems.value = result.total
-      return result.data
-    },
-    options
-  )
-  
+  const asyncData = useAsyncData(async (params?: any) => {
+    const result = await fetcher(currentPage.value, pageSize.value, params)
+    totalItems.value = result.total
+    return result.data
+  }, options)
+
   // Pagination methods
   const goToPage = async (page: number) => {
     currentPage.value = Math.max(1, Math.min(page, totalPages.value))
     await asyncData.refresh()
   }
-  
+
   const nextPage = () => goToPage(currentPage.value + 1)
   const prevPage = () => goToPage(currentPage.value - 1)
   const firstPage = () => goToPage(1)
   const lastPage = () => goToPage(totalPages.value)
-  
+
   return {
     ...asyncData,
     currentPage: computed(() => currentPage.value),
@@ -268,6 +267,6 @@ export function usePaginatedAsyncData<T = any>(
     nextPage,
     prevPage,
     firstPage,
-    lastPage
+    lastPage,
   }
 }

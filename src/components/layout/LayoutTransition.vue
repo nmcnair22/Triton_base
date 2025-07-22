@@ -99,4 +99,4 @@ function onLeave(el: Element) {
   opacity: 0;
   transform: scaleX(0.8);
 }
-</style> 
+</style>

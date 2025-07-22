@@ -6,15 +6,8 @@
     <h3 class="text-lg font-medium text-surface-700 dark:text-surface-300 mb-2">
       No Custom Presets Yet
     </h3>
-    <p class="text-sm text-muted mb-4">
-      Create your first custom theme preset to get started
-    </p>
-    <Button
-      label="Create Preset"
-      icon="pi pi-plus"
-      size="small"
-      @click="$emit('create')"
-    />
+    <p class="text-sm text-muted mb-4">Create your first custom theme preset to get started</p>
+    <Button label="Create Preset" icon="pi pi-plus" size="small" @click="$emit('create')" />
   </div>
 
   <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -24,7 +17,7 @@
       class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 hover:border-primary/50 transition-all duration-200"
       :class="{
         'ring-2 ring-primary border-primary bg-primary/5': preset.id === activePresetId,
-        'hover:shadow-md': preset.id !== activePresetId
+        'hover:shadow-md': preset.id !== activePresetId,
       }"
     >
       <!-- Header -->
@@ -34,7 +27,7 @@
             class="w-8 h-8 rounded border border-surface-300 dark:border-surface-600 flex-shrink-0"
             :style="{ backgroundColor: getPresetPrimaryColor(preset) }"
           />
-          
+
           <div class="min-w-0 flex-1">
             <h4 class="font-medium text-surface-900 dark:text-surface-100 truncate">
               {{ preset.name }}
@@ -52,14 +45,10 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Actions Menu -->
-        <Menu
-          ref="menu"
-          :model="getMenuItems(preset)"
-          :popup="true"
-        />
-        
+        <Menu ref="menu" :model="getMenuItems(preset)" :popup="true" />
+
         <Button
           icon="pi pi-ellipsis-v"
           text
@@ -70,10 +59,7 @@
       </div>
 
       <!-- Description -->
-      <p
-        v-if="preset.description"
-        class="text-sm text-muted mb-3 line-clamp-2"
-      >
+      <p v-if="preset.description" class="text-sm text-muted mb-3 line-clamp-2">
         {{ preset.description }}
       </p>
 
@@ -86,10 +72,7 @@
           severity="secondary"
           class="text-xs px-2 py-1"
         />
-        <span
-          v-if="preset.metadata.tags.length > 3"
-          class="text-xs text-muted"
-        >
+        <span v-if="preset.metadata.tags.length > 3" class="text-xs text-muted">
           +{{ preset.metadata.tags.length - 3 }} more
         </span>
       </div>
@@ -114,13 +97,8 @@
             size="small"
             @click="$emit('activate', preset)"
           />
-          
-          <Tag
-            v-else
-            value="Active"
-            severity="success"
-            class="px-3 py-1"
-          />
+
+          <Tag v-else value="Active" severity="success" class="px-3 py-1" />
         </div>
 
         <div class="flex gap-1">
@@ -131,7 +109,7 @@
             @click="$emit('duplicate', preset)"
             v-tooltip="'Duplicate'"
           />
-          
+
           <Button
             v-if="!preset.metadata.isBuiltIn"
             icon="pi pi-pencil"
@@ -176,12 +154,12 @@ function getPresetPrimaryColor(preset: ThemePreset): string {
 
 function getPresetColors(preset: ThemePreset): Array<{ name: string; value: string }> {
   const colorTokens = ['primary', 'secondary', 'success', 'warning', 'danger']
-  
+
   return colorTokens.map(tokenId => {
     const override = preset.colorOverrides?.find(c => c.tokenId === tokenId)
     return {
       name: tokenId,
-      value: override?.value || getDefaultColor(tokenId)
+      value: override?.value || getDefaultColor(tokenId),
     }
   })
 }
@@ -192,9 +170,9 @@ function getDefaultColor(tokenId: string): string {
     secondary: '#297FB7',
     success: '#10B981',
     warning: '#FFB400',
-    danger: '#F60D03'
+    danger: '#F60D03',
   }
-  
+
   return defaults[tokenId] || '#6B7280'
 }
 
@@ -203,26 +181,26 @@ function getMenuItems(preset: ThemePreset) {
     {
       label: 'Duplicate',
       icon: 'pi pi-copy',
-      command: () => emit('duplicate', preset)
-    }
+      command: () => emit('duplicate', preset),
+    },
   ]
 
   if (!preset.metadata.isBuiltIn) {
     items.unshift({
       label: 'Edit',
       icon: 'pi pi-pencil',
-      command: () => emit('edit', preset)
+      command: () => emit('edit', preset),
     })
-    
+
     items.push({
-      separator: true
+      separator: true,
     } as any)
-    
+
     items.push({
       label: 'Delete',
       icon: 'pi pi-trash',
       command: () => emit('delete', preset),
-      class: 'text-danger'
+      class: 'text-danger',
     } as any)
   }
 
@@ -241,4 +219,4 @@ function toggleMenu(event: Event, preset: ThemePreset) {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-</style> 
+</style>

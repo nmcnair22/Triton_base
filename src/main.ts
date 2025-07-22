@@ -42,34 +42,34 @@ import { useGlobalErrorHandler } from './composables/error'
 
 app.config.errorHandler = (err, _instance, info) => {
   const { handleError } = useGlobalErrorHandler()
-  
+
   handleError(err, {
     context: `Global Vue Error: ${info}`,
     showToast: true,
-    logToConsole: true
+    logToConsole: true,
   })
-  
+
   // In production, send to error tracking service
   if (import.meta.env.PROD) {
     console.log('Sending error to tracking service...', {
       error: err,
       info,
       url: window.location.href,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     })
   }
 }
 
 // Handle unhandled promise rejections
-window.addEventListener('unhandledrejection', (event) => {
+window.addEventListener('unhandledrejection', event => {
   const { handleError } = useGlobalErrorHandler()
-  
+
   handleError(new Error(event.reason), {
     context: 'Unhandled Promise Rejection',
     showToast: true,
-    logToConsole: true
+    logToConsole: true,
   })
-  
+
   // Prevent default browser behavior
   event.preventDefault()
 })

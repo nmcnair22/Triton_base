@@ -1,6 +1,6 @@
 /**
  * Theme Store Module
- * 
+ *
  * This module exports all theme-related stores that were split from
  * the original monolithic theme store for better separation of concerns.
  */
@@ -15,11 +15,11 @@ export { useThemePresetStore } from './preset.store'
 export { useThemeEditorStore } from './editor.store'
 
 // Re-export types for convenience
-export type { 
-  ThemePreset, 
-  BaseTheme, 
-  ColorOverride, 
-  ThemeState 
+export type {
+  ThemePreset,
+  BaseTheme,
+  ColorOverride,
+  ThemeState,
 } from '@/themes/presets/preset.types'
 
 /**
@@ -37,28 +37,28 @@ export function useThemeStore() {
   const uiStore = useThemeUIStore()
   const presetStore = useThemePresetStore()
   const editorStore = useThemeEditorStore()
-  
+
   // Initialize all stores
   async function initialize() {
     configStore.loadSavedConfig()
     await presetStore.initialize()
   }
-  
+
   return {
     // Config Store
     config: configStore.config,
     toggleDarkMode: configStore.toggleDarkMode,
-    
+
     // UI Store
     state: computed(() => ({
       configSidebarVisible: uiStore.configSidebarVisible,
       isDirty: uiStore.isDirty,
-      isLoading: uiStore.isLoading
+      isLoading: uiStore.isLoading,
     })),
     toggleConfig: uiStore.toggleConfig,
     setConfigVisible: uiStore.setConfigVisible,
     isConfigOpen: uiStore.isConfigOpen,
-    
+
     // Preset Store
     presets: presetStore.presets,
     activePreset: presetStore.activePreset,
@@ -70,7 +70,7 @@ export function useThemeStore() {
     duplicatePreset: presetStore.duplicatePreset,
     exportPreset: presetStore.exportPreset,
     importPreset: presetStore.importPreset,
-    
+
     // Editor Store
     editingPreset: editorStore.editingPreset,
     editingColors: editorStore.editingColors,
@@ -82,9 +82,9 @@ export function useThemeStore() {
     updateCurrentPreset: editorStore.saveChanges,
     createPreset: presetStore.createPreset,
     updatePreset: presetStore.updatePreset,
-    
+
     // Initialize
-    initialize
+    initialize,
   }
 }
 
@@ -98,6 +98,6 @@ export function migrateThemeStore() {
   console.warn('- useThemeUIStore() for UI state')
   console.warn('- useThemePresetStore() for preset management')
   console.warn('- useThemeEditorStore() for theme editing')
-  
+
   return useThemeStore()
 }

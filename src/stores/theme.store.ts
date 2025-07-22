@@ -1,12 +1,12 @@
 /**
  * Legacy theme store wrapper for backward compatibility
- * 
+ *
  * This file provides a compatibility layer during the migration
  * from the monolithic theme store to the split theme stores.
- * 
+ *
  * @deprecated Please use the individual stores from '@/stores/theme' instead:
  * - useThemeConfigStore() for configuration
- * - useThemeUIStore() for UI state  
+ * - useThemeUIStore() for UI state
  * - useThemePresetStore() for preset management
  * - useThemeEditorStore() for theme editing
  */

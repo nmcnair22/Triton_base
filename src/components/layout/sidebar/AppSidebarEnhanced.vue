@@ -1,28 +1,32 @@
 <template>
-  <aside 
+  <aside
     :class="sidebarClasses"
     @mouseenter="handleSidebarMouseEnter"
     @mouseleave="handleSidebarMouseLeave"
   >
     <!-- Sidebar Header -->
-    <div class="sidebar-header p-4 border-b border-current border-opacity-20 flex items-center justify-between">
+    <div
+      class="sidebar-header p-4 border-b border-current border-opacity-20 flex items-center justify-between"
+    >
       <!-- Logo -->
-      <router-link 
-        to="/" 
+      <router-link
+        to="/"
         class="flex items-center space-x-3 text-current no-underline"
-        :class="{ 'justify-center': (isSlim && !menuHoverActive) || (isCompact && !menuHoverActive) }"
+        :class="{
+          'justify-center': (isSlim && !menuHoverActive) || (isCompact && !menuHoverActive),
+        }"
       >
         <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
           <i class="pi pi-prime text-lg text-white"></i>
         </div>
-        <span 
+        <span
           v-show="!((isSlim || isCompact) && !menuHoverActive)"
           class="font-bold text-xl transition-opacity duration-300"
         >
           Triton
         </span>
       </router-link>
-      
+
       <!-- Anchor Toggle (for reveal/slim modes) -->
       <Button
         v-if="(isReveal || isSlim) && menuHoverActive"
@@ -44,17 +48,12 @@
     </div>
 
     <!-- Sidebar Footer (optional) -->
-    <div 
+    <div
       v-if="menuProfile && !((isSlim || isCompact) && !menuHoverActive)"
       class="sidebar-footer p-4 border-t border-current border-opacity-20"
     >
       <div class="flex items-center space-x-3">
-        <Avatar 
-          icon="pi pi-user" 
-          size="normal" 
-          shape="circle"
-          class="bg-current text-surface-0"
-        />
+        <Avatar icon="pi pi-user" size="normal" shape="circle" class="bg-current text-surface-0" />
         <div class="flex-1 min-w-0">
           <div class="text-sm font-medium truncate">John Doe</div>
           <div class="text-xs opacity-70 truncate">john@example.com</div>
@@ -73,11 +72,7 @@
   <!-- Mobile Overlay - FIXED -->
   <Teleport to="body">
     <Transition name="fade">
-      <div
-        v-if="showOverlay"
-        class="layout-mask"
-        @click="toggleMenu"
-      ></div>
+      <div v-if="showOverlay" class="layout-mask" @click="toggleMenu"></div>
     </Transition>
   </Teleport>
 </template>
@@ -105,7 +100,7 @@ const {
   handleSidebarMouseEnter,
   handleSidebarMouseLeave,
   toggleAnchor,
-  toggleMenu
+  toggleMenu,
 } = useLayoutEnhanced()
 
 // Access reactive properties directly from state/config
@@ -114,8 +109,10 @@ const anchored = computed(() => layoutState.value.anchored)
 const menuProfile = computed(() => layoutConfig.value.menuProfile)
 
 const showOverlay = computed(() => {
-  return (isOverlay.value || isDrawer.value) && layoutState.value.overlayMenuActive ||
-         (!isDesktop.value && layoutState.value.staticMenuMobileActive)
+  return (
+    ((isOverlay.value || isDrawer.value) && layoutState.value.overlayMenuActive) ||
+    (!isDesktop.value && layoutState.value.staticMenuMobileActive)
+  )
 })
 </script>
 
@@ -134,8 +131,9 @@ const showOverlay = computed(() => {
 
 /* Smooth transitions */
 .layout-sidebar {
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Custom scrollbar for sidebar */
@@ -171,4 +169,4 @@ const showOverlay = computed(() => {
 .fade-leave-to {
   opacity: 0;
 }
-</style> 
+</style>

@@ -1,6 +1,6 @@
 /**
  * Error handling composable for Vue 3 applications
- * 
+ *
  * Provides utilities for consistent error handling,
  * logging, and user notifications.
  */
@@ -32,7 +32,7 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
   const toast = useToast()
   const errors = ref<ErrorRecord[]>([])
   const isHandlingError = ref(false)
-  
+
   const defaultConfig: ErrorHandlerOptions = {
     showToast: true,
     logToConsole: true,
@@ -40,29 +40,26 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
     severity: 'error',
     life: 5000,
     throwError: false,
-    ...defaultOptions
+    ...defaultOptions,
   }
-  
+
   // Computed properties
   const hasErrors = computed(() => errors.value.length > 0)
   const latestError = computed(() => errors.value[errors.value.length - 1])
   const errorCount = computed(() => errors.value.length)
-  
+
   /**
    * Main error handling function
    */
-  const handleError = (
-    error: Error | unknown,
-    options: ErrorHandlerOptions = {}
-  ): ErrorRecord => {
+  const handleError = (error: Error | unknown, options: ErrorHandlerOptions = {}): ErrorRecord => {
     const opts = { ...defaultConfig, ...options }
     isHandlingError.value = true
-    
+
     try {
       // Extract error information
       const errorMessage = extractErrorMessage(error)
       const errorStack = error instanceof Error ? error.stack : undefined
-      
+
       // Create error record
       const errorRecord: ErrorRecord = {
         id: generateErrorId(),
@@ -75,44 +72,44 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
           userAgent: navigator.userAgent,
           url: window.location.href,
           ...extractErrorMetadata(error),
-          ...opts.metadata
-        }
+          ...opts.metadata,
+        },
       }
-      
+
       // Store error
       errors.value.push(errorRecord)
-      
+
       // Keep only last 50 errors to prevent memory leak
       if (errors.value.length > 50) {
         errors.value = errors.value.slice(-50)
       }
-      
+
       // Log to console
       if (opts.logToConsole) {
         logError(errorRecord, opts)
       }
-      
+
       // Show toast notification
       if (opts.showToast) {
         showErrorToast(errorMessage, opts)
       }
-      
+
       // Send to error tracking service (if configured)
       if (import.meta.env.PROD) {
         sendToErrorTracking(errorRecord)
       }
-      
+
       // Re-throw if requested
       if (opts.throwError) {
         throw error
       }
-      
+
       return errorRecord
     } finally {
       isHandlingError.value = false
     }
   }
-  
+
   /**
    * Handle async errors with loading state
    */
@@ -127,21 +124,21 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
       return null
     }
   }
-  
+
   /**
    * Clear all stored errors
    */
   const clearErrors = () => {
     errors.value = []
   }
-  
+
   /**
    * Clear a specific error by ID
    */
   const clearError = (errorId: string) => {
     errors.value = errors.value.filter(e => e.id !== errorId)
   }
-  
+
   /**
    * Extract error message from various error types
    */
@@ -149,11 +146,11 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
     if (error instanceof Error) {
       return error.message
     }
-    
+
     if (typeof error === 'string') {
       return error
     }
-    
+
     if (error && typeof error === 'object') {
       // Handle API error responses
       if ('message' in error) {
@@ -166,16 +163,16 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
         return String(error.statusText)
       }
     }
-    
+
     return 'An unexpected error occurred'
   }
-  
+
   /**
    * Extract additional metadata from error
    */
   function extractErrorMetadata(error: unknown): Record<string, any> {
     const metadata: Record<string, any> = {}
-    
+
     if (error && typeof error === 'object') {
       // Handle API error responses
       if ('status' in error) {
@@ -188,51 +185,51 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
         metadata.response = error.response
       }
     }
-    
+
     return metadata
   }
-  
+
   /**
    * Generate unique error ID
    */
   function generateErrorId(): string {
     return `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
   }
-  
+
   /**
    * Log error to console with formatting
    */
   function logError(errorRecord: ErrorRecord, options: ErrorHandlerOptions) {
     const logFn = options.severity === 'warn' ? console.warn : console.error
-    
+
     console.group(`🚨 ${options.context || 'Error'} [${errorRecord.id}]`)
     logFn('Message:', errorRecord.message)
     logFn('Timestamp:', errorRecord.timestamp.toISOString())
-    
+
     if (errorRecord.stack) {
       logFn('Stack:', errorRecord.stack)
     }
-    
+
     if (errorRecord.metadata && Object.keys(errorRecord.metadata).length > 0) {
       logFn('Metadata:', errorRecord.metadata)
     }
-    
+
     console.groupEnd()
   }
-  
+
   /**
    * Show error toast notification
    */
   function showErrorToast(message: string, options: ErrorHandlerOptions) {
     toast.add({
       severity: options.severity || 'error',
-      summary: options.severity === 'error' ? 'Error' : 
-               options.severity === 'warn' ? 'Warning' : 'Info',
+      summary:
+        options.severity === 'error' ? 'Error' : options.severity === 'warn' ? 'Warning' : 'Info',
       detail: message,
-      life: options.life || 5000
+      life: options.life || 5000,
     })
   }
-  
+
   /**
    * Send error to tracking service
    */
@@ -241,7 +238,7 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
     // In a real app, you would send to Sentry, LogRocket, etc.
     console.log('Sending error to tracking service:', errorRecord.id)
   }
-  
+
   return {
     // State
     errors: computed(() => errors.value),
@@ -249,12 +246,12 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
     latestError,
     errorCount,
     isHandlingError: computed(() => isHandlingError.value),
-    
+
     // Methods
     handleError,
     handleAsyncError,
     clearErrors,
-    clearError
+    clearError,
   }
 }
 
@@ -269,7 +266,7 @@ export function useGlobalErrorHandler() {
     globalErrorHandler = useErrorHandler({
       context: 'Global',
       showToast: true,
-      logToConsole: true
+      logToConsole: true,
     })
   }
   return globalErrorHandler

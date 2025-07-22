@@ -2,32 +2,34 @@
   <div class="layout-topbar">
     <div class="topbar-left">
       <!-- Menu Toggle Button (not for horizontal mode) -->
-      <button 
+      <button
         v-if="!isHorizontal"
-        class="menu-button" 
+        class="menu-button"
         @click="handleMenuToggle"
         title="Toggle menu"
       >
         <i class="pi pi-bars"></i>
       </button>
-      
+
       <!-- Logo (only in horizontal mode) -->
-      <router-link 
+      <router-link
         v-if="isHorizontal"
         to="/"
         class="horizontal-logo flex items-center space-x-3 mr-6"
       >
-        <div class="w-8 h-8 bg-gradient-to-br from-primary to-primary/70 rounded-lg flex items-center justify-center">
+        <div
+          class="w-8 h-8 bg-gradient-to-br from-primary to-primary/70 rounded-lg flex items-center justify-center"
+        >
           <i class="pi pi-bolt text-white text-sm font-bold"></i>
         </div>
         <h1 class="text-lg font-bold text-surface-900 dark:text-surface-100">Triton</h1>
       </router-link>
-      
+
       <!-- HORIZONTAL MENU HERE -->
       <nav v-if="isHorizontal && isDesktop" class="horizontal-nav flex-1">
         <AppHorizontalMenu />
       </nav>
-      
+
       <!-- Breadcrumb (non-horizontal modes) -->
       <div v-else class="breadcrumb">
         <span class="text-surface-500 dark:text-surface-400">{{ $route.path }}</span>
@@ -36,23 +38,15 @@
 
     <div class="topbar-right">
       <!-- Layout Configuration Button -->
-      <button
-        @click="handleConfigToggle"
-        class="topbar-button"
-        title="Layout Configuration"
-      >
+      <button @click="handleConfigToggle" class="topbar-button" title="Layout Configuration">
         <i class="pi pi-cog"></i>
       </button>
-      
+
       <!-- Theme Configuration Button -->
-      <button
-        @click="toggleThemeConfig"
-        class="topbar-button"
-        title="Theme Configuration"
-      >
+      <button @click="toggleThemeConfig" class="topbar-button" title="Theme Configuration">
         <i class="pi pi-palette"></i>
       </button>
-      
+
       <!-- User Menu -->
       <AppUserMenu :show-name="!isHorizontal" />
     </div>
@@ -64,12 +58,7 @@ import { useLayoutEnhanced } from '@/composables/layout/useLayoutEnhanced'
 import { useThemeUIStore } from '@/stores/theme'
 import AppHorizontalMenu from './sidebar/AppHorizontalMenu.vue'
 
-const {
-  toggleMenu,
-  toggleConfigSidebar,
-  isHorizontal,
-  isDesktop
-} = useLayoutEnhanced()
+const { toggleMenu, toggleConfigSidebar, isHorizontal, isDesktop } = useLayoutEnhanced()
 const themeUIStore = useThemeUIStore()
 
 // Add debug functions for troubleshooting
@@ -128,4 +117,4 @@ function toggleThemeConfig() {
 .user-profile {
   @apply flex items-center;
 }
-</style> 
+</style>

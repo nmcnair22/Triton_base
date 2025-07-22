@@ -1,6 +1,6 @@
 /**
  * Loading state management composable
- * 
+ *
  * Provides utilities for managing loading states
  * with support for multiple concurrent operations.
  */
@@ -19,18 +19,18 @@ export function useLoadingState(defaultMessage = 'Loading...') {
   // Track multiple loading tasks
   const loadingTasks = ref(new Map<string, LoadingTask>())
   const globalMessage = ref(defaultMessage)
-  
+
   // Computed properties
   const isLoading = computed(() => loadingTasks.value.size > 0)
   const loadingCount = computed(() => loadingTasks.value.size)
   const currentTasks = computed(() => Array.from(loadingTasks.value.values()))
-  
+
   // Get the most recent task
   const currentTask = computed(() => {
     const tasks = currentTasks.value
     return tasks.length > 0 ? tasks[tasks.length - 1] : null
   })
-  
+
   // Get loading message
   const loadingMessage = computed(() => {
     if (currentTask.value?.message) {
@@ -41,16 +41,16 @@ export function useLoadingState(defaultMessage = 'Loading...') {
     }
     return globalMessage.value
   })
-  
+
   // Get overall progress (average of all tasks with progress)
   const progress = computed(() => {
     const tasksWithProgress = currentTasks.value.filter(t => t.progress !== undefined)
     if (tasksWithProgress.length === 0) return undefined
-    
+
     const totalProgress = tasksWithProgress.reduce((sum, t) => sum + (t.progress || 0), 0)
     return Math.round(totalProgress / tasksWithProgress.length)
   })
-  
+
   /**
    * Start a loading task
    */
@@ -59,17 +59,17 @@ export function useLoadingState(defaultMessage = 'Loading...') {
       id: taskId,
       name: taskName || taskId,
       startTime: Date.now(),
-      message
+      message,
     })
   }
-  
+
   /**
    * Stop a loading task
    */
   const stopLoading = (taskId: string): void => {
     loadingTasks.value.delete(taskId)
   }
-  
+
   /**
    * Update task progress
    */
@@ -83,7 +83,7 @@ export function useLoadingState(defaultMessage = 'Loading...') {
       loadingTasks.value.set(taskId, task)
     }
   }
-  
+
   /**
    * Update task message
    */
@@ -94,7 +94,7 @@ export function useLoadingState(defaultMessage = 'Loading...') {
       loadingTasks.value.set(taskId, task)
     }
   }
-  
+
   /**
    * Execute a function with loading state
    */
@@ -108,7 +108,7 @@ export function useLoadingState(defaultMessage = 'Loading...') {
     }
   ): Promise<T> => {
     startLoading(taskId, options?.taskName, options?.message)
-    
+
     try {
       // If progress callback is provided, create a wrapper
       if (options?.onProgress) {
@@ -120,13 +120,13 @@ export function useLoadingState(defaultMessage = 'Loading...') {
         const result = await (fn as any)(progressWrapper)
         return result
       }
-      
+
       return await fn()
     } finally {
       stopLoading(taskId)
     }
   }
-  
+
   /**
    * Execute multiple functions with combined loading state
    */
@@ -141,11 +141,11 @@ export function useLoadingState(defaultMessage = 'Loading...') {
     tasks.forEach(task => {
       startLoading(task.id, task.name)
     })
-    
+
     try {
       // Execute all tasks in parallel
       const results = await Promise.all(
-        tasks.map(async (task) => {
+        tasks.map(async task => {
           try {
             return await task.fn()
           } finally {
@@ -153,7 +153,7 @@ export function useLoadingState(defaultMessage = 'Loading...') {
           }
         })
       )
-      
+
       return results
     } catch (error) {
       // Stop all remaining tasks on error
@@ -161,14 +161,14 @@ export function useLoadingState(defaultMessage = 'Loading...') {
       throw error
     }
   }
-  
+
   /**
    * Clear all loading tasks
    */
   const clearAll = (): void => {
     loadingTasks.value.clear()
   }
-  
+
   /**
    * Get duration of a loading task
    */
@@ -177,14 +177,14 @@ export function useLoadingState(defaultMessage = 'Loading...') {
     if (!task) return null
     return Date.now() - task.startTime
   }
-  
+
   /**
    * Check if a specific task is loading
    */
   const isTaskLoading = (taskId: string): boolean => {
     return loadingTasks.value.has(taskId)
   }
-  
+
   return {
     // State
     isLoading,
@@ -193,7 +193,7 @@ export function useLoadingState(defaultMessage = 'Loading...') {
     progress,
     currentTasks,
     currentTask,
-    
+
     // Methods
     startLoading,
     stopLoading,
@@ -203,7 +203,7 @@ export function useLoadingState(defaultMessage = 'Loading...') {
     withBatchLoading,
     clearAll,
     getTaskDuration,
-    isTaskLoading
+    isTaskLoading,
   }
 }
 

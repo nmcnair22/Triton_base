@@ -1,7 +1,7 @@
 <template>
   <div class="layout-preset-selector">
     <h3 class="text-lg font-semibold mb-4">Layout Presets</h3>
-    
+
     <!-- Preset Grid -->
     <div class="grid grid-cols-2 gap-3 mb-6">
       <div
@@ -19,15 +19,15 @@
           {{ preset.description }}
         </p>
         <div class="flex flex-wrap gap-1">
-          <Tag 
-            v-for="tag in preset.tags" 
+          <Tag
+            v-for="tag in preset.tags"
             :key="tag"
             :value="tag"
             severity="secondary"
             class="text-xs"
           />
         </div>
-        
+
         <!-- Delete button for custom presets -->
         <Button
           v-if="preset.id.startsWith('custom-')"
@@ -43,15 +43,11 @@
 
     <!-- Save Current as Preset -->
     <Divider />
-    
+
     <div class="save-preset-section">
       <h4 class="font-medium mb-3">Save Current Configuration</h4>
       <div class="space-y-3">
-        <InputText
-          v-model="newPresetName"
-          placeholder="Preset name"
-          class="w-full"
-        />
+        <InputText v-model="newPresetName" placeholder="Preset name" class="w-full" />
         <Textarea
           v-model="newPresetDescription"
           placeholder="Description (optional)"
@@ -77,16 +73,8 @@
     >
       <p>Are you sure you want to delete "{{ presetToDelete?.name }}"?</p>
       <template #footer>
-        <Button
-          label="Cancel"
-          severity="secondary"
-          @click="deleteDialogVisible = false"
-        />
-        <Button
-          label="Delete"
-          severity="danger"
-          @click="deletePreset"
-        />
+        <Button label="Cancel" severity="secondary" @click="deleteDialogVisible = false" />
+        <Button label="Delete" severity="danger" @click="deletePreset" />
       </template>
     </Dialog>
   </div>
@@ -97,12 +85,7 @@ import { ref, computed } from 'vue'
 import { useLayoutPresets, type LayoutPreset } from '@/composables/layout/useLayoutPresets'
 import { useLayoutEnhanced } from '@/composables/layout/useLayoutEnhanced'
 
-const { 
-  getAllPresets, 
-  applyPreset, 
-  saveAsPreset, 
-  deleteCustomPreset 
-} = useLayoutPresets()
+const { getAllPresets, applyPreset, saveAsPreset, deleteCustomPreset } = useLayoutPresets()
 
 const { layoutConfig } = useLayoutEnhanced()
 
@@ -115,9 +98,11 @@ const presetToDelete = ref<LayoutPreset | null>(null)
 
 // Check if preset matches current config
 function isActivePreset(preset: LayoutPreset) {
-  return preset.config.menuMode === layoutConfig.value.menuMode &&
-         preset.config.menuTheme === layoutConfig.value.menuTheme &&
-         preset.config.primaryColor === layoutConfig.value.primaryColor
+  return (
+    preset.config.menuMode === layoutConfig.value.menuMode &&
+    preset.config.menuTheme === layoutConfig.value.menuTheme &&
+    preset.config.primaryColor === layoutConfig.value.primaryColor
+  )
 }
 
 function selectPreset(preset: LayoutPreset) {
@@ -126,9 +111,9 @@ function selectPreset(preset: LayoutPreset) {
 
 function saveCurrentAsPreset() {
   if (!newPresetName.value) return
-  
+
   saveAsPreset(newPresetName.value, newPresetDescription.value)
-  
+
   // Refresh list and reset form
   allPresets.value = getAllPresets()
   newPresetName.value = ''
@@ -190,4 +175,4 @@ function deletePreset() {
 .space-y-3 > * + * {
   margin-top: 0.75rem;
 }
-</style> 
+</style>

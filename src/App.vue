@@ -5,5 +5,3 @@ import AppLayout from '@/components/layout/AppLayout.vue'
 <template>
   <AppLayout />
 </template>
-
-

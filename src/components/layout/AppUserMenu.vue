@@ -6,7 +6,7 @@
       class="user-button flex items-center gap-2 p-1.5 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
       @click="toggleMenu"
     >
-      <Avatar 
+      <Avatar
         :image="user.avatar"
         :label="user.initials"
         size="normal"
@@ -21,8 +21,9 @@
           {{ user.role }}
         </div>
       </div>
-      <i class="pi pi-chevron-down text-xs ml-1 transition-transform duration-200"
-         :class="{ 'rotate-180': isMenuOpen }"
+      <i
+        class="pi pi-chevron-down text-xs ml-1 transition-transform duration-200"
+        :class="{ 'rotate-180': isMenuOpen }"
       ></i>
     </button>
 
@@ -34,14 +35,11 @@
         class="user-dropdown absolute right-0 mt-2 w-64 bg-surface-0 dark:bg-surface-900 rounded-lg shadow-lg border border-surface-200 dark:border-surface-700 overflow-hidden z-50"
       >
         <!-- User Info Header -->
-        <div class="p-4 bg-surface-50 dark:bg-surface-800 border-b border-surface-200 dark:border-surface-700">
+        <div
+          class="p-4 bg-surface-50 dark:bg-surface-800 border-b border-surface-200 dark:border-surface-700"
+        >
           <div class="flex items-center gap-3">
-            <Avatar 
-              :image="user.avatar"
-              :label="user.initials"
-              size="large"
-              shape="circle"
-            />
+            <Avatar :image="user.avatar" :label="user.initials" size="large" shape="circle" />
             <div class="flex-1 min-w-0">
               <div class="font-medium text-surface-900 dark:text-surface-0 truncate">
                 {{ user.name }}
@@ -74,21 +72,17 @@
         <div class="py-2">
           <template v-for="(item, index) in menuItems" :key="index">
             <Divider v-if="item.separator" class="my-2" />
-            <router-link
-              v-else-if="item.to"
-              :to="item.to"
-              class="menu-item"
-              @click="closeMenu"
-            >
+            <router-link v-else-if="item.to" :to="item.to" class="menu-item" @click="closeMenu">
               <i :class="item.icon" class="w-5"></i>
               <span>{{ item.label }}</span>
-              <Badge v-if="item.badge" :value="item.badge" :severity="item.badgeSeverity" class="ml-auto" />
+              <Badge
+                v-if="item.badge"
+                :value="item.badge"
+                :severity="item.badgeSeverity"
+                class="ml-auto"
+              />
             </router-link>
-            <button
-              v-else
-              class="menu-item w-full"
-              @click="handleAction(item)"
-            >
+            <button v-else class="menu-item w-full" @click="handleAction(item)">
               <i :class="item.icon" class="w-5"></i>
               <span>{{ item.label }}</span>
               <i v-if="item.items" class="pi pi-chevron-right ml-auto text-xs"></i>
@@ -97,7 +91,9 @@
         </div>
 
         <!-- Footer Actions -->
-        <div class="p-3 bg-surface-50 dark:bg-surface-800 border-t border-surface-200 dark:border-surface-700">
+        <div
+          class="p-3 bg-surface-50 dark:bg-surface-800 border-t border-surface-200 dark:border-surface-700"
+        >
           <Button
             label="Sign Out"
             icon="pi pi-sign-out"
@@ -144,7 +140,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  showName: false
+  showName: false,
 })
 
 const router = useRouter()
@@ -156,13 +152,13 @@ const user = ref({
   email: 'john.doe@triton.com',
   role: 'Administrator',
   avatar: '/images/avatar/default.jpg',
-  initials: 'JD'
+  initials: 'JD',
 })
 
 const stats = ref({
   projects: 12,
   tasks: 48,
-  notifications: 3
+  notifications: 3,
 })
 
 // Menu state
@@ -176,19 +172,19 @@ const menuItems = computed(() => [
   {
     label: 'My Profile',
     icon: 'pi pi-user',
-    to: '/profile'
+    to: '/profile',
   },
   {
     label: 'Account Settings',
     icon: 'pi pi-cog',
-    to: '/settings/account'
+    to: '/settings/account',
   },
   {
     label: 'Notifications',
     icon: 'pi pi-bell',
     badge: stats.value.notifications,
     badgeSeverity: 'danger',
-    to: '/notifications'
+    to: '/notifications',
   },
   { separator: true },
   {
@@ -197,8 +193,8 @@ const menuItems = computed(() => [
     items: [
       { label: 'Light', icon: 'pi pi-sun', action: 'theme-light' },
       { label: 'Dark', icon: 'pi pi-moon', action: 'theme-dark' },
-      { label: 'System', icon: 'pi pi-desktop', action: 'theme-system' }
-    ]
+      { label: 'System', icon: 'pi pi-desktop', action: 'theme-system' },
+    ],
   },
   {
     label: 'Language',
@@ -206,20 +202,20 @@ const menuItems = computed(() => [
     items: [
       { label: 'English', icon: 'pi pi-flag', action: 'lang-en' },
       { label: 'Spanish', icon: 'pi pi-flag', action: 'lang-es' },
-      { label: 'French', icon: 'pi pi-flag', action: 'lang-fr' }
-    ]
+      { label: 'French', icon: 'pi pi-flag', action: 'lang-fr' },
+    ],
   },
   { separator: true },
   {
     label: 'Help & Support',
     icon: 'pi pi-question-circle',
-    to: '/help'
+    to: '/help',
   },
   {
     label: 'Keyboard Shortcuts',
     icon: 'pi pi-keyboard',
-    action: 'shortcuts'
-  }
+    action: 'shortcuts',
+  },
 ])
 
 // Methods
@@ -256,15 +252,30 @@ function executeAction(action: string) {
     case 'theme-light':
       // Handle theme change
       document.documentElement.classList.remove('dark')
-      toast.add({ severity: 'success', summary: 'Theme Changed', detail: 'Switched to light theme', life: 3000 })
+      toast.add({
+        severity: 'success',
+        summary: 'Theme Changed',
+        detail: 'Switched to light theme',
+        life: 3000,
+      })
       break
     case 'theme-dark':
       document.documentElement.classList.add('dark')
-      toast.add({ severity: 'success', summary: 'Theme Changed', detail: 'Switched to dark theme', life: 3000 })
+      toast.add({
+        severity: 'success',
+        summary: 'Theme Changed',
+        detail: 'Switched to dark theme',
+        life: 3000,
+      })
       break
     case 'shortcuts':
       // Show shortcuts modal
-      toast.add({ severity: 'info', summary: 'Keyboard Shortcuts', detail: 'Press Ctrl+K to open command palette', life: 5000 })
+      toast.add({
+        severity: 'info',
+        summary: 'Keyboard Shortcuts',
+        detail: 'Press Ctrl+K to open command palette',
+        life: 5000,
+      })
       break
     default:
       console.log('Action:', action)
@@ -272,13 +283,13 @@ function executeAction(action: string) {
 }
 
 function handleSignOut() {
-  toast.add({ 
-    severity: 'info', 
-    summary: 'Signing Out', 
-    detail: 'You are being signed out...', 
-    life: 2000 
+  toast.add({
+    severity: 'info',
+    summary: 'Signing Out',
+    detail: 'You are being signed out...',
+    life: 2000,
   })
-  
+
   setTimeout(() => {
     router.push('/login')
   }, 2000)
@@ -286,8 +297,12 @@ function handleSignOut() {
 
 // Click outside to close
 useEventListener(document, 'click', (e: MouseEvent) => {
-  if (userButton.value && !userButton.value.contains(e.target as Node) &&
-      menuRef.value && !menuRef.value.contains(e.target as Node)) {
+  if (
+    userButton.value &&
+    !userButton.value.contains(e.target as Node) &&
+    menuRef.value &&
+    !menuRef.value.contains(e.target as Node)
+  ) {
     closeMenu()
   }
 })
@@ -372,4 +387,4 @@ onMounted(() => {
   opacity: 0;
   transform: translateX(10px);
 }
-</style> 
+</style>

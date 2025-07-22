@@ -1,6 +1,6 @@
 /**
  * Memoized color utilities for improved performance
- * 
+ *
  * These utilities wrap expensive color calculations with memoization
  * to avoid recalculating the same values multiple times.
  */
@@ -14,7 +14,7 @@ import {
   getBestTextColor,
   generateColorHarmonies,
   lightenColor,
-  darkenColor
+  darkenColor,
 } from '@/themes/utils/color-utils'
 import type { ContrastResult, ColorHarmony } from '@/themes/utils/color-utils'
 
@@ -26,16 +26,16 @@ const CACHE_SIZE = 500
  */
 function createColorMemoizer<T extends (...args: any[]) => any>(fn: T, cacheSize = CACHE_SIZE) {
   const cache = new Map<string, ReturnType<T>>()
-  
+
   return ((...args: Parameters<T>): ReturnType<T> => {
     const key = JSON.stringify(args)
-    
+
     if (cache.has(key)) {
       return cache.get(key)!
     }
-    
+
     const result = fn(...args)
-    
+
     // Implement LRU cache eviction
     if (cache.size >= cacheSize) {
       const firstKey = cache.keys().next().value
@@ -43,7 +43,7 @@ function createColorMemoizer<T extends (...args: any[]) => any>(fn: T, cacheSize
         cache.delete(firstKey)
       }
     }
-    
+
     cache.set(key, result)
     return result
   }) as T
@@ -59,16 +59,16 @@ export const parseColorMemoized = createColorMemoizer(parseColor)
  * Memoized luminance calculation
  * Expensive mathematical operations benefit from caching
  */
-export const getRelativeLuminanceMemoized = createColorMemoizer(
-  (r: number, g: number, b: number) => getRelativeLuminance(r, g, b)
+export const getRelativeLuminanceMemoized = createColorMemoizer((r: number, g: number, b: number) =>
+  getRelativeLuminance(r, g, b)
 )
 
 /**
  * Memoized contrast ratio calculation
  * This is one of the most expensive calculations in the color system
  */
-export const getContrastRatioMemoized = createColorMemoizer(
-  (color1: string, color2: string) => getContrastRatio(color1, color2)
+export const getContrastRatioMemoized = createColorMemoizer((color1: string, color2: string) =>
+  getContrastRatio(color1, color2)
 )
 
 /**
@@ -86,7 +86,7 @@ export const generateColorScaleMemoized = createColorMemoizer(
   (baseColor: string, steps = 10) => {
     const scale: string[] = []
     const stepSize = 100 / (steps - 1)
-    
+
     for (let i = 0; i < steps; i++) {
       const percentage = (steps - 1 - i) * stepSize
       if (percentage > 50) {
@@ -97,7 +97,7 @@ export const generateColorScaleMemoized = createColorMemoizer(
         scale.push(baseColor)
       }
     }
-    
+
     return scale
   },
   100 // Smaller cache for scales since they're larger objects
@@ -106,8 +106,8 @@ export const generateColorScaleMemoized = createColorMemoizer(
 /**
  * Memoized best text color calculation
  */
-export const getBestTextColorMemoized = createColorMemoizer(
-  (backgroundColor: string) => getBestTextColor(backgroundColor)
+export const getBestTextColorMemoized = createColorMemoizer((backgroundColor: string) =>
+  getBestTextColor(backgroundColor)
 )
 
 /**
@@ -142,7 +142,7 @@ export const generatePaletteMemoized = createColorMemoizer(
         700: scale[7],
         800: scale[8],
         900: scale[9],
-        950: scale[9] // Use 900 as fallback for 950
+        950: scale[9], // Use 900 as fallback for 950
       }
     }
   },
@@ -152,10 +152,7 @@ export const generatePaletteMemoized = createColorMemoizer(
 /**
  * Batch process multiple colors for efficiency
  */
-export function batchProcessColors<T>(
-  colors: string[],
-  processor: (color: string) => T
-): T[] {
+export function batchProcessColors<T>(colors: string[], processor: (color: string) => T): T[] {
   return colors.map(color => processor(color))
 }
 
@@ -176,7 +173,7 @@ export function getColorCacheStats() {
   // Placeholder for cache statistics
   return {
     message: 'Cache statistics not yet implemented',
-    recommendation: 'Monitor performance using browser DevTools'
+    recommendation: 'Monitor performance using browser DevTools',
   }
 }
 
@@ -189,5 +186,5 @@ export const memoizedColorUtils = {
   generateColorScale: generateColorScaleMemoized,
   getBestTextColor: getBestTextColorMemoized,
   generateColorHarmonies: generateColorHarmoniesMemoized,
-  generatePalette: generatePaletteMemoized
+  generatePalette: generatePaletteMemoized,
 }

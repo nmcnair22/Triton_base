@@ -9,14 +9,16 @@
     <template #header>
       <div class="flex items-center justify-between w-full">
         <div>
-          <h2 class="text-lg font-semibold text-surface-900 dark:text-surface-100">Layout Configuration</h2>
-          <p class="text-sm text-surface-500 dark:text-surface-400">Customize sidebar and layout options</p>
+          <h2 class="text-lg font-semibold text-surface-900 dark:text-surface-100">
+            Layout Configuration
+          </h2>
+          <p class="text-sm text-surface-500 dark:text-surface-400">
+            Customize sidebar and layout options
+          </p>
         </div>
         <button
           @click="hideConfigSidebar"
-          class="w-8 h-8 rounded-full hover:bg-surface-100 dark:hover:bg-surface-800 
-                 text-surface-500 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100
-                 transition-colors flex items-center justify-center"
+          class="w-8 h-8 rounded-full hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-500 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100 transition-colors flex items-center justify-center"
         >
           <i class="pi pi-times text-sm"></i>
         </button>
@@ -33,8 +35,10 @@
             :key="mode.value"
             class="p-3 rounded-lg border border-surface-200 dark:border-surface-700 cursor-pointer transition-all"
             :class="{
-              'bg-primary-100 border-primary-300 text-primary-600': layoutConfig.menuMode === mode.value,
-              'bg-surface-50 dark:bg-surface-800 hover:bg-surface-100 dark:hover:bg-surface-700': layoutConfig.menuMode !== mode.value
+              'bg-primary-100 border-primary-300 text-primary-600':
+                layoutConfig.menuMode === mode.value,
+              'bg-surface-50 dark:bg-surface-800 hover:bg-surface-100 dark:hover:bg-surface-700':
+                layoutConfig.menuMode !== mode.value,
             }"
             @click="setMenuMode(mode.value)"
           >
@@ -42,7 +46,9 @@
               <i :class="mode.icon" class="text-lg"></i>
               <div>
                 <div class="font-medium text-sm">{{ mode.label }}</div>
-                <div class="text-xs text-surface-500 dark:text-surface-400">{{ mode.description }}</div>
+                <div class="text-xs text-surface-500 dark:text-surface-400">
+                  {{ mode.description }}
+                </div>
               </div>
             </div>
           </div>
@@ -59,8 +65,10 @@
             @click="setMenuTheme(theme.value)"
             class="flex-1 p-3 rounded-lg border transition-all text-sm font-medium"
             :class="{
-              'bg-primary-100 border-primary-300 text-primary-600': layoutConfig.menuTheme === theme.value,
-              'bg-surface-50 dark:bg-surface-800 border-surface-200 dark:border-surface-700 text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-700': layoutConfig.menuTheme !== theme.value
+              'bg-primary-100 border-primary-300 text-primary-600':
+                layoutConfig.menuTheme === theme.value,
+              'bg-surface-50 dark:bg-surface-800 border-surface-200 dark:border-surface-700 text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-700':
+                layoutConfig.menuTheme !== theme.value,
             }"
           >
             <i :class="theme.icon" class="mr-2"></i>
@@ -79,8 +87,10 @@
             @click="setTopbarTheme(theme.value)"
             class="flex-1 p-3 rounded-lg border transition-all text-sm font-medium"
             :class="{
-              'bg-primary-100 border-primary-300 text-primary-600': layoutConfig.topbarTheme === theme.value,
-              'bg-surface-50 dark:bg-surface-800 border-surface-200 dark:border-surface-700 text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-700': layoutConfig.topbarTheme !== theme.value
+              'bg-primary-100 border-primary-300 text-primary-600':
+                layoutConfig.topbarTheme === theme.value,
+              'bg-surface-50 dark:bg-surface-800 border-surface-200 dark:border-surface-700 text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-700':
+                layoutConfig.topbarTheme !== theme.value,
             }"
           >
             <i :class="theme.icon" class="mr-2"></i>
@@ -99,8 +109,10 @@
             @click="setInputStyle(style.value)"
             class="flex-1 p-3 rounded-lg border transition-all text-sm font-medium"
             :class="{
-              'bg-primary-100 border-primary-300 text-primary-600': layoutConfig.inputStyle === style.value,
-              'bg-surface-50 dark:bg-surface-800 border-surface-200 dark:border-surface-700 text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-700': layoutConfig.inputStyle !== style.value
+              'bg-primary-100 border-primary-300 text-primary-600':
+                layoutConfig.inputStyle === style.value,
+              'bg-surface-50 dark:bg-surface-800 border-surface-200 dark:border-surface-700 text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-700':
+                layoutConfig.inputStyle !== style.value,
             }"
           >
             <i :class="style.icon" class="mr-2"></i>
@@ -118,7 +130,7 @@
             :min="12"
             :max="20"
             :step="1"
-            @update:model-value="(value) => setScale(Array.isArray(value) ? value[0] : value)"
+            @update:model-value="value => setScale(Array.isArray(value) ? value[0] : value)"
             class="w-full"
           />
           <div class="flex justify-between text-xs text-surface-500 dark:text-surface-400">
@@ -133,13 +145,14 @@
       <div class="space-y-3">
         <div class="flex items-center justify-between">
           <div>
-            <h3 class="text-sm font-medium text-surface-900 dark:text-surface-100">Ripple Effect</h3>
-            <p class="text-xs text-surface-500 dark:text-surface-400">Enable material design ripple animations</p>
+            <h3 class="text-sm font-medium text-surface-900 dark:text-surface-100">
+              Ripple Effect
+            </h3>
+            <p class="text-xs text-surface-500 dark:text-surface-400">
+              Enable material design ripple animations
+            </p>
           </div>
-          <ToggleSwitch
-            v-model="layoutConfig.ripple"
-            @update:model-value="setRipple"
-          />
+          <ToggleSwitch v-model="layoutConfig.ripple" @update:model-value="setRipple" />
         </div>
       </div>
     </div>
@@ -159,7 +172,7 @@ const {
   setTopbarTheme,
   setInputStyle,
   setScale,
-  setRipple
+  setRipple,
 } = useLayout()
 
 const menuModes = [
@@ -167,47 +180,47 @@ const menuModes = [
     label: 'Static',
     value: 'static' as const,
     description: 'Fixed sidebar always visible',
-    icon: 'pi pi-sidebar'
+    icon: 'pi pi-sidebar',
   },
   {
     label: 'Overlay',
     value: 'overlay' as const,
     description: 'Sidebar slides over content',
-    icon: 'pi pi-clone'
+    icon: 'pi pi-clone',
   },
   {
     label: 'Slim',
     value: 'slim' as const,
     description: 'Narrow sidebar with hover expand',
-    icon: 'pi pi-align-left'
+    icon: 'pi pi-align-left',
   },
   {
     label: 'Compact',
     value: 'compact' as const,
     description: 'Icons only with hover expand',
-    icon: 'pi pi-th-large'
+    icon: 'pi pi-th-large',
   },
   {
     label: 'Horizontal',
     value: 'horizontal' as const,
     description: 'Top navigation bar',
-    icon: 'pi pi-bars'
-  }
+    icon: 'pi pi-bars',
+  },
 ]
 
 const menuThemes = [
   { label: 'Light', value: 'light' as const, icon: 'pi pi-sun' },
-  { label: 'Dark', value: 'dark' as const, icon: 'pi pi-moon' }
+  { label: 'Dark', value: 'dark' as const, icon: 'pi pi-moon' },
 ]
 
 const topbarThemes = [
   { label: 'Light', value: 'light' as const, icon: 'pi pi-sun' },
-  { label: 'Dark', value: 'dark' as const, icon: 'pi pi-moon' }
+  { label: 'Dark', value: 'dark' as const, icon: 'pi pi-moon' },
 ]
 
 const inputStyles = [
   { label: 'Outlined', value: 'outlined' as const, icon: 'pi pi-square' },
-  { label: 'Filled', value: 'filled' as const, icon: 'pi pi-stop' }
+  { label: 'Filled', value: 'filled' as const, icon: 'pi pi-stop' },
 ]
 </script>
 
@@ -221,4 +234,4 @@ const inputStyles = [
 .layout-configurator-drawer :deep(.p-drawer-content) {
   padding: 0;
 }
-</style> 
+</style>

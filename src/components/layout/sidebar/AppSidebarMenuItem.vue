@@ -9,14 +9,8 @@
       @click="handleItemClick"
     >
       <div class="flex items-center min-w-0 flex-1">
-        <i 
-          v-if="item.icon" 
-          :class="[item.icon, iconClasses]"
-        ></i>
-        <span 
-          v-if="showLabel"
-          class="menu-label"
-        >
+        <i v-if="item.icon" :class="[item.icon, iconClasses]"></i>
+        <span v-if="showLabel" class="menu-label">
           {{ item.label }}
         </span>
       </div>
@@ -31,13 +25,10 @@
       @click="handleToggleSubmenu"
     >
       <i v-if="item.icon" :class="item.icon" class="menu-icon"></i>
-      <span 
-        v-show="showLabel" 
-        class="menu-label transition-opacity duration-300"
-      >
+      <span v-show="showLabel" class="menu-label transition-opacity duration-300">
         {{ item.label }}
       </span>
-      <i 
+      <i
         v-if="item.items && showLabel"
         :class="submenuIcon"
         class="submenu-icon transition-transform duration-200"
@@ -46,8 +37,8 @@
 
     <!-- Submenu -->
     <Transition name="submenu">
-      <ul 
-        v-if="item.items && (isSubmenuVisible || forceShowSubmenu)" 
+      <ul
+        v-if="item.items && (isSubmenuVisible || forceShowSubmenu)"
         class="submenu"
         :class="submenuClasses"
       >
@@ -98,20 +89,14 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   parentKey: '',
   level: 0,
-  root: false
+  root: false,
 })
 
 const route = useRoute()
 const router = useRouter()
 
-const {
-  isSlim,
-  isCompact,
-  isHorizontal,
-  isDesktop,
-  layoutState,
-  setActiveMenuItem
-} = useLayoutEnhanced()
+const { isSlim, isCompact, isHorizontal, isDesktop, layoutState, setActiveMenuItem } =
+  useLayoutEnhanced()
 
 const isSubmenuOpen = ref(false)
 const itemKey = ref('')
@@ -125,7 +110,7 @@ const paddingMap: Record<number, string> = {
   1: 'pl-8',
   2: 'pl-12',
   3: 'pl-16',
-  4: 'pl-20'
+  4: 'pl-20',
 }
 
 // Computed properties
@@ -141,21 +126,19 @@ const showLabel = computed(() => {
 
 const isActive = computed(() => {
   if (!props.item.to) return false
-  
+
   // Exact match
   if (route.path === props.item.to) return true
-  
+
   // Parent match (but not for home)
   if (props.item.to !== '/' && route.path.startsWith(props.item.to)) return true
-  
+
   return false
 })
 
 const hasActiveChild = computed(() => {
   if (!props.item.items) return false
-  return props.item.items.some(child => 
-    child.to && route.path.startsWith(child.to)
-  )
+  return props.item.items.some(child => child.to && route.path.startsWith(child.to))
 })
 
 const isSubmenuVisible = computed(() => {
@@ -163,25 +146,41 @@ const isSubmenuVisible = computed(() => {
 })
 
 const forceShowSubmenu = computed(() => {
-  return isHorizontal.value || 
-         ((isSlim.value || isCompact.value) && menuHoverActive.value && isDesktop.value)
+  return (
+    isHorizontal.value ||
+    ((isSlim.value || isCompact.value) && menuHoverActive.value && isDesktop.value)
+  )
 })
 
 const menuLinkClasses = computed(() => {
   const { layoutConfig } = useLayoutEnhanced()
   const classes = [
-    'flex', 'items-center', 'px-4', 'py-2.5', 'rounded-lg',
-    'transition-colors', 'duration-200',
-    'no-underline', 'relative', 'min-w-0', 'flex-1'
+    'flex',
+    'items-center',
+    'px-4',
+    'py-2.5',
+    'rounded-lg',
+    'transition-colors',
+    'duration-200',
+    'no-underline',
+    'relative',
+    'min-w-0',
+    'flex-1',
   ]
-  
+
   // Active state styling - matching Demo_Frontend with left border
   if (isActive.value) {
     classes.push('bg-primary-500/10', 'text-primary-500', 'font-semibold')
     // Add left border for active state
-    classes.push('before:absolute', 'before:left-0', 'before:top-0', 
-                 'before:bottom-0', 'before:w-1', 'before:bg-primary-500',
-                 'before:rounded-l-lg')
+    classes.push(
+      'before:absolute',
+      'before:left-0',
+      'before:top-0',
+      'before:bottom-0',
+      'before:w-1',
+      'before:bg-primary-500',
+      'before:rounded-l-lg'
+    )
   } else {
     // Theme-specific colors for proper visibility
     if (layoutConfig.value.menuTheme === 'dark') {
@@ -189,34 +188,49 @@ const menuLinkClasses = computed(() => {
     } else if (layoutConfig.value.menuTheme === 'primary') {
       classes.push('text-primary-100', 'hover:text-white', 'hover:bg-white/20')
     } else {
-      classes.push('text-gray-600', 'dark:text-gray-400', 
-                   'hover:bg-gray-100', 'dark:hover:bg-gray-800',
-                   'hover:text-gray-900', 'dark:hover:text-gray-100')
+      classes.push(
+        'text-gray-600',
+        'dark:text-gray-400',
+        'hover:bg-gray-100',
+        'dark:hover:bg-gray-800',
+        'hover:text-gray-900',
+        'dark:hover:text-gray-100'
+      )
     }
   }
-  
+
   // Center content for slim/compact when collapsed
   if ((isSlim.value || isCompact.value) && !menuHoverActive.value) {
     classes.push('justify-center', 'px-0')
   }
-  
+
   // Use padding map for nested items
   if (props.level > 0 && showLabel.value) {
     classes.push(paddingMap[Math.min(props.level, 4)])
   }
-  
+
   return classes
 })
 
 const menuButtonClasses = computed(() => {
   const { layoutConfig } = useLayoutEnhanced()
   const classes = [
-    'w-full', 'flex', 'items-center', 'px-3', 'py-2.5', 'rounded-lg',
-    'bg-transparent', 'border-none', 'cursor-pointer',
-    'transition-all', 'duration-200',
-    'focus:outline-none', 'focus:ring-2', 'focus:ring-opacity-20'
+    'w-full',
+    'flex',
+    'items-center',
+    'px-3',
+    'py-2.5',
+    'rounded-lg',
+    'bg-transparent',
+    'border-none',
+    'cursor-pointer',
+    'transition-all',
+    'duration-200',
+    'focus:outline-none',
+    'focus:ring-2',
+    'focus:ring-opacity-20',
   ]
-  
+
   // Theme-specific colors for proper visibility
   if (layoutConfig.value.menuTheme === 'dark') {
     classes.push('text-slate-300', 'hover:text-white', 'hover:bg-white/10', 'focus:ring-white/20')
@@ -229,46 +243,52 @@ const menuButtonClasses = computed(() => {
       classes.push('bg-white/20', 'text-white', 'font-medium')
     }
   } else {
-    classes.push('text-slate-700', 'hover:text-slate-900', 'hover:bg-slate-100', 'focus:ring-slate-400')
+    classes.push(
+      'text-slate-700',
+      'hover:text-slate-900',
+      'hover:bg-slate-100',
+      'focus:ring-slate-400'
+    )
     if (hasActiveChild.value) {
       classes.push('bg-slate-100', 'text-slate-900', 'font-medium')
     }
   }
-  
+
   if ((isSlim.value || isCompact.value) && !menuHoverActive.value) {
     classes.push('justify-center')
   }
-  
+
   if (props.level > 0 && showLabel.value) {
     classes.push(paddingMap[Math.min(props.level, 4)])
   }
-  
+
   return classes
 })
 
 const submenuClasses = computed(() => [
-  'mt-1', 'space-y-1',
+  'mt-1',
+  'space-y-1',
   {
     'ml-4': showLabel.value && props.root,
-    'absolute left-full top-0 ml-2 bg-surface-0 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-lg shadow-lg p-2 min-w-48 z-50': 
-      (isSlim.value || isCompact.value) && menuHoverActive.value && isDesktop.value
-  }
+    'absolute left-full top-0 ml-2 bg-surface-0 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-lg shadow-lg p-2 min-w-48 z-50':
+      (isSlim.value || isCompact.value) && menuHoverActive.value && isDesktop.value,
+  },
 ])
 
-const submenuIcon = computed(() => 
+const submenuIcon = computed(() =>
   isSubmenuOpen.value ? 'pi pi-chevron-down' : 'pi pi-chevron-right'
 )
 
 const iconClasses = computed(() => {
   const classes = ['text-xl', 'w-6', 'flex-shrink-0', 'text-center']
-  
+
   // Center icon when label is hidden
   if ((isSlim.value || isCompact.value) && !menuHoverActive.value) {
     classes.push('m-0')
   } else {
     classes.push('mr-3')
   }
-  
+
   return classes
 })
 
@@ -290,10 +310,8 @@ function handleToggleSubmenu() {
 
 // Generate item key
 onMounted(() => {
-  itemKey.value = props.parentKey 
-    ? `${props.parentKey}-${props.index}` 
-    : String(props.index)
-    
+  itemKey.value = props.parentKey ? `${props.parentKey}-${props.index}` : String(props.index)
+
   if (props.item.to && route.path === props.item.to) {
     setActiveMenuItem(itemKey.value)
   } else if (hasActiveChild.value) {
@@ -303,13 +321,16 @@ onMounted(() => {
 })
 
 // Watch for route changes
-watch(() => route.path, (newPath) => {
-  if (props.item.to && newPath === props.item.to) {
-    setActiveMenuItem(itemKey.value)
-  } else if (hasActiveChild.value) {
-    isSubmenuOpen.value = true
+watch(
+  () => route.path,
+  newPath => {
+    if (props.item.to && newPath === props.item.to) {
+      setActiveMenuItem(itemKey.value)
+    } else if (hasActiveChild.value) {
+      isSubmenuOpen.value = true
+    }
   }
-})
+)
 </script>
 
 <style scoped>
@@ -398,4 +419,4 @@ watch(() => route.path, (newPath) => {
     transform: translateX(0);
   }
 }
-</style> 
+</style>

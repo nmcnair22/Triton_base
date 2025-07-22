@@ -1,7 +1,7 @@
 <template>
   <ul class="horizontal-menu flex items-center h-full m-0 p-0 list-none">
     <template v-for="(item, i) in menuItems" :key="item.label || i">
-      <li 
+      <li
         class="horizontal-menu-item"
         @mouseenter="onItemMouseEnter(item)"
         @mouseleave="onItemMouseLeave"
@@ -11,37 +11,34 @@
           v-if="item.to && !item.items"
           :to="item.to"
           class="horizontal-menu-link"
-          :class="{ 'active': isActive(item) }"
+          :class="{ active: isActive(item) }"
         >
           <i v-if="item.icon" :class="item.icon" class="mr-2"></i>
           <span>{{ item.label }}</span>
         </router-link>
-        
+
         <!-- Menu Button (with submenu) -->
         <button
           v-else-if="item.items"
           type="button"
           class="horizontal-menu-link"
-          :class="{ 'active': hasActiveChild(item) }"
+          :class="{ active: hasActiveChild(item) }"
         >
           <i v-if="item.icon" :class="item.icon" class="mr-2"></i>
           <span>{{ item.label }}</span>
           <i class="pi pi-angle-down ml-2 text-sm"></i>
         </button>
-        
+
         <!-- Dropdown Submenu -->
         <Transition name="dropdown">
-          <div
-            v-if="item.items && activeItem === item"
-            class="horizontal-submenu"
-          >
+          <div v-if="item.items && activeItem === item" class="horizontal-submenu">
             <ul class="submenu-list">
               <li v-for="child in item.items" :key="child.label">
                 <router-link
                   v-if="child.to"
                   :to="child.to"
                   class="submenu-link"
-                  :class="{ 'active': isActive(child) }"
+                  :class="{ active: isActive(child) }"
                 >
                   <i v-if="child.icon" :class="child.icon" class="mr-2"></i>
                   <span>{{ child.label }}</span>
@@ -68,7 +65,7 @@ const menuItems = ref([
   {
     label: 'Dashboard',
     icon: 'pi pi-home',
-    to: '/'
+    to: '/',
   },
   {
     label: 'Components',
@@ -77,19 +74,19 @@ const menuItems = ref([
       {
         label: 'Form Demo',
         icon: 'pi pi-list',
-        to: '/forms-demo'
+        to: '/forms-demo',
       },
       {
         label: 'Components Demo',
         icon: 'pi pi-cog',
-        to: '/components-demo'
+        to: '/components-demo',
       },
       {
         label: 'Tables Demo',
         icon: 'pi pi-table',
-        to: '/tables-demo'
-      }
-    ]
+        to: '/tables-demo',
+      },
+    ],
   },
   {
     label: 'Theme System',
@@ -98,26 +95,25 @@ const menuItems = ref([
       {
         label: 'Theme Configurator',
         icon: 'pi pi-paint-bucket',
-        to: '/theme-config'
+        to: '/theme-config',
       },
       {
         label: 'Color Tokens',
         icon: 'pi pi-circle',
-        to: '/color-tokens'
-      }
-    ]
+        to: '/color-tokens',
+      },
+    ],
   },
   {
     label: 'About',
     icon: 'pi pi-info-circle',
-    to: '/about'
-  }
+    to: '/about',
+  },
 ])
 
 function isActive(item: any) {
   if (!item.to) return false
-  return route.path === item.to || 
-         (item.to !== '/' && route.path.startsWith(item.to))
+  return route.path === item.to || (item.to !== '/' && route.path.startsWith(item.to))
 }
 
 function hasActiveChild(item: any) {
@@ -235,7 +231,9 @@ function onItemMouseLeave() {
   padding: 0.5rem 0.75rem;
   color: #374151;
   border-radius: 0.375rem;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
   text-decoration: none;
 }
 
@@ -272,4 +270,4 @@ function onItemMouseLeave() {
   opacity: 0;
   transform: translateY(-10px);
 }
-</style> 
+</style>

@@ -36,7 +36,7 @@ const defaultLayoutConfig: LayoutConfig = {
   menuTheme: 'light',
   topbarTheme: 'light',
   inputStyle: 'outlined',
-  ripple: true
+  ripple: true,
 }
 
 // Default layout state
@@ -51,7 +51,7 @@ const defaultLayoutState: LayoutState = {
   anchored: true,
   rightMenuVisible: false,
   searchBarActive: false,
-  activeMenuItem: null
+  activeMenuItem: null,
 }
 
 // Global layout state
@@ -113,7 +113,7 @@ export function useLayout() {
   // Layout config actions
   function setMenuMode(mode: LayoutConfig['menuMode']) {
     layoutConfig.value.menuMode = mode
-    
+
     // Reset state when changing menu mode
     layoutState.value.staticMenuDesktopInactive = false
     layoutState.value.overlayMenuActive = false
@@ -146,15 +146,15 @@ export function useLayout() {
     if (isHorizontal.value) {
       return true
     }
-    
+
     if (isOverlay.value) {
       return layoutState.value.overlayMenuActive
     }
-    
+
     if (isStatic.value) {
       return !layoutState.value.staticMenuDesktopInactive
     }
-    
+
     return true
   })
 
@@ -166,11 +166,12 @@ export function useLayout() {
       'layout-slim': isSlim.value,
       'layout-compact': isCompact.value,
       'layout-horizontal': isHorizontal.value,
-      'layout-menu-active': layoutState.value.overlayMenuActive || layoutState.value.staticMenuMobileActive,
+      'layout-menu-active':
+        layoutState.value.overlayMenuActive || layoutState.value.staticMenuMobileActive,
       'layout-config-active': layoutState.value.configSidebarVisible,
       'layout-static-inactive': isStatic.value && layoutState.value.staticMenuDesktopInactive,
       'p-input-filled': layoutConfig.value.inputStyle === 'filled',
-      'p-ripple-disabled': !layoutConfig.value.ripple
+      'p-ripple-disabled': !layoutConfig.value.ripple,
     }
   })
 
@@ -178,7 +179,7 @@ export function useLayout() {
     // State
     layoutConfig,
     layoutState,
-    
+
     // Computed
     isStatic,
     isOverlay,
@@ -188,7 +189,7 @@ export function useLayout() {
     isDesktop,
     isMenuVisible,
     layoutClasses,
-    
+
     // Actions
     toggleMenu,
     toggleMobileMenu,
@@ -198,13 +199,13 @@ export function useLayout() {
     setActiveMenuItem,
     toggleSearchBar,
     toggleRightMenu,
-    
+
     // Config actions
     setMenuMode,
     setScale,
     setInputStyle,
     setRipple,
     setMenuTheme,
-    setTopbarTheme
+    setTopbarTheme,
   }
-} 
+}

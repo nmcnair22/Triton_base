@@ -7,21 +7,21 @@
           :style="{ backgroundColor: value }"
           @click="openColorPicker"
         />
-        
+
         <div>
           <div class="font-medium text-xs">{{ token.label }}</div>
           <div class="text-xs text-muted">{{ value }}</div>
         </div>
-        
-        <Badge 
-          v-if="isEdited" 
-          value="●" 
-          severity="info" 
+
+        <Badge
+          v-if="isEdited"
+          value="●"
+          severity="info"
           size="small"
           v-tooltip="'Modified from default'"
         />
       </div>
-      
+
       <div class="flex items-center gap-1">
         <Button
           icon="pi pi-copy"
@@ -30,7 +30,7 @@
           @click="copyValue"
           v-tooltip="'Copy color value'"
         />
-        
+
         <Button
           icon="pi pi-refresh"
           size="small"
@@ -40,7 +40,7 @@
           v-tooltip="'Reset to default'"
           :disabled="!isEdited"
         />
-        
+
         <Button
           icon="pi pi-pencil"
           size="small"
@@ -50,9 +50,9 @@
         />
       </div>
     </div>
-    
+
     <!-- Enhanced Color picker overlay -->
-    <Popover 
+    <Popover
       ref="colorPickerPanel"
       @show="onColorPickerShow"
       @hide="onColorPickerHide"
@@ -180,7 +180,7 @@
               :key="quickColor"
               class="w-5 h-5 rounded border border-surface-300 dark:border-surface-600 cursor-pointer hover:scale-110 transition-transform"
               :style="{ backgroundColor: quickColor }"
-              @click.stop="(event) => selectQuickColor(quickColor, event)"
+              @click.stop="event => selectQuickColor(quickColor, event)"
               :title="quickColor"
             />
           </div>
@@ -194,7 +194,7 @@
               v-for="variation in colorVariations"
               :key="variation.value"
               class="flex flex-col items-center cursor-pointer hover:bg-surface-50 dark:hover:bg-surface-800 p-1 rounded"
-              @click.stop="(event) => selectQuickColor(variation.value, event)"
+              @click.stop="event => selectQuickColor(variation.value, event)"
             >
               <div
                 class="w-5 h-5 rounded border border-surface-300 dark:border-surface-600"
@@ -204,20 +204,10 @@
             </div>
           </div>
         </div>
-        
+
         <div class="flex justify-end gap-2">
-          <Button
-            label="Cancel"
-            size="small"
-            severity="secondary"
-            @click.stop="closeColorPicker"
-          />
-          <Button
-            label="Apply"
-            size="small"
-            @click.stop="applyColor"
-            :disabled="!!colorError"
-          />
+          <Button label="Cancel" size="small" severity="secondary" @click.stop="closeColorPicker" />
+          <Button label="Apply" size="small" @click.stop="applyColor" :disabled="!!colorError" />
         </div>
       </div>
     </Popover>
@@ -228,13 +218,13 @@
 import { ref, watch, computed } from 'vue'
 import type { ColorToken } from '@/themes/presets/preset.types'
 import { useToast } from 'primevue/usetoast'
-import { 
-  isValidColor, 
-  darkenColor, 
-  lightenColor, 
-  parseColor, 
-  rgbToHex, 
-  rgbToHsl 
+import {
+  isValidColor,
+  darkenColor,
+  lightenColor,
+  parseColor,
+  rgbToHex,
+  rgbToHsl,
 } from '@/themes/utils/color-utils'
 
 interface Props {
@@ -258,22 +248,43 @@ const localValue = ref('')
 const isColorPickerOpen = ref(false)
 const colorError = ref('')
 
-// Color format values  
+// Color format values
 const hexValue = ref('')
 const rgbValue = ref({ r: '0', g: '0', b: '0' })
 const hslValue = ref({ h: '0', s: '0', l: '0' })
 
 // Quick color presets
 const quickColors = [
-  '#FF0000', '#FF8000', '#FFFF00', '#80FF00', '#00FF00', '#00FF80', '#00FFFF', '#0080FF',
-  '#0000FF', '#8000FF', '#FF00FF', '#FF0080', '#000000', '#404040', '#808080', '#C0C0C0',
-  '#FFFFFF', '#FFE6E6', '#E6F7FF', '#F6FFED', '#FFF7E6', '#FFF1F0', '#F9F0FF', '#E6F4FF'
+  '#FF0000',
+  '#FF8000',
+  '#FFFF00',
+  '#80FF00',
+  '#00FF00',
+  '#00FF80',
+  '#00FFFF',
+  '#0080FF',
+  '#0000FF',
+  '#8000FF',
+  '#FF00FF',
+  '#FF0080',
+  '#000000',
+  '#404040',
+  '#808080',
+  '#C0C0C0',
+  '#FFFFFF',
+  '#FFE6E6',
+  '#E6F7FF',
+  '#F6FFED',
+  '#FFF7E6',
+  '#FFF1F0',
+  '#F9F0FF',
+  '#E6F4FF',
 ]
 
 // Color variations based on current color
 const colorVariations = computed(() => {
   if (!isValidColor(localValue.value)) return []
-  
+
   try {
     const baseColor = localValue.value
     return [
@@ -281,7 +292,7 @@ const colorVariations = computed(() => {
       { name: 'Dark', value: darkenColor(baseColor, 10) },
       { name: 'Original', value: baseColor },
       { name: 'Light', value: lightenColor(baseColor, 10) },
-      { name: 'Lighter', value: lightenColor(baseColor, 20) }
+      { name: 'Lighter', value: lightenColor(baseColor, 20) },
     ]
   } catch {
     return []
@@ -289,31 +300,35 @@ const colorVariations = computed(() => {
 })
 
 // Watch for prop changes
-watch(() => props.value, (newValue) => {
-  console.log('🎨 props.value changed', { 
-    tokenId: props.token.id,
-    oldValue: localValue.value,
-    newValue,
-    isColorPickerOpen: isColorPickerOpen.value 
-  })
-  localValue.value = newValue
-}, { immediate: true })
+watch(
+  () => props.value,
+  newValue => {
+    console.log('🎨 props.value changed', {
+      tokenId: props.token.id,
+      oldValue: localValue.value,
+      newValue,
+      isColorPickerOpen: isColorPickerOpen.value,
+    })
+    localValue.value = newValue
+  },
+  { immediate: true }
+)
 
 function openColorPicker(event: Event) {
-  console.log('🎨 openColorPicker called', { 
-    tokenId: props.token.id, 
-    propsValue: props.value, 
+  console.log('🎨 openColorPicker called', {
+    tokenId: props.token.id,
+    propsValue: props.value,
     localValue: localValue.value,
-    event: event.type 
+    event: event.type,
   })
   localValue.value = props.value
-  
+
   // Add debugging for popover
   console.log('🎨 Attempting to toggle popover', {
     panelRef: !!colorPickerPanel.value,
-    panelVisible: colorPickerPanel.value?.visible
+    panelVisible: colorPickerPanel.value?.visible,
   })
-  
+
   try {
     colorPickerPanel.value.show(event)
     console.log('🎨 Show completed')
@@ -351,12 +366,12 @@ function onColorChange() {
 
 function validateColor() {
   colorError.value = ''
-  
+
   if (!localValue.value.trim()) {
     colorError.value = 'Color value is required'
     return
   }
-  
+
   if (!isValidColor(localValue.value)) {
     colorError.value = 'Invalid color format'
     return
@@ -365,7 +380,7 @@ function validateColor() {
 
 function updateFormatValues() {
   if (!isValidColor(localValue.value)) return
-  
+
   try {
     const rgb = parseColor(localValue.value)
     if (rgb) {
@@ -373,14 +388,14 @@ function updateFormatValues() {
       rgbValue.value = {
         r: rgb.r.toString(),
         g: rgb.g.toString(),
-        b: rgb.b.toString()
+        b: rgb.b.toString(),
       }
-      
+
       const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b)
       hslValue.value = {
         h: Math.round(hsl.h).toString(),
         s: Math.round(hsl.s).toString(),
-        l: Math.round(hsl.l).toString()
+        l: Math.round(hsl.l).toString(),
       }
     }
   } catch (error) {
@@ -399,7 +414,11 @@ function updateFromHex() {
 
 function updateFromRgb() {
   try {
-    const hex = rgbToHex(Number(rgbValue.value.r), Number(rgbValue.value.g), Number(rgbValue.value.b))
+    const hex = rgbToHex(
+      Number(rgbValue.value.r),
+      Number(rgbValue.value.g),
+      Number(rgbValue.value.b)
+    )
     localValue.value = hex
     onColorChange()
     // Apply immediately for real-time preview
@@ -415,29 +434,29 @@ function updateFromHsl() {
     const h = Number(hslValue.value.h) / 360
     const s = Number(hslValue.value.s) / 100
     const l = Number(hslValue.value.l) / 100
-    
+
     // Basic HSL to RGB conversion
     let r, g, b
-    
+
     if (s === 0) {
       r = g = b = l // achromatic
     } else {
       const hue2rgb = (p: number, q: number, t: number) => {
         if (t < 0) t += 1
         if (t > 1) t -= 1
-        if (t < 1/6) return p + (q - p) * 6 * t
-        if (t < 1/2) return q
-        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6
+        if (t < 1 / 6) return p + (q - p) * 6 * t
+        if (t < 1 / 2) return q
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
         return p
       }
-      
+
       const q = l < 0.5 ? l * (1 + s) : l + s - l * s
       const p = 2 * l - q
-      r = hue2rgb(p, q, h + 1/3)
+      r = hue2rgb(p, q, h + 1 / 3)
       g = hue2rgb(p, q, h)
-      b = hue2rgb(p, q, h - 1/3)
+      b = hue2rgb(p, q, h - 1 / 3)
     }
-    
+
     const hex = rgbToHex(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255))
     localValue.value = hex
     onColorChange()
@@ -449,19 +468,19 @@ function updateFromHsl() {
 }
 
 function selectQuickColor(color: string, event?: Event) {
-  console.log('🎨 selectQuickColor START', { 
-    tokenId: props.token.id, 
+  console.log('🎨 selectQuickColor START', {
+    tokenId: props.token.id,
     color,
     localValue: localValue.value,
-    event: event?.type 
+    event: event?.type,
   })
-  
+
   // Prevent any event bubbling
   if (event) {
     event.stopPropagation()
     event.preventDefault()
   }
-  
+
   localValue.value = color
   onColorChange()
   // Apply the color immediately for real-time preview
@@ -471,9 +490,9 @@ function selectQuickColor(color: string, event?: Event) {
 }
 
 function applyColor() {
-  console.log('🎨 applyColor called', { 
-    tokenId: props.token.id, 
-    value: localValue.value 
+  console.log('🎨 applyColor called', {
+    tokenId: props.token.id,
+    value: localValue.value,
   })
   emit('update', props.token.id, localValue.value)
   closeColorPicker()
@@ -494,7 +513,7 @@ async function copyValue() {
       severity: 'success',
       summary: 'Copied',
       detail: `${props.token.label} color copied`,
-      life: 2000
+      life: 2000,
     })
   } catch (error) {
     console.error('Failed to copy color:', error)
@@ -510,4 +529,4 @@ async function copyValue() {
 .color-token-editor:hover {
   background-color: var(--p-surface-50);
 }
-</style> 
+</style>

@@ -7,49 +7,46 @@
           <h3 class="text-xl font-semibold">{{ title }}</h3>
         </div>
       </template>
-      
+
       <template #content>
         <div class="space-y-4">
           <!-- Error Message -->
           <div class="text-surface-600 dark:text-surface-400">
             <p class="mb-2">{{ errorMessage }}</p>
-            <p v-if="showDetails && errorDetails" class="text-sm text-surface-500 dark:text-surface-500">
+            <p
+              v-if="showDetails && errorDetails"
+              class="text-sm text-surface-500 dark:text-surface-500"
+            >
               {{ errorDetails }}
             </p>
           </div>
-          
+
           <!-- Error Stack (Development Only) -->
           <div v-if="isDevelopment && errorStack" class="mt-4">
-            <Button 
-              label="Show Error Details" 
+            <Button
+              label="Show Error Details"
               icon="pi pi-chevron-down"
               @click="showStack = !showStack"
               text
               size="small"
               class="p-0"
             />
-            <pre v-if="showStack" class="mt-2 p-4 bg-surface-100 dark:bg-surface-800 rounded-lg text-xs overflow-auto max-h-64">{{ errorStack }}</pre>
+            <pre
+              v-if="showStack"
+              class="mt-2 p-4 bg-surface-100 dark:bg-surface-800 rounded-lg text-xs overflow-auto max-h-64"
+              >{{ errorStack }}</pre
+            >
           </div>
-          
+
           <!-- Actions -->
           <div class="flex gap-3 mt-6">
-            <Button 
-              label="Try Again" 
-              icon="pi pi-refresh"
-              @click="retry" 
-              severity="primary"
-            />
-            <Button 
-              label="Go Home" 
-              icon="pi pi-home"
-              @click="goHome" 
-              severity="secondary"
-            />
-            <Button 
+            <Button label="Try Again" icon="pi pi-refresh" @click="retry" severity="primary" />
+            <Button label="Go Home" icon="pi pi-home" @click="goHome" severity="secondary" />
+            <Button
               v-if="canReport"
-              label="Report Issue" 
+              label="Report Issue"
               icon="pi pi-flag"
-              @click="reportError" 
+              @click="reportError"
               severity="secondary"
               outlined
             />
@@ -58,7 +55,7 @@
       </template>
     </Card>
   </div>
-  
+
   <slot v-else />
 </template>
 
@@ -84,7 +81,7 @@ const props = withDefaults(defineProps<Props>(), {
   fallbackMessage: 'An unexpected error occurred. Please try again.',
   showDetails: true,
   canReport: true,
-  isolated: false
+  isolated: false,
 })
 
 const emit = defineEmits<{
@@ -108,7 +105,7 @@ const router = useRouter()
 // Error handler
 const { handleError } = useErrorHandler({
   showToast: false, // We'll show our own UI
-  logToConsole: true
+  logToConsole: true,
 })
 
 // Environment
@@ -135,25 +132,25 @@ const errorStack = computed(() => {
 // Capture errors from child components
 onErrorCaptured((err: Error, instance, info: string) => {
   console.error('Error captured in boundary:', err, info)
-  
+
   hasError.value = true
   currentError.value = err
   errorInfo.value = info
-  
+
   // Handle the error
   handleError(err, {
     context: 'Error Boundary',
-    metadata: { componentInfo: info }
+    metadata: { componentInfo: info },
   })
-  
+
   // Call custom error handler if provided
   if (props.onError) {
     props.onError(err, info)
   }
-  
+
   // Emit error event
   emit('error', err, info)
-  
+
   // Prevent error from propagating if isolated
   return props.isolated
 })
@@ -164,12 +161,12 @@ const retry = () => {
   currentError.value = null
   errorInfo.value = ''
   showStack.value = false
-  
+
   // Call custom retry handler if provided
   if (props.onRetry) {
     props.onRetry()
   }
-  
+
   emit('retry')
 }
 
@@ -182,9 +179,9 @@ const goHome = () => {
 // Report error
 const reportError = () => {
   if (!currentError.value) return
-  
+
   emit('report', currentError.value)
-  
+
   // In a real app, this would send to an error reporting service
   console.log('Reporting error:', {
     error: currentError.value.message,
@@ -192,7 +189,7 @@ const reportError = () => {
     info: errorInfo.value,
     url: window.location.href,
     userAgent: navigator.userAgent,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   })
 }
 
@@ -202,7 +199,7 @@ provide(ErrorBoundaryKey, {
     hasError.value = false
     currentError.value = null
     errorInfo.value = ''
-  }
+  },
 })
 
 // Check if we're inside another error boundary
@@ -217,7 +214,7 @@ defineExpose({
     hasError.value = false
     currentError.value = null
     errorInfo.value = ''
-  }
+  },
 })
 </script>
 

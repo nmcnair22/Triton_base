@@ -1,17 +1,19 @@
 <template>
-  <Drawer 
-    :visible="configSidebarVisible" 
-    @update:visible="(value) => layoutState.configSidebarVisible = value"
-    position="right" 
+  <Drawer
+    :visible="configSidebarVisible"
+    @update:visible="value => (layoutState.configSidebarVisible = value)"
+    position="right"
     header=""
     class="layout-config-drawer"
     :pt="{
       root: { class: 'w-80' },
-      content: { class: 'p-0 h-full' }
+      content: { class: 'p-0 h-full' },
     }"
   >
     <!-- Header -->
-    <div class="config-header flex items-center justify-between p-4 border-b border-surface-200 dark:border-surface-700">
+    <div
+      class="config-header flex items-center justify-between p-4 border-b border-surface-200 dark:border-surface-700"
+    >
       <h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0">
         Layout Configuration
       </h2>
@@ -23,7 +25,7 @@
         @click="configSidebarVisible = false"
       />
     </div>
-    
+
     <!-- Configuration Content -->
     <ScrollPanel class="config-content h-full">
       <div class="p-4 space-y-6">
@@ -31,7 +33,7 @@
         <div class="config-section">
           <LayoutPresetSelector />
         </div>
-        
+
         <!-- Menu Mode Selection -->
         <div class="config-section">
           <h3 class="config-section-title">Menu Mode</h3>
@@ -50,7 +52,7 @@
             />
           </div>
         </div>
-        
+
         <!-- Sidebar Theme -->
         <div class="config-section">
           <h3 class="config-section-title">Sidebar Theme</h3>
@@ -64,7 +66,7 @@
             @update:model-value="setSidebarTheme"
           />
         </div>
-        
+
         <!-- Primary Color -->
         <div class="config-section">
           <h3 class="config-section-title">Primary Color</h3>
@@ -75,45 +77,41 @@
               class="color-option"
               :style="{ backgroundColor: color.color }"
               :class="{
-                'ring-2 ring-offset-2 ring-surface-900 dark:ring-surface-0 ring-offset-surface-0 dark:ring-offset-surface-900': 
-                  primaryColor === color.value
+                'ring-2 ring-offset-2 ring-surface-900 dark:ring-surface-0 ring-offset-surface-0 dark:ring-offset-surface-900':
+                  primaryColor === color.value,
               }"
               :title="color.label"
               @click="setPrimaryColor(color.value)"
             >
-              <i 
-                v-if="primaryColor === color.value"
-                class="pi pi-check text-white text-sm"
-              ></i>
+              <i v-if="primaryColor === color.value" class="pi pi-check text-white text-sm"></i>
             </button>
           </div>
         </div>
-        
+
         <!-- Additional Options -->
         <div class="config-section">
           <h3 class="config-section-title">Options</h3>
-          
+
           <div class="space-y-4">
             <div class="flex items-center justify-between">
               <label class="text-sm font-medium">Menu Profile</label>
-              <ToggleSwitch 
-                :model-value="menuProfile" 
-                @update:model-value="setMenuProfile"
-              />
+              <ToggleSwitch :model-value="menuProfile" @update:model-value="setMenuProfile" />
             </div>
-            
+
             <div class="flex items-center justify-between">
               <label class="text-sm font-medium">Menu Anchored</label>
-              <ToggleSwitch 
-                :model-value="layoutState.anchored" 
+              <ToggleSwitch
+                :model-value="layoutState.anchored"
                 :disabled="!canToggleAnchor"
-                v-tooltip.bottom="canToggleAnchor ? 'Pin/unpin sidebar' : 'Not available in this mode'"
+                v-tooltip.bottom="
+                  canToggleAnchor ? 'Pin/unpin sidebar' : 'Not available in this mode'
+                "
                 @update:model-value="handleAnchorToggle"
               />
             </div>
           </div>
         </div>
-        
+
         <!-- Scale -->
         <div class="config-section">
           <h3 class="config-section-title">Interface Scale</h3>
@@ -133,7 +131,7 @@
             {{ layoutConfig.scale }}px
           </div>
         </div>
-        
+
         <!-- Preview Section -->
         <div class="config-section">
           <h3 class="config-section-title">Preview</h3>
@@ -142,11 +140,7 @@
               <Button icon="pi pi-home" size="small" />
               <span class="text-sm">Button Example</span>
             </div>
-            <InputText 
-              placeholder="Input example" 
-              size="small"
-              class="w-full"
-            />
+            <InputText placeholder="Input example" size="small" class="w-full" />
             <div class="flex space-x-2">
               <Badge value="Info" severity="info" />
               <Badge value="Success" severity="success" />
@@ -154,10 +148,10 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Actions -->
         <Divider />
-        
+
         <div class="space-y-3">
           <Button
             label="Reset to Defaults"
@@ -167,7 +161,7 @@
             class="w-full"
             @click="handleReset"
           />
-          
+
           <Button
             label="Export Configuration"
             icon="pi pi-download"
@@ -206,7 +200,7 @@ const {
   setSidebarTheme,
   setPrimaryColor,
   toggleAnchor,
-  resetConfig
+  resetConfig,
 } = useLayoutEnhanced()
 
 const canToggleAnchor = computed(() => isReveal.value || isSlim.value)
@@ -233,7 +227,7 @@ function handleReset() {
     severity: 'success',
     summary: 'Reset Complete',
     detail: 'Layout configuration has been reset to defaults',
-    life: 3000
+    life: 3000,
   })
 }
 
@@ -243,11 +237,11 @@ function exportConfig() {
     sidebarTheme: sidebarTheme.value,
     primaryColor: primaryColor.value,
     menuProfile: menuProfile.value,
-    scale: layoutConfig.value.scale
+    scale: layoutConfig.value.scale,
   }
-  
-  const blob = new Blob([JSON.stringify(config, null, 2)], { 
-    type: 'application/json' 
+
+  const blob = new Blob([JSON.stringify(config, null, 2)], {
+    type: 'application/json',
   })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
@@ -255,12 +249,12 @@ function exportConfig() {
   link.download = 'triton-layout-config.json'
   link.click()
   URL.revokeObjectURL(url)
-  
+
   toast.add({
     severity: 'success',
     summary: 'Export Complete',
     detail: 'Configuration has been exported',
-    life: 3000
+    life: 3000,
   })
 }
 </script>

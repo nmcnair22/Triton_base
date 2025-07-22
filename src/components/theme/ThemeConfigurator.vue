@@ -22,16 +22,16 @@
             </p>
           </div>
         </div>
-        
+
         <div class="flex items-center gap-2">
           <!-- Save indicator -->
-          <Badge 
-            v-if="editorStore.canSave" 
-            value="●" 
-            severity="warning" 
+          <Badge
+            v-if="editorStore.canSave"
+            value="●"
+            severity="warning"
             v-tooltip="'Unsaved changes'"
           />
-          
+
           <!-- Quick actions -->
           <Button
             v-if="editorStore.canSave"
@@ -42,7 +42,7 @@
             v-tooltip="'Save current changes'"
             class="text-xs"
           />
-          
+
           <Button
             icon="pi pi-refresh"
             severity="secondary"
@@ -52,7 +52,7 @@
             @click="resetToDefaults"
             v-tooltip="'Reset to preset defaults'"
           />
-          
+
           <Button
             icon="pi pi-times"
             severity="secondary"
@@ -71,14 +71,9 @@
       <div>
         <div class="flex items-center justify-between mb-2">
           <h4 class="text-xs font-medium m-0">Active Theme</h4>
-          <Button
-            label="Manage"
-            size="small"
-            text
-            @click="showPresetManager = true"
-          />
+          <Button label="Manage" size="small" text @click="showPresetManager = true" />
         </div>
-        
+
         <Select
           v-model="selectedPresetId"
           :options="presetStore.availablePresets"
@@ -107,16 +102,16 @@
                   </div>
                 </div>
               </div>
-              
+
               <div class="flex items-center gap-1">
-                <Badge 
-                  v-if="option.metadata.isDefault" 
-                  value="DEFAULT" 
+                <Badge
+                  v-if="option.metadata.isDefault"
+                  value="DEFAULT"
                   size="small"
                   severity="info"
                 />
-                <i 
-                  v-if="presetStore.activePreset?.id === option.id" 
+                <i
+                  v-if="presetStore.activePreset?.id === option.id"
                   class="pi pi-check text-success"
                 />
               </div>
@@ -139,41 +134,33 @@
             @change="onBaseThemeChange"
           />
         </div>
-        
+
         <div>
           <label class="block text-xs font-medium mb-1">Mode</label>
-                     <div class="flex items-center justify-between p-2 border border-surface-300 rounded">
-             <span class="text-xs">{{ darkMode.isDark.value ? 'Dark' : 'Light' }}</span>
-             <ToggleSwitch
-               :modelValue="darkMode.isDark.value"
-               @update:modelValue="darkMode.toggle"
-               :disabled="darkMode.isTransitioning.value"
-               size="small"
-             />
-           </div>
+          <div class="flex items-center justify-between p-2 border border-surface-300 rounded">
+            <span class="text-xs">{{ darkMode.isDark.value ? 'Dark' : 'Light' }}</span>
+            <ToggleSwitch
+              :modelValue="darkMode.isDark.value"
+              @update:modelValue="darkMode.toggle"
+              :disabled="darkMode.isTransitioning.value"
+              size="small"
+            />
+          </div>
         </div>
       </div>
 
       <!-- Color Token Editor Tabs -->
       <div>
         <h4 class="text-xs font-medium mb-2">Color Tokens</h4>
-        
-                         <Tabs value="brand">
+
+        <Tabs value="brand">
           <TabList>
-            <Tab
-              v-for="category in colorCategories"
-              :key="category.id"
-              :value="category.id"
-            >
+            <Tab v-for="category in colorCategories" :key="category.id" :value="category.id">
               {{ category.label }}
             </Tab>
           </TabList>
           <TabPanels>
-            <TabPanel
-              v-for="category in colorCategories"
-              :key="category.id"
-              :value="category.id"
-            >
+            <TabPanel v-for="category in colorCategories" :key="category.id" :value="category.id">
               <div class="space-y-2">
                 <ColorTokenEditor
                   v-for="token in themeConfig.tokensByCategory.value[category.id] || []"
@@ -194,7 +181,7 @@
       <!-- Color Harmony Tools -->
       <div>
         <h4 class="text-xs font-medium mb-2">Color Tools</h4>
-        
+
         <div class="grid grid-cols-2 gap-2">
           <Button
             label="Monochromatic"
@@ -237,12 +224,12 @@
                 <span class="text-xs">Auto-save changes</span>
                 <ToggleSwitch v-model="configStore.config.autoSave" size="small" />
               </div>
-              
+
               <div class="flex items-center justify-between">
                 <span class="text-xs">Sync across tabs</span>
                 <ToggleSwitch v-model="configStore.config.syncAcrossTabs" size="small" />
               </div>
-              
+
               <div class="flex items-center justify-between">
                 <span class="text-xs">Smooth transitions</span>
                 <ToggleSwitch v-model="configStore.config.smoothTransitions" size="small" />
@@ -250,21 +237,24 @@
             </div>
           </AccordionContent>
         </AccordionPanel>
-        
+
         <AccordionPanel value="export">
           <AccordionHeader>Import / Export</AccordionHeader>
           <AccordionContent>
             <ThemeExporter />
           </AccordionContent>
         </AccordionPanel>
-        
+
         <AccordionPanel value="storage">
           <AccordionHeader>Storage Info</AccordionHeader>
           <AccordionContent>
             <div class="space-y-1 text-xs">
               <div class="flex justify-between">
                 <span>User Presets:</span>
-                <span>{{ presetStore.userPresets.length }} / {{ configStore.config.maxSavedPresets || 20 }}</span>
+                <span
+                  >{{ presetStore.userPresets.length }} /
+                  {{ configStore.config.maxSavedPresets || 20 }}</span
+                >
               </div>
               <div class="flex justify-between">
                 <span>Built-in Presets:</span>
@@ -280,16 +270,18 @@
     </div>
 
     <!-- Preset Manager Dialog -->
-    <PresetManager 
-      v-model:visible="showPresetManager"
-      @preset-changed="onPresetChanged"
-    />
+    <PresetManager v-model:visible="showPresetManager" @preset-changed="onPresetChanged" />
   </Drawer>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useThemeConfigStore, useThemeUIStore, useThemePresetStore, useThemeEditorStore } from '@/stores/theme'
+import {
+  useThemeConfigStore,
+  useThemeUIStore,
+  useThemePresetStore,
+  useThemeEditorStore,
+} from '@/stores/theme'
 import { useThemeConfig } from '@/themes/composables/useThemeConfig'
 import { useDarkMode } from '@/composables/useDarkMode'
 import { colorCategories, baseThemes } from '@/themes/config/theme.config'
@@ -316,16 +308,20 @@ const showPresetManager = ref(false)
 // Base theme options for dropdown
 const baseThemeOptions = baseThemes.map(theme => ({
   label: theme,
-  value: theme
+  value: theme,
 }))
 
 // Watch for active preset changes
-watch(() => presetStore.activePreset, (preset) => {
-  if (preset) {
-    selectedPresetId.value = preset.id
-    baseTheme.value = preset.baseTheme
-  }
-}, { immediate: true })
+watch(
+  () => presetStore.activePreset,
+  preset => {
+    if (preset) {
+      selectedPresetId.value = preset.id
+      baseTheme.value = preset.baseTheme
+    }
+  },
+  { immediate: true }
+)
 
 // Helper functions
 function getPresetPrimaryColor(preset: any): string {
@@ -352,7 +348,7 @@ async function onPresetChange(event: any) {
       severity: 'success',
       summary: 'Theme Changed',
       detail: `Switched to ${preset.name}`,
-      life: 3000
+      life: 3000,
     })
   }
 }
@@ -364,7 +360,7 @@ async function onBaseThemeChange() {
       severity: 'info',
       summary: 'Base Theme Changed',
       detail: `Switched to ${baseTheme.value}`,
-      life: 3000
+      life: 3000,
     })
   }
 }
@@ -378,19 +374,19 @@ async function updateTokenColor(tokenId: string, value: string) {
 async function resetToken(tokenId: string) {
   // Find the token across all categories
   let foundToken = null
-  
+
   for (const categoryTokens of Object.values(themeConfig.tokensByCategory.value)) {
     foundToken = categoryTokens.find(t => t.id === tokenId)
     if (foundToken) break
   }
-  
+
   if (foundToken) {
     await themeConfig.updateTokenColor(tokenId, foundToken.defaultValue)
     toast.add({
       severity: 'info',
       summary: 'Token Reset',
       detail: `${foundToken.label} reset to default`,
-      life: 2000
+      life: 2000,
     })
   }
 }
@@ -408,7 +404,7 @@ async function saveCurrentPreset() {
         severity: 'success',
         summary: 'Preset Saved',
         detail: 'Your changes have been saved',
-        life: 3000
+        life: 3000,
       })
     }
   } catch (error) {
@@ -416,7 +412,7 @@ async function saveCurrentPreset() {
       severity: 'error',
       summary: 'Save Failed',
       detail: error instanceof Error ? error.message : 'Unknown error',
-      life: 5000
+      life: 5000,
     })
   }
 }
@@ -427,21 +423,23 @@ async function resetToDefaults() {
     severity: 'info',
     summary: 'Reset Complete',
     detail: 'Theme reset to preset defaults',
-    life: 3000
+    life: 3000,
   })
 }
 
-async function applyColorHarmony(type: 'monochromatic' | 'complementary' | 'triadic' | 'analogous') {
+async function applyColorHarmony(
+  type: 'monochromatic' | 'complementary' | 'triadic' | 'analogous'
+) {
   const primaryColor = editorStore.getTokenValue('primary')
   const harmony = themeConfig.generateColorHarmony(primaryColor, type)
-  
+
   if (Object.keys(harmony).length > 0) {
     await themeConfig.applyColorHarmony(harmony)
     toast.add({
       severity: 'success',
       summary: 'Color Harmony Applied',
       detail: `Applied ${type} color scheme`,
-      life: 3000
+      life: 3000,
     })
   }
 }
@@ -477,4 +475,4 @@ function onPresetChanged() {
 .space-y-2 > * + * {
   margin-top: 0.5rem;
 }
-</style> 
+</style>

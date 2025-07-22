@@ -317,7 +317,7 @@
   .horizontal-nav {
     display: none !important;
   }
-  
+
   /* Show mobile menu button in horizontal mode */
   .layout-horizontal .mobile-menu-button {
     display: flex;
@@ -352,27 +352,27 @@
   .mode-transition-static {
     animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .mode-transition-overlay {
     animation: overlaySlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .mode-transition-slim {
     animation: slimCollapse 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .mode-transition-compact {
     animation: compactShrink 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .mode-transition-reveal {
     animation: revealHide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .mode-transition-drawer {
     animation: drawerSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .mode-transition-horizontal {
     animation: horizontalFade 0.3s ease-out;
   }

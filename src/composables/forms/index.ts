@@ -1,6 +1,6 @@
 /**
  * Form composables for Triton
- * 
+ *
  * This module exports all form-related composables and utilities
  * for building reactive, validated forms in Vue 3.
  */
@@ -36,5 +36,5 @@ export {
   alphanumeric,
   custom,
   compose,
-  when
+  when,
 } from './validators'

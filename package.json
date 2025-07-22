@@ -22,8 +22,9 @@
     "clean:full": "rm -rf dist node_modules/.vite node_modules package-lock.json",
     "reinstall": "npm run clean:full && npm install",
     "test:build": "npm run build && npm run preview",
-    "check-all": "run-p lint:check format:check type-check",
-    "prepare": "npm run check-all"
+    "check-all": "run-p lint:check type-check",
+    "check-all:format": "run-p lint:check format:check type-check",
+    "prepare": "npm run type-check"
   },
   "dependencies": {
     "@primeuix/themes": "^1.2.1",
@@ -50,9 +51,11 @@
     "eslint": "^9.29.0",
     "eslint-plugin-vue": "^10.3.0",
     "jiti": "^2.4.2",
+    "lint-staged": "^15.2.10",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.6.2",
     "rollup-plugin-visualizer": "^6.0.3",
+    "simple-git-hooks": "^2.12.0",
     "terser": "^5.43.1",
     "typescript": "~5.8.0",
     "unplugin-auto-import": "^19.3.0",
@@ -60,5 +63,17 @@
     "vite": "^6.3.5",
     "vite-plugin-vue-devtools": "^7.7.7",
     "vue-tsc": "^3.0.3"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,scss,sass,less,styl,html,json,jsonc,yml,yaml,md}": [
+      "prettier --write"
+    ]
   }
 }

@@ -7,7 +7,8 @@ export type ValidatorFn<T = any> = (value: T) => string | true | Promise<string 
 /**
  * Required field validator
  */
-export const required = (message = 'This field is required'): ValidatorFn => 
+export const required =
+  (message = 'This field is required'): ValidatorFn =>
   (value: any) => {
     if (value === null || value === undefined || value === '') {
       return message
@@ -24,7 +25,8 @@ export const required = (message = 'This field is required'): ValidatorFn =>
 /**
  * Email validator
  */
-export const email = (message = 'Invalid email address'): ValidatorFn<string> => 
+export const email =
+  (message = 'Invalid email address'): ValidatorFn<string> =>
   (value: string) => {
     if (!value) return true // Let required validator handle empty values
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -34,7 +36,8 @@ export const email = (message = 'Invalid email address'): ValidatorFn<string> =>
 /**
  * Minimum length validator
  */
-export const minLength = (min: number, message?: string): ValidatorFn<string> => 
+export const minLength =
+  (min: number, message?: string): ValidatorFn<string> =>
   (value: string) => {
     if (!value) return true // Let required validator handle empty values
     const msg = message || `Must be at least ${min} characters`
@@ -44,7 +47,8 @@ export const minLength = (min: number, message?: string): ValidatorFn<string> =>
 /**
  * Maximum length validator
  */
-export const maxLength = (max: number, message?: string): ValidatorFn<string> => 
+export const maxLength =
+  (max: number, message?: string): ValidatorFn<string> =>
   (value: string) => {
     if (!value) return true // Let required validator handle empty values
     const msg = message || `Must be no more than ${max} characters`
@@ -54,7 +58,8 @@ export const maxLength = (max: number, message?: string): ValidatorFn<string> =>
 /**
  * Pattern validator
  */
-export const pattern = (regex: RegExp, message = 'Invalid format'): ValidatorFn<string> => 
+export const pattern =
+  (regex: RegExp, message = 'Invalid format'): ValidatorFn<string> =>
   (value: string) => {
     if (!value) return true // Let required validator handle empty values
     return regex.test(value) || message
@@ -63,7 +68,8 @@ export const pattern = (regex: RegExp, message = 'Invalid format'): ValidatorFn<
 /**
  * Numeric validator
  */
-export const numeric = (message = 'Must be a number'): ValidatorFn => 
+export const numeric =
+  (message = 'Must be a number'): ValidatorFn =>
   (value: any) => {
     if (!value && value !== 0) return true // Let required validator handle empty values
     return !isNaN(Number(value)) || message
@@ -72,7 +78,8 @@ export const numeric = (message = 'Must be a number'): ValidatorFn =>
 /**
  * Integer validator
  */
-export const integer = (message = 'Must be a whole number'): ValidatorFn => 
+export const integer =
+  (message = 'Must be a whole number'): ValidatorFn =>
   (value: any) => {
     if (!value && value !== 0) return true // Let required validator handle empty values
     return Number.isInteger(Number(value)) || message
@@ -81,7 +88,8 @@ export const integer = (message = 'Must be a whole number'): ValidatorFn =>
 /**
  * Minimum value validator
  */
-export const min = (minValue: number, message?: string): ValidatorFn<number> => 
+export const min =
+  (minValue: number, message?: string): ValidatorFn<number> =>
   (value: number) => {
     if (value === null || value === undefined) return true
     const msg = message || `Must be at least ${minValue}`
@@ -91,7 +99,8 @@ export const min = (minValue: number, message?: string): ValidatorFn<number> =>
 /**
  * Maximum value validator
  */
-export const max = (maxValue: number, message?: string): ValidatorFn<number> => 
+export const max =
+  (maxValue: number, message?: string): ValidatorFn<number> =>
   (value: number) => {
     if (value === null || value === undefined) return true
     const msg = message || `Must be no more than ${maxValue}`
@@ -101,7 +110,8 @@ export const max = (maxValue: number, message?: string): ValidatorFn<number> =>
 /**
  * Range validator
  */
-export const between = (minValue: number, maxValue: number, message?: string): ValidatorFn<number> => 
+export const between =
+  (minValue: number, maxValue: number, message?: string): ValidatorFn<number> =>
   (value: number) => {
     if (value === null || value === undefined) return true
     const msg = message || `Must be between ${minValue} and ${maxValue}`
@@ -112,16 +122,16 @@ export const between = (minValue: number, maxValue: number, message?: string): V
 /**
  * Match validator - compares with another value
  */
-export const match = <T = any>(
-  getValue: () => T, 
-  message = 'Values must match'
-): ValidatorFn<T> => 
-  (value: T) => value === getValue() || message
+export const match =
+  <T = any>(getValue: () => T, message = 'Values must match'): ValidatorFn<T> =>
+  (value: T) =>
+    value === getValue() || message
 
 /**
  * URL validator
  */
-export const url = (message = 'Invalid URL'): ValidatorFn<string> => 
+export const url =
+  (message = 'Invalid URL'): ValidatorFn<string> =>
   (value: string) => {
     if (!value) return true
     try {
@@ -135,7 +145,8 @@ export const url = (message = 'Invalid URL'): ValidatorFn<string> =>
 /**
  * Phone number validator (basic)
  */
-export const phone = (message = 'Invalid phone number'): ValidatorFn<string> => 
+export const phone =
+  (message = 'Invalid phone number'): ValidatorFn<string> =>
   (value: string) => {
     if (!value) return true
     // Basic phone validation - can be customized for specific formats
@@ -146,7 +157,8 @@ export const phone = (message = 'Invalid phone number'): ValidatorFn<string> =>
 /**
  * Alpha validator - only letters
  */
-export const alpha = (message = 'Only letters allowed'): ValidatorFn<string> => 
+export const alpha =
+  (message = 'Only letters allowed'): ValidatorFn<string> =>
   (value: string) => {
     if (!value) return true
     const pattern = /^[a-zA-Z]+$/
@@ -156,7 +168,8 @@ export const alpha = (message = 'Only letters allowed'): ValidatorFn<string> =>
 /**
  * Alphanumeric validator
  */
-export const alphanumeric = (message = 'Only letters and numbers allowed'): ValidatorFn<string> => 
+export const alphanumeric =
+  (message = 'Only letters and numbers allowed'): ValidatorFn<string> =>
   (value: string) => {
     if (!value) return true
     const pattern = /^[a-zA-Z0-9]+$/
@@ -166,10 +179,11 @@ export const alphanumeric = (message = 'Only letters and numbers allowed'): Vali
 /**
  * Custom validator helper
  */
-export const custom = <T = any>(
-  validatorFn: (value: T) => boolean | Promise<boolean>,
-  message = 'Invalid value'
-): ValidatorFn<T> => 
+export const custom =
+  <T = any>(
+    validatorFn: (value: T) => boolean | Promise<boolean>,
+    message = 'Invalid value'
+  ): ValidatorFn<T> =>
   async (value: T) => {
     const isValid = await validatorFn(value)
     return isValid || message
@@ -178,7 +192,8 @@ export const custom = <T = any>(
 /**
  * Compose multiple validators
  */
-export const compose = <T = any>(...validators: ValidatorFn<T>[]): ValidatorFn<T> => 
+export const compose =
+  <T = any>(...validators: ValidatorFn<T>[]): ValidatorFn<T> =>
   async (value: T) => {
     for (const validator of validators) {
       const result = await validator(value)
@@ -192,10 +207,8 @@ export const compose = <T = any>(...validators: ValidatorFn<T>[]): ValidatorFn<T
 /**
  * Conditional validator - only runs if condition is met
  */
-export const when = <T = any>(
-  condition: (value: T) => boolean,
-  validator: ValidatorFn<T>
-): ValidatorFn<T> => 
+export const when =
+  <T = any>(condition: (value: T) => boolean, validator: ValidatorFn<T>): ValidatorFn<T> =>
   async (value: T) => {
     if (!condition(value)) {
       return true
@@ -224,5 +237,5 @@ export const validators = {
   alphanumeric,
   custom,
   compose,
-  when
+  when,
 }

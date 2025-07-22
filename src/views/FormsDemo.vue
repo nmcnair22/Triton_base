@@ -20,18 +20,26 @@
       <form @submit="contactForm.handleSubmit" class="space-y-6">
         <div class="grid md:grid-cols-2 gap-6">
           <AppInput
-            v-bind="resolveFieldProps(contactForm.getFieldProps('firstName', {
-              validators: [validators.required('First name is required')]
-            }))"
+            v-bind="
+              resolveFieldProps(
+                contactForm.getFieldProps('firstName', {
+                  validators: [validators.required('First name is required')],
+                })
+              )
+            "
             label="First Name"
             placeholder="Enter your first name"
             required
           />
 
           <AppInput
-            v-bind="resolveFieldProps(contactForm.getFieldProps('lastName', {
-              validators: [validators.required('Last name is required')]
-            }))"
+            v-bind="
+              resolveFieldProps(
+                contactForm.getFieldProps('lastName', {
+                  validators: [validators.required('Last name is required')],
+                })
+              )
+            "
             label="Last Name"
             placeholder="Enter your last name"
             required
@@ -39,44 +47,54 @@
         </div>
 
         <AppInput
-          v-bind="resolveFieldProps(contactForm.getFieldProps('email', {
-            validators: [
-              validators.required('Email is required'),
-              validators.email('Please enter a valid email address')
-            ]
-          }))"
+          v-bind="
+            resolveFieldProps(
+              contactForm.getFieldProps('email', {
+                validators: [
+                  validators.required('Email is required'),
+                  validators.email('Please enter a valid email address'),
+                ],
+              })
+            )
+          "
           label="Email Address"
           placeholder="Enter your email"
           required
         />
 
         <AppInput
-          v-bind="resolveFieldProps(contactForm.getFieldProps('phone', {
-            validators: [
-              validators.phone('Please enter a valid phone number')
-            ]
-          }))"
+          v-bind="
+            resolveFieldProps(
+              contactForm.getFieldProps('phone', {
+                validators: [validators.phone('Please enter a valid phone number')],
+              })
+            )
+          "
           label="Phone Number"
           placeholder="(555) 123-4567"
           help-text="Optional - we'll only call if necessary"
         />
 
         <AppInput
-          v-bind="resolveFieldProps(contactForm.getFieldProps('message', {
-            validators: [
-              validators.required('Message is required'),
-              validators.minLength(10, 'Message must be at least 10 characters')
-            ]
-          }))"
+          v-bind="
+            resolveFieldProps(
+              contactForm.getFieldProps('message', {
+                validators: [
+                  validators.required('Message is required'),
+                  validators.minLength(10, 'Message must be at least 10 characters'),
+                ],
+              })
+            )
+          "
           label="Message"
           placeholder="Enter your message..."
           help-text="Tell us how we can help you"
         />
 
         <div class="flex gap-4">
-          <AppButton 
-            type="submit" 
-            variant="primary" 
+          <AppButton
+            type="submit"
+            variant="primary"
             size="large"
             :loading="contactForm.isSubmitting.value"
             :disabled="!contactForm.isValid.value || contactForm.isSubmitting.value"
@@ -84,13 +102,13 @@
             <template #icon><i class="pi pi-send"></i></template>
             Send Message
           </AppButton>
-          <AppButton 
-            type="button" 
-            variant="secondary" 
+          <AppButton
+            type="button"
+            variant="secondary"
             @click="contactForm.reset()"
             :disabled="!contactForm.isDirty.value"
-          > 
-            Reset 
+          >
+            Reset
           </AppButton>
         </div>
 
@@ -134,19 +152,14 @@
         />
 
         <div class="flex gap-4">
-          <AppButton 
+          <AppButton
             @click="validatePasswords"
             variant="primary"
             :disabled="!passwordField.dirty.value || !confirmPasswordField.dirty.value"
           >
             Validate Passwords
           </AppButton>
-          <AppButton 
-            @click="resetPasswords"
-            variant="secondary"
-          >
-            Reset
-          </AppButton>
+          <AppButton @click="resetPasswords" variant="secondary"> Reset </AppButton>
         </div>
       </div>
     </AppCard>
@@ -170,7 +183,9 @@
             placeholder="Choose a username"
             :state="usernameField.state.value"
             :error-message="usernameField.error.value"
-            :help-text="usernameField.isValidating.value ? 'Checking availability...' : 'Must be unique'"
+            :help-text="
+              usernameField.isValidating.value ? 'Checking availability...' : 'Must be unique'
+            "
             @blur="usernameField.setTouched"
           />
           <div v-if="usernameField.isValidating.value" class="flex items-center gap-2 text-primary">
@@ -212,8 +227,14 @@
         <div v-for="category in validatorCategories" :key="category.name">
           <h3 class="font-semibold mb-3">{{ category.name }}</h3>
           <ul class="space-y-2">
-            <li v-for="validator in category.validators" :key="validator" class="text-sm text-surface-600 dark:text-surface-400">
-              <code class="bg-surface-100 dark:bg-surface-800 px-2 py-1 rounded">{{ validator }}</code>
+            <li
+              v-for="validator in category.validators"
+              :key="validator"
+              class="text-sm text-surface-600 dark:text-surface-400"
+            >
+              <code class="bg-surface-100 dark:bg-surface-800 px-2 py-1 rounded">{{
+                validator
+              }}</code>
             </li>
           </ul>
         </div>
@@ -234,35 +255,40 @@ const showDebug = ref(false)
 
 // Helper to resolve computed refs for v-bind
 const resolveFieldProps = (props: any) => ({
-  ...props,
+  modelValue: props.modelValue?.value,
   errorMessage: props.errorMessage?.value || '',
-  state: props.state?.value || 'default'
+  state: props.state?.value || 'default',
+  onBlur: props.onBlur,
+  onChange: props.onChange,
 })
 
 // Form composable example
-const contactForm = useForm({
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  message: ''
-}, {
-  validateOn: 'blur',
-  onSubmit: async (values) => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    toast.add({
-      severity: 'success',
-      summary: 'Success',
-      detail: 'Form submitted successfully!',
-      life: 3000
-    })
-    
-    console.log('Form submitted:', values)
-    contactForm.reset()
+const contactForm = useForm(
+  {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    message: '',
+  },
+  {
+    validateOn: 'blur',
+    onSubmit: async values => {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      toast.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Form submitted successfully!',
+        life: 3000,
+      })
+
+      console.log('Form submitted:', values)
+      contactForm.reset()
+    },
   }
-})
+)
 
 // Individual field examples
 const passwordField = useFormField('', {
@@ -272,20 +298,17 @@ const passwordField = useFormField('', {
     validators.pattern(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
       'Password must contain uppercase, lowercase, and numbers'
-    )
+    ),
   ],
-  validateOn: 'blur'
+  validateOn: 'blur',
 })
 
 const confirmPasswordField = useFormField('', {
   validators: [
     validators.required('Please confirm your password'),
-    validators.match(
-      () => passwordField.value.value,
-      'Passwords must match'
-    )
+    validators.match(() => passwordField.value.value, 'Passwords must match'),
   ],
-  validateOn: 'blur'
+  validateOn: 'blur',
 })
 
 // Async validation example
@@ -302,10 +325,10 @@ const usernameField = useFormField('', {
     validators.required('Username is required'),
     validators.minLength(3, 'Username must be at least 3 characters'),
     validators.alphanumeric('Username can only contain letters and numbers'),
-    custom(checkUsernameAvailability, 'Username is already taken')
+    custom(checkUsernameAvailability, 'Username is already taken'),
   ],
   validateOn: 'blur',
-  debounce: 500
+  debounce: 500,
 })
 
 // Conditional validation example
@@ -315,24 +338,24 @@ const addressField = useFormField('', {
     validators.when(
       () => requireAddress.value,
       validators.required('Address is required when shipping is selected')
-    )
+    ),
   ],
-  validateOn: 'blur'
+  validateOn: 'blur',
 })
 
 // Methods
 const validatePasswords = async () => {
   const [isPasswordValid, isConfirmValid] = await Promise.all([
     passwordField.validate(),
-    confirmPasswordField.validate()
+    confirmPasswordField.validate(),
   ])
-  
+
   if (isPasswordValid && isConfirmValid) {
     toast.add({
       severity: 'success',
       summary: 'Valid',
       detail: 'Passwords are valid and match!',
-      life: 3000
+      life: 3000,
     })
   }
 }
@@ -348,26 +371,26 @@ const formDebugInfo = computed(() => ({
   isDirty: contactForm.isDirty.value,
   isSubmitting: contactForm.isSubmitting.value,
   errors: contactForm.errors.value,
-  touched: contactForm.touched.value
+  touched: contactForm.touched.value,
 }))
 
 // Validator categories for reference
 const validatorCategories = [
   {
     name: 'Basic Validators',
-    validators: ['required', 'email', 'url', 'phone']
+    validators: ['required', 'email', 'url', 'phone'],
   },
   {
     name: 'String Validators',
-    validators: ['minLength', 'maxLength', 'pattern', 'alpha', 'alphanumeric']
+    validators: ['minLength', 'maxLength', 'pattern', 'alpha', 'alphanumeric'],
   },
   {
     name: 'Number Validators',
-    validators: ['numeric', 'integer', 'min', 'max', 'between']
+    validators: ['numeric', 'integer', 'min', 'max', 'between'],
   },
   {
     name: 'Advanced',
-    validators: ['match', 'custom', 'compose', 'when']
-  }
+    validators: ['match', 'custom', 'compose', 'when'],
+  },
 ]
 </script>

@@ -2,8 +2,8 @@
   <nav class="layout-menu">
     <ul class="menu-list">
       <li v-for="(item, index) in menuItems" :key="index" class="menu-item">
-        <router-link 
-          :to="item.to" 
+        <router-link
+          :to="item.to"
           class="menu-link"
           :class="{ 'menu-link-active': $route.path === item.to }"
         >
@@ -28,7 +28,7 @@ const menuItems: MenuItem[] = [
   { label: 'Forms', to: '/forms', icon: 'pi pi-file-edit' },
   { label: 'Tables', to: '/tables', icon: 'pi pi-table' },
   { label: 'Charts', to: '/charts', icon: 'pi pi-chart-bar' },
-  { label: 'Settings', to: '/settings', icon: 'pi pi-cog' }
+  { label: 'Settings', to: '/settings', icon: 'pi pi-cog' },
 ]
 </script>
 
@@ -62,4 +62,4 @@ const menuItems: MenuItem[] = [
 .menu-label {
   @apply text-sm font-medium;
 }
-</style> 
+</style>

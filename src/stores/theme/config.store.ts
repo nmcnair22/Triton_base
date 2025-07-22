@@ -24,16 +24,16 @@ export const useThemeConfigStore = defineStore('theme-config', () => {
     syncAcrossTabs: true,
     smoothTransitions: true,
     storageKey: 'triton-theme-config',
-    maxSavedPresets: 20
+    maxSavedPresets: 20,
   })
-  
+
   // Actions
   function toggleDarkMode() {
     config.value.darkMode = !config.value.darkMode
     applyDarkMode(config.value.darkMode)
     saveConfig()
   }
-  
+
   function setDarkMode(isDark: boolean) {
     config.value.darkMode = isDark
     applyDarkMode(isDark)
@@ -41,21 +41,21 @@ export const useThemeConfigStore = defineStore('theme-config', () => {
       saveConfig()
     }
   }
-  
+
   function setActivePresetId(presetId: string) {
     config.value.activePresetId = presetId
     if (config.value.autoSave) {
       saveConfig()
     }
   }
-  
+
   function setBaseTheme(theme: BaseTheme) {
     config.value.baseTheme = theme
     if (config.value.autoSave) {
       saveConfig()
     }
   }
-  
+
   function applyDarkMode(isDark: boolean) {
     if (isDark) {
       document.documentElement.classList.add('dark')
@@ -63,7 +63,7 @@ export const useThemeConfigStore = defineStore('theme-config', () => {
       document.documentElement.classList.remove('dark')
     }
   }
-  
+
   function loadSavedConfig() {
     try {
       const saved = localStorage.getItem(config.value.storageKey)
@@ -76,15 +76,15 @@ export const useThemeConfigStore = defineStore('theme-config', () => {
           'darkMode',
           'autoSave',
           'syncAcrossTabs',
-          'smoothTransitions'
+          'smoothTransitions',
         ]
-        
+
         allowedKeys.forEach(key => {
           if (key in parsedConfig) {
-            (config.value[key] as any) = parsedConfig[key]
+            ;(config.value[key] as any) = parsedConfig[key]
           }
         })
-        
+
         // Apply dark mode immediately
         applyDarkMode(config.value.darkMode)
       }
@@ -92,7 +92,7 @@ export const useThemeConfigStore = defineStore('theme-config', () => {
       console.warn('Failed to load saved config:', error)
     }
   }
-  
+
   function saveConfig() {
     try {
       const configToSave = {
@@ -101,14 +101,14 @@ export const useThemeConfigStore = defineStore('theme-config', () => {
         darkMode: config.value.darkMode,
         autoSave: config.value.autoSave,
         syncAcrossTabs: config.value.syncAcrossTabs,
-        smoothTransitions: config.value.smoothTransitions
+        smoothTransitions: config.value.smoothTransitions,
       }
       localStorage.setItem(config.value.storageKey, JSON.stringify(configToSave))
     } catch (error) {
       console.warn('Failed to save config:', error)
     }
   }
-  
+
   function resetConfig() {
     config.value = {
       activePresetId: '',
@@ -118,15 +118,15 @@ export const useThemeConfigStore = defineStore('theme-config', () => {
       syncAcrossTabs: true,
       smoothTransitions: true,
       storageKey: 'triton-theme-config',
-      maxSavedPresets: 20
+      maxSavedPresets: 20,
     }
     applyDarkMode(false)
     saveConfig()
   }
-  
+
   // Cross-tab synchronization
   if (typeof window !== 'undefined' && config.value.syncAcrossTabs) {
-    window.addEventListener('storage', (e) => {
+    window.addEventListener('storage', e => {
       if (e.key === config.value.storageKey && e.newValue) {
         try {
           const newConfig = JSON.parse(e.newValue)
@@ -138,37 +138,40 @@ export const useThemeConfigStore = defineStore('theme-config', () => {
       }
     })
   }
-  
+
   // Watch for auto-save changes
-  watch(() => config.value.autoSave, (newValue) => {
-    if (newValue) {
-      saveConfig()
+  watch(
+    () => config.value.autoSave,
+    newValue => {
+      if (newValue) {
+        saveConfig()
+      }
     }
-  })
-  
+  )
+
   // Initialize method that coordinates with preset store
   async function initialize() {
     console.log('🎨 Initializing Theme System...')
-    
+
     // Load saved configuration
     loadSavedConfig()
-    
+
     // Initialize preset store
     const presetStore = useThemePresetStore()
     await presetStore.initialize()
-    
+
     console.log('✅ Theme system initialized')
   }
-  
+
   return {
     // State
     config,
-    
+
     // Getters
     isDarkMode: () => config.value.darkMode,
     isAutoSave: () => config.value.autoSave,
     isSyncEnabled: () => config.value.syncAcrossTabs,
-    
+
     // Actions
     initialize,
     toggleDarkMode,
@@ -177,6 +180,6 @@ export const useThemeConfigStore = defineStore('theme-config', () => {
     setBaseTheme,
     loadSavedConfig,
     saveConfig,
-    resetConfig
+    resetConfig,
   }
 })
