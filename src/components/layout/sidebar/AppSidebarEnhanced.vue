@@ -79,6 +79,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useLayoutEnhanced } from '@/composables/layout/useLayoutEnhanced'
 import AppSidebarMenu from './AppSidebarMenu.vue'
 
@@ -91,13 +92,18 @@ const {
   isMobile,
   isOverlay,
   isDrawer,
-  layoutState: { menuHoverActive, anchored },
+  layoutState,
+  layoutConfig,
   handleSidebarMouseEnter,
   handleSidebarMouseLeave,
   toggleAnchor,
-  toggleMenu,
-  layoutConfig: { menuProfile }
+  toggleMenu
 } = useLayoutEnhanced()
+
+// Access reactive properties directly from state/config
+const menuHoverActive = computed(() => layoutState.value.menuHoverActive)
+const anchored = computed(() => layoutState.value.anchored)
+const menuProfile = computed(() => layoutConfig.value.menuProfile)
 </script>
 
 <style scoped>
