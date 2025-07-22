@@ -4,38 +4,42 @@
 1. [Overview](#overview)
 2. [Architecture](#architecture)
 3. [File Structure](#file-structure)
-4. [Core Components](#core-components)
-5. [Data Flow](#data-flow)
-6. [API Reference](#api-reference)
-7. [User Guide](#user-guide)
-8. [Developer Guide](#developer-guide)
-9. [Extension Points](#extension-points)
-10. [Troubleshooting](#troubleshooting)
+4. [Store Architecture](#store-architecture)
+5. [Core Components](#core-components)
+6. [Composables](#composables)
+7. [Data Flow](#data-flow)
+8. [API Reference](#api-reference)
+9. [User Guide](#user-guide)
+10. [Developer Guide](#developer-guide)
+11. [Performance Optimizations](#performance-optimizations)
+12. [Troubleshooting](#troubleshooting)
 
 ---
 
 ## Overview
 
-The Triton Theme Configuration System is a comprehensive, real-time theme customization solution built for Vue 3 applications using PrimeVue 4. It provides users with the ability to customize every aspect of their application's visual appearance through an intuitive interface while maintaining type safety and performance.
+The Triton Theme Configuration System is a comprehensive, real-time theme customization solution built for Vue 3 applications using PrimeVue 4. The system has evolved into a modular, high-performance architecture with split stores for better separation of concerns and enhanced user experience.
 
 ### Key Features
-- **Real-time theme editing** with instant visual feedback
-- **Multi-format color editing** (Hex, RGB, HSL) with validation
-- **Preset management** with CRUD operations
-- **Color harmony generation** (monochromatic, complementary, triadic, analogous)
-- **Import/export functionality** for theme sharing
-- **Dark mode with smooth transitions** using View Transitions API
-- **Accessibility support** with high contrast themes and WCAG compliance
-- **Cross-tab synchronization** for consistent experience
-- **Type-safe architecture** with comprehensive TypeScript support
+- **🏗️ Split Store Architecture** with dedicated stores for config, UI, presets, and editing
+- **⚡ Real-time theme editing** with instant visual feedback and performance optimizations
+- **🎨 Advanced color editing** with multiple format support, palettes, and color harmonies
+- **📚 Built-in preset library** with professional themes (Default, High Contrast, Ocean, Sunset, Corporate)
+- **💾 Enhanced preset management** with CRUD operations, import/export, and validation
+- **🌙 Advanced dark mode** with smooth transitions using View Transitions API
+- **♿ Accessibility support** with WCAG compliance and high contrast themes
+- **🔄 Cross-tab synchronization** for consistent experience
+- **🚀 Performance optimizations** with memoized color calculations
+- **📱 Modern UI** with PrimeVue 4 components and responsive design
 
 ### Technical Stack
-- **Vue 3** with Composition API
-- **Pinia** for state management
-- **PrimeVue 4** (Styled Mode) with design tokens
-- **TypeScript** for type safety
-- **LocalStorage** for persistence
-- **CSS Variables** for real-time updates
+- **Vue 3** with Composition API and `<script setup>`
+- **Pinia** for state management (split stores)
+- **PrimeVue 4** (Styled Mode) with latest design tokens API
+- **TypeScript** for comprehensive type safety
+- **LocalStorage** with intelligent caching and quota management
+- **CSS Variables** for real-time theme updates
+- **View Transitions API** for smooth dark mode transitions
 
 ---
 
@@ -45,36 +49,47 @@ The Triton Theme Configuration System is a comprehensive, real-time theme custom
 
 ```mermaid
 graph TD
-    A[User Interface] --> B[ThemeConfigurator.vue]
-    B --> C[Theme Store (Pinia)]
-    C --> D[Preset Manager]
-    C --> E[Theme Config Composable]
-    C --> F[Color Editor Composable]
+    A[ThemeConfigurator.vue] --> B[Split Store Architecture]
     
-    D --> G[Storage Utils]
-    D --> H[Validation Utils]
+    B --> C[useThemeConfigStore]
+    B --> D[useThemeUIStore]
+    B --> E[useThemePresetStore]
+    B --> F[useThemeEditorStore]
     
-    E --> I[PrimeVue Theme System]
-    F --> J[Color Utils]
+    C --> G[Configuration & Dark Mode]
+    D --> H[UI State & Drawer]
+    E --> I[Preset Management]
+    F --> J[Real-time Editing]
     
-    I --> K[CSS Variables]
-    K --> L[Live UI Updates]
+    E --> K[PresetManager]
+    K --> L[ThemeStorage Utils]
+    K --> M[ThemeValidator]
     
-    G --> M[LocalStorage]
-    H --> N[Theme Validation]
+    F --> N[useThemeConfig Composable]
+    F --> O[useColorEditor Composable]
     
-    O[Dark Mode Composable] --> P[View Transitions API]
-    O --> K
+    N --> P[PrimeVue 4 Theme API]
+    O --> Q[Memoized Color Utils]
+    
+    P --> R[CSS Variables]
+    R --> S[Live UI Updates]
+    
+    T[useDarkMode] --> U[View Transitions API]
+    T --> R
+    
+    V[Performance Layer] --> W[Memoized Functions]
+    V --> X[Batch Processing]
+    V --> Y[Cache Management]
 ```
 
 ### Core Principles
 
-1. **Separation of Concerns**: Each module has a single responsibility
-2. **Reactive Updates**: Changes propagate automatically through the system
-3. **Type Safety**: Comprehensive TypeScript coverage
-4. **Performance**: Minimal re-renders and efficient storage
-5. **Extensibility**: Modular design for easy enhancement
-6. **User Experience**: Intuitive interface with immediate feedback
+1. **Modular Architecture**: Split stores for single responsibility
+2. **Performance First**: Memoized calculations and optimized rendering
+3. **Type Safety**: Comprehensive TypeScript coverage with strict types
+4. **User Experience**: Smooth transitions and intuitive interface
+5. **Accessibility**: WCAG compliance and high contrast support
+6. **Extensibility**: Plugin-ready architecture for easy enhancement
 
 ---
 
@@ -82,316 +97,294 @@ graph TD
 
 ```
 src/
-├── components/
-│   └── theme/
-│       ├── ThemeConfigurator.vue      # Main theme configuration interface
-│       ├── ColorTokenEditor.vue       # Individual color token editing
-│       ├── PresetManager.vue          # Preset CRUD operations
-│       ├── PresetGrid.vue            # Visual preset display
-│       ├── ThemePreview.vue          # Live theme preview
-│       └── ThemeExporter.vue         # Import/export functionality
-├── stores/
-│   └── theme.store.ts                # Central theme state management
+├── components/theme/
+│   ├── ThemeConfigurator.vue         # Main configurator with drawer UI
+│   ├── ColorTokenEditor.vue          # Advanced color editor with palettes
+│   ├── PresetManager.vue             # Complete preset CRUD interface
+│   ├── PresetGrid.vue               # Visual preset gallery
+│   ├── ThemePreview.vue             # Live theme preview
+│   └── ThemeExporter.vue            # Import/export functionality
+├── stores/theme/
+│   ├── config.store.ts              # Configuration & dark mode
+│   ├── ui.store.ts                  # UI state management
+│   ├── preset.store.ts              # Preset CRUD operations
+│   ├── editor.store.ts              # Real-time editing
+│   └── index.ts                     # Unified exports
 ├── themes/
 │   ├── presets/
-│   │   ├── preset.types.ts           # TypeScript type definitions
-│   │   └── preset-manager.ts         # Preset management logic
+│   │   ├── preset.types.ts          # TypeScript definitions
+│   │   └── preset-manager.ts        # Preset management logic
 │   ├── config/
-│   │   └── theme.config.ts           # Theme configuration and tokens
+│   │   └── theme.config.ts          # Token definitions & categories
 │   ├── composables/
-│   │   ├── useThemeConfig.ts         # Theme configuration composable
-│   │   └── useColorEditor.ts         # Color editing composable
-│   └── utils/
-│       ├── storage.ts                # Storage utilities
-│       ├── validation.ts             # Validation utilities
-│       └── color-utils.ts            # Color manipulation utilities
+│   │   ├── useThemeConfig.ts        # PrimeVue integration
+│   │   └── useColorEditor.ts        # Color manipulation
+│   ├── utils/
+│   │   ├── storage.ts               # ThemeStorage class
+│   │   ├── validation.ts            # ThemeValidator class
+│   │   └── color-utils.ts           # Color calculations
+│   ├── custom-preset.ts             # Default Triton theme
+│   └── token-factory.ts             # Token utilities
+├── utils/performance/
+│   └── color-utils-optimized.ts     # Memoized color functions
 ├── composables/
-│   └── useDarkMode.ts                # Dark mode management
-└── main.ts                           # Theme system initialization
+│   └── useDarkMode.ts               # Enhanced dark mode
+└── main.ts                          # Theme system initialization
 ```
+
+---
+
+## Store Architecture
+
+### Split Store Pattern
+
+The theme system uses a split store architecture for better separation of concerns:
+
+#### 1. useThemeConfigStore
+**Manages global configuration and dark mode**
+
+```typescript
+interface ThemeConfig {
+  activePresetId: string
+  baseTheme: BaseTheme
+  darkMode: boolean
+  autoSave: boolean
+  syncAcrossTabs: boolean
+  smoothTransitions: boolean
+  storageKey: string
+  maxSavedPresets?: number
+}
+```
+
+**Key Features:**
+- Dark mode with CSS class management
+- Cross-tab synchronization via storage events
+- Auto-save configuration
+- Base theme switching
+
+#### 2. useThemeUIStore
+**Manages UI state for the configurator**
+
+```typescript
+interface ThemeUIState {
+  configSidebarVisible: boolean
+  isDirty: boolean
+  isLoading: boolean
+  activeTab: 'presets' | 'colors' | 'settings'
+  expandedSections: Set<string>
+}
+```
+
+**Key Features:**
+- Drawer/sidebar visibility
+- Dirty state tracking
+- Loading states
+- Section expansion state
+
+#### 3. useThemePresetStore
+**Handles all preset operations**
+
+```typescript
+// Built-in presets: Triton Default, High Contrast, Ocean, Sunset, Corporate
+// User presets: Custom themes with full CRUD operations
+// Smart caching and validation
+```
+
+**Key Features:**
+- Built-in preset library (5 professional themes)
+- User preset CRUD operations
+- Import/export with validation
+- Preset duplication and metadata management
+
+#### 4. useThemeEditorStore
+**Real-time theme editing functionality**
+
+```typescript
+interface EditorState {
+  editingPreset: ThemePreset | null
+  editingColors: ColorOverride[]
+  originalColors: ColorOverride[]
+  hasChanges: boolean
+  canSave: boolean
+}
+```
+
+**Key Features:**
+- Real-time color editing with instant preview
+- Undo/redo capabilities
+- Palette generation for brand colors
+- Change tracking and dirty state
 
 ---
 
 ## Core Components
 
 ### 1. ThemeConfigurator.vue
-**Main orchestration component that provides the primary user interface.**
+**Main orchestration component with modern drawer UI**
 
-#### Key Features:
-- Drawer-based interface (420px width)
-- Real-time preset switching
-- Base theme selection (Material, Aura, Lara, Nora)
-- Tabbed color token editor
-- Color harmony tools
-- Configuration preferences
-- Import/export access
+**Key Features:**
+- 420px responsive drawer interface
+- Live preset switching with visual previews
+- Tabbed color token editor (Brand, Status, Surface, Text, Interaction)
+- Color harmony tools (Monochromatic, Complementary, Triadic, Analogous)
+- Advanced preferences panel
+- Storage information display
 
-#### Props: None (uses global theme store)
+**Enhanced Props:** None (uses global stores)
 
-#### Events:
-- None (communicates through store)
+**Events:** Fully reactive through stores
 
-#### Key Methods:
+**New Methods:**
 ```typescript
-onPresetChange(event: any) // Handles preset selection
-onBaseThemeChange() // Switches base theme
-updateTokenColor(tokenId: string, value: string) // Updates color tokens
-resetToken(tokenId: string) // Resets token to default
-applyColorHarmony(type: string) // Applies color harmony scheme
+async updateTokenColor(tokenId: string, value: string) // Real-time updates
+async applyColorHarmony(type: HarmonyType) // Color scheme generation
+async saveCurrentPreset() // Intelligent saving
+async resetToDefaults() // Smart reset
 ```
 
 ### 2. ColorTokenEditor.vue
-**Advanced color editing component with multi-format support.**
+**Advanced color editing with multi-format support**
 
-#### Props:
+**Enhanced Features:**
+- Visual color swatch with live preview
+- Multi-format editing (Hex, RGB, HSL) with real-time conversion
+- 24-color quick preset palette
+- Color variations (lighter/darker/saturated)
+- Clipboard integration
+- Palette-based editing for brand colors
+- Real-time validation with error display
+
+**Props:**
 ```typescript
 interface Props {
-  token: ColorToken          // Token definition
-  value: string             // Current color value
-  isEdited?: boolean        // Whether token has been modified
+  token: ColorToken
+  value: string
+  isEdited?: boolean
 }
 ```
 
-#### Events:
+**Events:**
 ```typescript
 interface Emits {
-  update: [tokenId: string, value: string]  // Color value changed
-  reset: [tokenId: string]                  // Reset to default
-  edit: [tokenId: string]                   // Open detailed editor
+  update: [tokenId: string, value: string]
+  reset: [tokenId: string]
+  edit: [tokenId: string]
 }
 ```
-
-#### Key Features:
-- Visual color swatch display
-- Multi-format editing (Hex, RGB, HSL)
-- Real-time validation
-- Quick color presets (24 colors)
-- Color variations (lighter/darker)
-- Copy to clipboard functionality
 
 ### 3. PresetManager.vue
-**Comprehensive preset management interface.**
+**Comprehensive preset management interface**
 
-#### Props:
-```typescript
-interface Props {
-  visible: boolean  // Dialog visibility
-}
-```
-
-#### Events:
-```typescript
-interface Emits {
-  'update:visible': [visible: boolean]
-  'preset-changed': []
-}
-```
-
-#### Key Features:
-- Tabbed interface (All/Built-in/Custom)
-- CRUD operations for presets
-- Edit dialog with metadata
-- Import/export functionality
-- Storage statistics display
+**Enhanced Features:**
+- Modal dialog interface (800px responsive)
+- Tabbed preset organization (All/Built-in/Custom)
+- Advanced CRUD operations with validation
+- Bulk import/export functionality
+- Storage quota monitoring
+- Preset metadata editing (tags, descriptions)
+- Visual preset previews with color swatches
 
 ### 4. PresetGrid.vue
-**Visual display component for theme presets.**
+**Visual preset gallery with enhanced UX**
 
-#### Props:
-```typescript
-interface Props {
-  presets: ThemePreset[]     // Presets to display
-  activePresetId?: string    // Currently active preset
-  showEmptyState?: boolean   // Show empty state message
-}
-```
-
-#### Events:
-```typescript
-interface Emits {
-  activate: [preset: ThemePreset]
-  edit: [preset: ThemePreset]
-  duplicate: [preset: ThemePreset]
-  delete: [preset: ThemePreset]
-  create: []
-}
-```
-
-#### Key Features:
-- Responsive grid layout (1-3 columns)
-- Color preview swatches
-- Context menus for actions
+**New Features:**
+- Responsive grid layout (1-3 columns based on screen size)
+- Rich preset cards with metadata display
+- Context menus for quick actions
+- Color preview strips showing main colors
 - Status indicators (active, default, built-in)
+- Empty state with call-to-action
 
 ---
 
-## Data Flow
+## Composables
 
-### Theme Change Flow
+### 1. useThemeConfig
+**Enhanced PrimeVue integration composable**
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant UI as ThemeConfigurator
-    participant Store as Theme Store
-    participant Config as useThemeConfig
-    participant PV as PrimeVue
-    participant DOM
-
-    User->>UI: Selects new theme
-    UI->>Store: activatePreset(preset)
-    Store->>Config: Apply color overrides
-    Config->>PV: updatePreset()
-    PV->>DOM: Update CSS variables
-    DOM->>User: Visual changes appear
-```
-
-### Color Edit Flow
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Editor as ColorTokenEditor
-    participant Store as Theme Store
-    participant Utils as Color Utils
-    participant CSS as CSS Variables
-
-    User->>Editor: Changes color value
-    Editor->>Utils: Validate color
-    Utils->>Editor: Validation result
-    Editor->>Store: updateColor(tokenId, value)
-    Store->>CSS: Apply CSS variable
-    CSS->>User: Instant visual feedback
-```
-
----
-
-## API Reference
-
-### Theme Store (Pinia)
-
-#### State
-```typescript
-interface ThemeState {
-  config: ThemeConfig                    // Theme configuration
-  state: ThemeState                      // UI state
-  presets: ThemePreset[]                 // All available presets
-  activePreset: ThemePreset | null       // Currently active preset
-  editingPreset: ThemePreset | null      // Preset being edited
-  editingColors: ColorOverride[]         // Color modifications
-}
-```
-
-#### Computed Properties
-```typescript
-availablePresets: ComputedRef<ThemePreset[]>  // Built-in + user presets
-userPresets: ComputedRef<ThemePreset[]>       // User-created presets
-builtInPresets: ComputedRef<ThemePreset[]>    // Built-in presets
-canSave: ComputedRef<boolean>                 // Can save current changes
-isConfigOpen: ComputedRef<boolean>            // Configuration panel open
-```
-
-#### Actions
-```typescript
-// Initialization
-initialize(): Promise<void>
-
-// Preset Management
-activatePreset(preset: ThemePreset): Promise<void>
-createPreset(name: string, description?: string): Promise<ThemePreset>
-updatePreset(preset: ThemePreset): Promise<void>
-deletePreset(presetId: string): Promise<void>
-duplicatePreset(presetId: string, newName: string): Promise<ThemePreset>
-
-// Color Management
-updateColor(tokenId: string, value: string): Promise<void>
-getTokenValue(tokenId: string): string
-
-// Theme Application
-applyTheme(): Promise<void>
-
-// Import/Export
-exportPreset(presetId: string): Promise<void>
-importPreset(file: File): Promise<ThemePreset>
-
-// UI State
-toggleConfig(): void
-toggleDarkMode(): Promise<void>
-```
-
-### useThemeConfig Composable
-
-#### Purpose
-Bridges the theme store with PrimeVue's theme system, providing real-time updates and color harmony generation.
-
-#### Return Value
+**New Capabilities:**
 ```typescript
 interface ThemeConfigReturn {
-  // Token organization
+  // Enhanced token organization
   tokensByCategory: ComputedRef<Record<string, ColorToken[]>>
   
-  // Theme operations
+  // Advanced theme operations
   updateTokenColor(tokenId: string, value: string): Promise<void>
   switchBaseTheme(baseTheme: BaseTheme): Promise<void>
   resetToPresetDefaults(): Promise<void>
   
-  // Color harmony
+  // Color harmony generation
   generateColorHarmony(baseColor: string, type: HarmonyType): ColorHarmonyResult
   applyColorHarmony(harmony: ColorHarmonyResult): Promise<void>
   
-  // Utilities
-  getTokenValue(tokenId: string): string
-  validateThemeConfig(config: any): ValidationResult
+  // Real-time integration
+  applyColorUpdate(tokenId: string, value: string): Promise<void>
+  updateCSSProperty(tokenId: string, value: string): void
+  getCurrentCSSValue(cssVariable: string): string
+  
+  // Accessibility
+  checkColorContrast(foreground: string, background: string): ContrastResult
 }
 ```
 
-### useColorEditor Composable
+**PrimeVue 4 Integration:**
+- Direct integration with `updatePreset()` API
+- Automatic palette generation using `palette()` function
+- Support for semantic color tokens
+- Real-time CSS variable updates
 
-#### Purpose
-Provides advanced color editing capabilities with format conversion and validation.
+### 2. useColorEditor
+**Advanced color manipulation composable**
 
-#### Return Value
+**Enhanced Features:**
 ```typescript
 interface ColorEditorReturn {
-  // Color operations
-  convertColor(color: string, format: ColorFormat): string
-  validateColor(color: string): ValidationResult
-  generateColorVariations(baseColor: string): ColorVariation[]
+  // State management
+  currentTokenId: Ref<string | null>
+  currentValue: Ref<string>
+  isEditing: Ref<boolean>
+  previewMode: Ref<boolean>
+  
+  // Color format conversion
+  colorFormats: ComputedRef<{
+    hex: string
+    rgb: string
+    hsl: string
+    hsv: string
+  }>
+  
+  // Advanced editing
+  startEditing(tokenId: string, initialValue?: string): void
+  updateColor(newValue: string, applyImmediately?: boolean): boolean
+  applyToTheme(): Promise<void>
+  togglePreview(): void
+  
+  // Color tools
+  generateVariations(): ColorVariations
+  selectFromPalette(shade: number): void
+  applyQuickPreset(presetName: string): void
   
   // Clipboard operations
-  copyColorToClipboard(color: string): Promise<void>
-  pasteColorFromClipboard(): Promise<string | null>
-  
-  // Color analysis
-  getColorTemperature(color: string): 'warm' | 'cool' | 'neutral'
-  getContrastRatio(foreground: string, background: string): number
-  
-  // Preview mode
-  startPreview(tokenId: string): void
-  updatePreview(color: string): void
-  commitPreview(): void
-  cancelPreview(): void
+  copyToClipboard(format: 'hex' | 'rgb' | 'hsl'): Promise<boolean>
+  pasteFromClipboard(): Promise<boolean>
 }
 ```
 
-### useDarkMode Composable
+### 3. useDarkMode
+**Enhanced dark mode with smooth transitions**
 
-#### Purpose
-Manages dark mode state with smooth transitions and system integration.
-
-#### Return Value
+**New Features:**
 ```typescript
 interface DarkModeReturn {
-  // State
+  // Enhanced state
   isDark: ComputedRef<boolean>
   isTransitioning: Ref<boolean>
   systemPrefersDark: Ref<boolean>
   supportsViewTransitions: Ref<boolean>
   
-  // Core functions
+  // Smooth transitions
   toggle(): Promise<void>
   setDarkMode(dark: boolean, skipTransition?: boolean): Promise<void>
-  initialize(): void
   
   // System integration
   setFollowSystemPreference(follow: boolean): void
@@ -401,85 +394,227 @@ interface DarkModeReturn {
   // Accessibility
   getContrastPreference(): 'high' | 'normal' | 'low'
   applyContrastPreference(): void
+  updateThemeColorMeta(dark: boolean): void
 }
 ```
 
-### Color Utils
+**View Transitions Integration:**
+- Smooth transitions using `document.startViewTransition()`
+- Fallback for browsers without support
+- Configurable transition preferences
 
-#### Core Functions
-```typescript
-// Color parsing and conversion
-parseColor(color: string): { r: number; g: number; b: number } | null
-rgbToHex(r: number, g: number, b: number): string
-rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: number }
-hslToRgb(h: number, s: number, l: number): { r: number; g: number; b: number }
+---
 
-// Color manipulation
-lightenColor(color: string, percentage: number): string
-darkenColor(color: string, percentage: number): string
-saturateColor(color: string, percentage: number): string
-desaturateColor(color: string, percentage: number): string
-adjustOpacity(color: string, opacity: number): string
+## Data Flow
 
-// Color analysis
-getContrastRatio(color1: string, color2: string): number
-checkContrast(foreground: string, background: string): ContrastResult
-getColorTemperature(color: string): 'warm' | 'cool' | 'neutral'
-getBestTextColor(backgroundColor: string): string
+### Enhanced Theme Change Flow
 
-// Color harmony
-getComplementaryColor(color: string): string
-generateColorHarmonies(baseColor: string): ColorHarmony[]
-generateAccessiblePalette(baseColor: string): AccessiblePalette
+```mermaid
+sequenceDiagram
+    participant User
+    participant UI as ThemeConfigurator
+    participant EditorStore as Theme Editor Store
+    participant PresetStore as Preset Store
+    participant ThemeConfig as useThemeConfig
+    participant PV as PrimeVue 4
+    participant DOM
 
-// Validation
-isValidColor(color: string): boolean
-convertToAllFormats(color: string): ColorSpace | null
+    User->>UI: Changes color value
+    UI->>EditorStore: updateColor(tokenId, value)
+    EditorStore->>ThemeConfig: Real-time update
+    ThemeConfig->>PV: updatePreset() with palette
+    ThemeConfig->>DOM: Update CSS variables
+    DOM->>User: Instant visual feedback
+    
+    Note over EditorStore: Tracks dirty state
+    EditorStore->>PresetStore: saveChanges() (if auto-save)
+    PresetStore->>DOM: Persist to localStorage
 ```
 
-### Storage Utils
+### Performance-Optimized Color Processing
 
-#### StorageManager Class
+```mermaid
+sequenceDiagram
+    participant Component
+    participant Memoized as Memoized Utils
+    participant Cache
+    participant PrimeVue
+
+    Component->>Memoized: generatePaletteMemoized(color)
+    Memoized->>Cache: Check cache
+    
+    alt Cache Hit
+        Cache->>Memoized: Return cached result
+    else Cache Miss
+        Memoized->>PrimeVue: palette(color)
+        PrimeVue->>Memoized: Generated palette
+        Memoized->>Cache: Store result
+    end
+    
+    Memoized->>Component: Return palette
+```
+
+---
+
+## API Reference
+
+### Split Store APIs
+
+#### ThemeConfigStore
 ```typescript
-class StorageManager {
-  // Core operations
-  save(key: string, data: any): Promise<void>
-  load(key: string): Promise<any>
-  remove(key: string): Promise<void>
-  clear(): Promise<void>
+interface ThemeConfigStore {
+  // State
+  config: Ref<ThemeConfig>
   
-  // Quota management
-  checkQuota(): Promise<QuotaInfo>
-  cleanup(): Promise<void>
+  // Getters
+  isDarkMode(): boolean
+  isAutoSave(): boolean
+  isSyncEnabled(): boolean
   
-  // Backup/restore
-  backup(): Promise<string>
-  restore(data: string): Promise<void>
-  
-  // Statistics
-  getStorageStats(): Promise<StorageStats>
+  // Actions
+  initialize(): Promise<void>
+  toggleDarkMode(): void
+  setDarkMode(isDark: boolean): void
+  setActivePresetId(presetId: string): void
+  setBaseTheme(theme: BaseTheme): void
+  loadSavedConfig(): void
+  saveConfig(): void
+  resetConfig(): void
 }
 ```
 
-### Validation Utils
-
-#### Validation Functions
+#### ThemeUIStore
 ```typescript
-// Preset validation
-validatePreset(preset: ThemePreset): ValidationResult
-validateColorOverrides(overrides: ColorOverride[]): ValidationResult
-validatePresetMetadata(metadata: PresetMetadata): ValidationResult
+interface ThemeUIStore {
+  // State
+  configSidebarVisible: Ref<boolean>
+  isDirty: Ref<boolean>
+  isLoading: Ref<boolean>
+  activeTab: Ref<'presets' | 'colors' | 'settings'>
+  expandedSections: Ref<Set<string>>
+  
+  // Actions
+  toggleConfig(): void
+  setConfigVisible(visible: boolean): void
+  setDirty(dirty: boolean): void
+  setLoading(loading: boolean): void
+  setActiveTab(tab: string): void
+  toggleSection(sectionId: string): void
+  resetUI(): void
+}
+```
 
-// Color validation
-validateColor(color: string): ValidationResult
-validateColorFormat(color: string, format: ColorFormat): ValidationResult
+#### ThemePresetStore
+```typescript
+interface ThemePresetStore {
+  // State
+  presets: Ref<ThemePreset[]>
+  activePreset: Ref<ThemePreset | null>
+  
+  // Computed
+  availablePresets: ComputedRef<ThemePreset[]>
+  userPresets: ComputedRef<ThemePreset[]>
+  builtInPresets: ComputedRef<ThemePreset[]>
+  
+  // Actions
+  initialize(): Promise<void>
+  activatePreset(preset: ThemePreset): Promise<void>
+  createPreset(name: string, description?: string): Promise<ThemePreset>
+  updatePreset(preset: ThemePreset): Promise<void>
+  deletePreset(presetId: string): Promise<void>
+  duplicatePreset(presetId: string, newName: string): Promise<ThemePreset>
+  exportPreset(presetId: string): Promise<void>
+  importPreset(file: File): Promise<ThemePreset>
+  searchPresets(query: string): ThemePreset[]
+}
+```
 
-// Configuration validation
-validateThemeConfig(config: ThemeConfig): ValidationResult
-validateImportFile(file: File): ValidationResult
+#### ThemeEditorStore
+```typescript
+interface ThemeEditorStore {
+  // State
+  editingPreset: Ref<ThemePreset | null>
+  editingColors: Ref<ColorOverride[]>
+  
+  // Computed
+  hasChanges: ComputedRef<boolean>
+  canSave: ComputedRef<boolean>
+  isEditingBuiltIn: ComputedRef<boolean>
+  
+  // Actions
+  startEditing(preset: ThemePreset): void
+  stopEditing(): void
+  updateColor(tokenId: string, value: string): Promise<void>
+  removeColorOverride(tokenId: string): Promise<void>
+  resetColor(tokenId: string): void
+  resetAllColors(): void
+  getTokenValue(tokenId: string): string
+  hasOverride(tokenId: string): boolean
+  applyColors(): Promise<void>
+  saveChanges(): Promise<void>
+  saveAsNewPreset(name: string, description?: string): Promise<ThemePreset>
+}
+```
 
-// Migration
-migratePresetData(data: any, fromVersion: string, toVersion: string): any
+### Enhanced Utility Classes
+
+#### ThemeStorage
+```typescript
+class ThemeStorage {
+  static save<T>(key: string, data: T, options?: StorageOptions): boolean
+  static load<T>(key: string, options?: StorageOptions): T | null
+  static remove(key: string): boolean
+  static exists(key: string): boolean
+  static getUsageStats(): StorageStats
+  static clearThemeData(): boolean
+  static backupData(keys?: string[]): string
+  static restoreData(backupData: string): boolean
+}
+```
+
+#### ThemeValidator
+```typescript
+class ThemeValidator {
+  static validatePreset(preset: unknown): ValidationResult
+  static validateColorOverride(override: unknown): ValidationResult
+  static validateColor(color: string): ValidationResult
+  static validateMetadata(metadata: unknown): ValidationResult
+  static validateConfig(config: unknown): ValidationResult
+  static checkContrast(foreground: string, background: string): ValidationResult
+  static validateImportFile(file: File): ValidationResult
+  static getValidationSummary(results: ValidationResult[]): ValidationSummary
+}
+```
+
+#### PresetManager
+```typescript
+class PresetManager {
+  async loadBuiltInPresets(): Promise<ThemePreset[]>
+  async loadUserPresets(): Promise<ThemePreset[]>
+  async saveUserPreset(preset: ThemePreset): Promise<void>
+  async deleteUserPreset(presetId: string): Promise<void>
+  async exportPreset(preset: ThemePreset): Promise<Blob>
+  async importPreset(file: File): Promise<ThemePreset>
+  async duplicatePreset(preset: ThemePreset, newName: string): Promise<ThemePreset>
+  getStorageStats(): StorageStats
+  async clearAllUserPresets(): Promise<void>
+}
+```
+
+### Performance Utilities
+
+#### Memoized Color Functions
+```typescript
+export const memoizedColorUtils = {
+  parseColor: parseColorMemoized,
+  getRelativeLuminance: getRelativeLuminanceMemoized,
+  getContrastRatio: getContrastRatioMemoized,
+  checkContrast: checkContrastMemoized,
+  generateColorScale: generateColorScaleMemoized,
+  getBestTextColor: getBestTextColorMemoized,
+  generateColorHarmonies: generateColorHarmoniesMemoized,
+  generatePalette: generatePaletteMemoized
+}
 ```
 
 ---
@@ -489,50 +624,59 @@ migratePresetData(data: any, fromVersion: string, toVersion: string): any
 ### Getting Started
 
 1. **Access Theme Configurator**
-   - Click the palette icon (🎨) in the header
-   - The theme configurator drawer will open on the right
+   - Click the palette icon (🎨) in the application header
+   - The theme configurator drawer opens on the right (420px width)
 
-2. **Basic Theme Switching**
-   - Use the "Active Theme" dropdown to switch between presets
-   - Changes apply instantly across the entire application
+2. **Choose a Built-in Theme**
+   - Use the "Active Theme" dropdown to select from 5 professional presets:
+     - **Triton Default**: Navy and blue professional theme
+     - **High Contrast**: WCAG AAA compliant accessibility theme
+     - **Ocean**: Light teal and blue oceanic theme
+     - **Sunset**: Warm orange and red sunset theme
+     - **Corporate**: Professional gray and blue business theme
 
-3. **Customizing Colors**
-   - Navigate to "Color Tokens" tabs (Brand, Status, Surface, Typography, Interaction)
-   - Click on any color swatch to open the color editor
-   - Choose colors using Hex, RGB, or HSL formats
-   - Use quick color presets or color variations for convenience
+3. **Customize Colors**
+   - Navigate through color token tabs: Brand, Status, Surface, Text, Interaction
+   - Click any color swatch to open the advanced color editor
+   - Use Hex, RGB, or HSL formats with real-time conversion
+   - Select from 24 quick color presets or generate color variations
 
 ### Advanced Features
 
 #### Creating Custom Themes
-1. Open Preset Manager by clicking "Manage" button
-2. Click "Create New" to start a custom theme
-3. Edit the preset name, description, and tags
-4. Customize colors using the color token editor
-5. Save your changes
+1. Click "Manage" → "Create New" in the preset manager
+2. Name your theme and add a description
+3. Customize colors using the tabbed color editor
+4. Add tags for organization
+5. Save your custom theme
 
 #### Using Color Harmonies
 1. Select a primary color in the Brand Colors tab
-2. Click one of the harmony buttons (Monochromatic, Complementary, etc.)
-3. The system will generate a harmonious color scheme
-4. Review and adjust individual colors as needed
+2. Click one of the harmony buttons:
+   - **Monochromatic**: Different shades of the same color
+   - **Complementary**: Opposite colors on the color wheel
+   - **Triadic**: Three equally spaced colors
+   - **Analogous**: Adjacent colors on the color wheel
+3. Review and fine-tune the generated colors
 
 #### Dark Mode
-- Toggle dark mode using the moon/sun icon in the header
-- Smooth transitions are enabled by default
-- System preference following can be enabled in preferences
+- Toggle dark mode using the mode switch in the configurator
+- Smooth transitions with View Transitions API (when supported)
+- Automatic system preference following
+- Time-based suggestions (evening = dark, morning = light)
 
 #### Import/Export Themes
-1. **Export**: In Preset Manager, use the context menu on any preset
-2. **Import**: Click "Import" button and select a .json theme file
-3. Themes are portable between different Triton installations
+1. **Export**: In Preset Manager, use context menu on any preset
+2. **Import**: Use the Import/Export accordion in the configurator
+3. Themes are JSON files that can be shared between installations
+4. Automatic validation ensures imported themes are compatible
 
-### Preferences
+### Configuration Preferences
 
-Access advanced preferences in the "Preferences" accordion:
-- **Auto-save changes**: Automatically save modifications
+Access in the "Preferences" accordion:
+- **Auto-save changes**: Automatically save modifications as you make them
 - **Sync across tabs**: Keep theme settings synchronized across browser tabs
-- **Smooth transitions**: Enable smooth animations for theme changes
+- **Smooth transitions**: Enable smooth animations for theme and dark mode changes
 
 ---
 
@@ -545,7 +689,7 @@ Access advanced preferences in the "Preferences" accordion:
    npm install
    ```
 
-2. **Development Server**
+2. **Development Server with Theme System**
    ```bash
    npm run dev
    ```
@@ -553,11 +697,6 @@ Access advanced preferences in the "Preferences" accordion:
 3. **Type Checking**
    ```bash
    npm run type-check
-   ```
-
-4. **Build for Production**
-   ```bash
-   npm run build
    ```
 
 ### Adding New Color Tokens
@@ -574,14 +713,7 @@ Access advanced preferences in the "Preferences" accordion:
    }
    ```
 
-2. **Add to PrimeVue Theme** in your custom preset:
-   ```typescript
-   primitive: {
-     customAccent: '{custom.accent}'
-   }
-   ```
-
-3. **Use in Components**:
+2. **Use in Components**:
    ```css
    .my-component {
      background-color: var(--p-custom-accent);
@@ -590,7 +722,7 @@ Access advanced preferences in the "Preferences" accordion:
 
 ### Creating Custom Presets
 
-1. **Define Preset** in `src/themes/presets/preset-manager.ts`:
+1. **Add to PresetManager** in `src/themes/presets/preset-manager.ts`:
    ```typescript
    const customPreset: ThemePreset = {
      id: 'my-custom-theme',
@@ -611,26 +743,23 @@ Access advanced preferences in the "Preferences" accordion:
        author: 'Your Name',
        version: '1.0.0',
        tags: ['custom', 'blue'],
-       isBuiltIn: true  // Set to false for user presets
+       isBuiltIn: true,
+       isDefault: false
      }
    }
    ```
 
-2. **Register Preset** in the `loadBuiltInPresets()` method:
-   ```typescript
-   presets.push(customPreset)
-   ```
+2. **Register in loadBuiltInPresets()** method
 
 ### Extending Color Utilities
 
-Add custom color manipulation functions to `src/themes/utils/color-utils.ts`:
+Add custom functions to `src/themes/utils/color-utils.ts`:
 
 ```typescript
 export function customColorTransform(color: string, factor: number): string {
   const rgb = parseColor(color)
   if (!rgb) return color
   
-  // Your custom transformation logic
   const transformed = {
     r: Math.min(255, rgb.r * factor),
     g: Math.min(255, rgb.g * factor),
@@ -641,38 +770,16 @@ export function customColorTransform(color: string, factor: number): string {
 }
 ```
 
-### Creating Custom Validation Rules
-
-Extend validation in `src/themes/utils/validation.ts`:
-
-```typescript
-export function validateCustomRule(value: any): ValidationResult {
-  const result: ValidationResult = {
-    isValid: true,
-    errors: [],
-    warnings: []
-  }
-  
-  // Your validation logic
-  if (!meetsCriteria(value)) {
-    result.isValid = false
-    result.errors.push('Custom validation failed')
-  }
-  
-  return result
-}
-```
-
 ### Performance Considerations
 
-1. **Debounced Updates**: Color changes are debounced to prevent excessive re-renders
-2. **Memoization**: Complex calculations are memoized using Vue's computed properties
-3. **Lazy Loading**: Preset data is loaded only when needed
-4. **Efficient Storage**: Only changed values are stored, not entire theme definitions
+1. **Memoized Functions**: Color calculations are automatically memoized
+2. **Batch Updates**: Use batch operations when updating multiple colors
+3. **Smart Caching**: Built-in cache management with LRU eviction
+4. **Debounced Updates**: Real-time updates are debounced to prevent excessive renders
 
 ### Testing Guidelines
 
-1. **Unit Tests**: Test individual utility functions
+1. **Unit Tests**: Test utility functions
    ```typescript
    describe('Color Utils', () => {
      test('parseColor should handle hex colors', () => {
@@ -681,106 +788,49 @@ export function validateCustomRule(value: any): ValidationResult {
    })
    ```
 
-2. **Component Tests**: Test component behavior
+2. **Component Tests**: Test component behavior with stores
    ```typescript
    describe('ColorTokenEditor', () => {
      test('should emit update event when color changes', async () => {
-       // Component testing logic
-     })
-   })
-   ```
-
-3. **Integration Tests**: Test end-to-end workflows
-   ```typescript
-   describe('Theme System Integration', () => {
-     test('should apply theme changes across components', async () => {
-       // Integration testing logic
+       // Test component with store integration
      })
    })
    ```
 
 ---
 
-## Extension Points
+## Performance Optimizations
 
-### 1. Custom Color Formats
+### Memoization Strategy
 
-Add support for new color formats by extending the color utilities:
+The system uses comprehensive memoization for expensive operations:
 
-```typescript
-// Add to color-utils.ts
-export function parseHwbColor(hwb: string): { r: number; g: number; b: number } | null {
-  // HWB color parsing logic
-}
+1. **Color Parsing**: `parseColorMemoized()` caches parsed color objects
+2. **Contrast Calculations**: `getContrastRatioMemoized()` caches WCAG calculations
+3. **Palette Generation**: `generatePaletteMemoized()` caches PrimeVue palettes
+4. **Color Harmonies**: `generateColorHarmoniesMemoized()` caches harmony calculations
 
-export function rgbToHwb(r: number, g: number, b: number): { h: number; w: number; b: number } {
-  // RGB to HWB conversion logic
-}
-```
-
-### 2. Advanced Color Harmonies
-
-Create custom harmony algorithms:
+### Cache Management
 
 ```typescript
-// Add to color-utils.ts
-export function generateCustomHarmony(baseColor: string): ColorHarmony {
-  return {
-    name: 'Custom Harmony',
-    description: 'Your custom harmony description',
-    colors: [
-      // Generated colors based on your algorithm
-    ]
-  }
-}
+// Automatic LRU cache with configurable size
+const CACHE_SIZE = 500 // Configurable per function
+
+// Built-in cache clearing for memory management
+clearColorCaches() // Clear all memoization caches
 ```
 
-### 3. Theme Analytics
+### Real-time Updates
 
-Add analytics tracking for theme usage:
+- **Debounced Updates**: Color changes are debounced to prevent excessive re-renders
+- **CSS Variable Updates**: Direct CSS variable manipulation for instant feedback
+- **Batch Processing**: Multiple color updates are processed efficiently
 
-```typescript
-// Add to theme.store.ts
-function trackThemeChange(presetId: string) {
-  // Analytics tracking logic
-  analytics.track('theme_changed', {
-    preset_id: presetId,
-    timestamp: Date.now()
-  })
-}
-```
+### Storage Optimization
 
-### 4. Cloud Synchronization
-
-Extend storage to support cloud backends:
-
-```typescript
-// Create cloud-storage.ts
-export class CloudStorageManager extends StorageManager {
-  async sync(): Promise<void> {
-    // Cloud synchronization logic
-  }
-}
-```
-
-### 5. Plugin System
-
-Create a plugin architecture for extensibility:
-
-```typescript
-// plugin-system.ts
-export interface ThemePlugin {
-  name: string
-  version: string
-  install(themeSystem: ThemeSystem): void
-}
-
-export class ThemeSystem {
-  use(plugin: ThemePlugin) {
-    plugin.install(this)
-  }
-}
-```
+- **Intelligent Caching**: Only changed values are stored, not entire theme definitions
+- **Quota Management**: Automatic storage quota monitoring and cleanup
+- **Compression**: Optional compression for large theme data
 
 ---
 
@@ -790,135 +840,159 @@ export class ThemeSystem {
 
 #### 1. Theme Not Applying
 **Symptoms**: Color changes don't appear in the UI
-**Causes**:
-- CSS specificity conflicts
-- Missing CSS variable definitions
-- PrimeVue theme not updating
+
+**Causes & Solutions**:
+```typescript
+// Check if stores are initialized
+const presetStore = useThemePresetStore()
+await presetStore.initialize()
+
+// Verify PrimeVue integration
+const themeConfig = useThemeConfig()
+await themeConfig.applyColorUpdate(tokenId, value)
+
+// Check CSS variables
+const value = document.documentElement.style.getPropertyValue('--p-primary')
+console.log('CSS Variable Value:', value)
+```
+
+#### 2. Split Store Issues
+**Symptoms**: Store methods not available
+
+**Solution**:
+```typescript
+// Use individual stores instead of legacy unified store
+import { useThemeConfigStore, useThemePresetStore } from '@/stores/theme'
+
+// NOT: useThemeStore() (legacy)
+const configStore = useThemeConfigStore()
+const presetStore = useThemePresetStore()
+```
+
+#### 3. Performance Issues
+**Symptoms**: Slow color updates or theme switching
 
 **Solutions**:
 ```typescript
-// Check if CSS variables are being set
-const rootElement = document.documentElement
-console.log(rootElement.style.getPropertyValue('--p-primary'))
+// Use memoized functions for expensive operations
+import { memoizedColorUtils } from '@/utils/performance/color-utils-optimized'
 
-// Force theme update
-await themeStore.applyTheme()
-
-// Check PrimeVue integration
-import { updatePreset } from 'primevue/themes'
-updatePreset(customPreset)
+// Batch multiple updates
+const editorStore = useThemeEditorStore()
+editorStore.startEditing(preset)
+await editorStore.updateColor('primary', '#123456')
+await editorStore.updateColor('secondary', '#654321')
+await editorStore.saveChanges()
 ```
 
-#### 2. Storage Quota Exceeded
+#### 4. Storage Quota Exceeded
 **Symptoms**: "Storage quota exceeded" error
-**Causes**:
-- Too many saved presets
-- Large theme data
 
 **Solutions**:
 ```typescript
 // Check storage usage
-const stats = await StorageManager.getStorageStats()
-console.log(`Used: ${stats.used}/${stats.total} bytes`)
+const stats = ThemeStorage.getUsageStats()
+console.log(`Storage: ${stats.totalSizeKB}KB used`)
 
-// Cleanup old presets
-await themeStore.cleanup()
-```
+// Clear theme data
+ThemeStorage.clearThemeData()
 
-#### 3. Color Validation Errors
-**Symptoms**: Invalid color format errors
-**Causes**:
-- Unsupported color format
-- Malformed color string
-
-**Solutions**:
-```typescript
-// Validate color before use
-if (!isValidColor(colorValue)) {
-  console.error('Invalid color:', colorValue)
-  return
-}
-
-// Convert to supported format
-const rgb = parseColor(colorValue)
-if (rgb) {
-  const hex = rgbToHex(rgb.r, rgb.g, rgb.b)
-  // Use hex value
-}
-```
-
-#### 4. Performance Issues
-**Symptoms**: Slow theme switching or color updates
-**Causes**:
-- Too many reactive watchers
-- Expensive color calculations
-- DOM updates not batched
-
-**Solutions**:
-```typescript
-// Debounce color updates
-const debouncedUpdate = debounce(updateColor, 300)
-
-// Use nextTick for DOM updates
-await nextTick()
-
-// Batch multiple color changes
-themeStore.batchUpdate(() => {
-  updateColor('primary', '#123456')
-  updateColor('secondary', '#654321')
-})
+// Or clear specific presets
+const presetStore = useThemePresetStore()
+await presetStore.deletePreset(unusedPresetId)
 ```
 
 ### Debug Mode
 
-Enable debug mode for detailed logging:
+Enable debug logging:
 
 ```typescript
-// In theme.store.ts
+// In theme stores, debug mode is automatically enabled in development
 const DEBUG = import.meta.env.DEV
 
 if (DEBUG) {
   console.log('🎨 Theme debug mode enabled')
   
-  // Log all state changes
-  watch(() => themeStore.state, (newState) => {
-    console.log('Theme state changed:', newState)
-  }, { deep: true })
+  // All store actions are logged with prefixes:
+  // 🎨 Config actions
+  // 👤 Preset actions
+  // ✏️ Editor actions
+  // 🖥️ UI actions
 }
 ```
 
 ### Performance Monitoring
 
-Add performance monitoring:
+Monitor theme system performance:
 
 ```typescript
-// performance-monitor.ts
-export class ThemePerformanceMonitor {
-  static measureThemeChange(presetId: string) {
-    const start = performance.now()
-    
-    return {
-      end: () => {
-        const duration = performance.now() - start
-        console.log(`Theme change took ${duration}ms`)
-        
-        if (duration > 100) {
-          console.warn('Slow theme change detected')
-        }
-      }
-    }
-  }
-}
+// Built-in performance logging
+console.log('Theme change took Xms') // Automatic logging
+
+// Cache statistics
+const stats = getColorCacheStats()
+console.log('Cache performance:', stats)
+
+// Storage monitoring
+const storage = ThemeStorage.getUsageStats()
+console.log('Storage usage:', storage)
+```
+
+---
+
+## Migration Guide
+
+### From Legacy Theme Store
+
+If migrating from the old monolithic theme store:
+
+```typescript
+// OLD (deprecated)
+import { useThemeStore } from '@/stores/theme.store'
+const themeStore = useThemeStore()
+
+// NEW (current)
+import { 
+  useThemeConfigStore,
+  useThemeUIStore, 
+  useThemePresetStore,
+  useThemeEditorStore 
+} from '@/stores/theme'
+
+const configStore = useThemeConfigStore()
+const uiStore = useThemeUIStore() 
+const presetStore = useThemePresetStore()
+const editorStore = useThemeEditorStore()
+```
+
+### Store Method Mapping
+
+```typescript
+// Legacy → New Store Mapping
+themeStore.toggleConfig() → uiStore.toggleConfig()
+themeStore.activatePreset() → presetStore.activatePreset()
+themeStore.updateColor() → editorStore.updateColor()
+themeStore.toggleDarkMode() → configStore.toggleDarkMode()
 ```
 
 ---
 
 ## Conclusion
 
-The Triton Theme Configuration System provides a comprehensive, extensible foundation for theme customization in Vue 3 applications. Its modular architecture, type-safe design, and extensive API make it suitable for both end-users and developers.
+The Triton Theme Configuration System provides a modern, performant, and extensible foundation for theme customization in Vue 3 applications. Its split store architecture, enhanced components, and performance optimizations make it suitable for both end-users and developers building sophisticated theming solutions.
 
-For additional support or feature requests, please refer to the project repository or contact the development team.
+The system's modular design allows for easy extension and customization while maintaining type safety and performance. With comprehensive built-in presets, advanced color tools, and accessibility features, it provides a complete theming solution for modern web applications.
 
-**Version**: 1.0.0  
+**Version**: 2.0.0  
 **Last Updated**: January 2024  
-**Maintainers**: Triton Development Team 
+**Maintainers**: Triton Development Team
+
+### Recent Major Updates (v2.0.0)
+
+- ✅ **Split Store Architecture**: Migrated from monolithic to modular stores
+- ✅ **Enhanced Performance**: Added memoization and optimized color calculations  
+- ✅ **Built-in Preset Library**: 5 professional themes included
+- ✅ **Advanced Color Editor**: Multi-format editing with palettes and harmonies
+- ✅ **Modern UI**: Complete redesign with PrimeVue 4 components
+- ✅ **Accessibility**: WCAG compliance and high contrast support
+- ✅ **Developer Experience**: Comprehensive TypeScript coverage and debugging tools 
