@@ -95,24 +95,31 @@ export function useLayoutEnhanced() {
     (isReveal.value && layoutState.value.sidebarActive)
   )
 
-  // Main content classes for different modes
+  // Main content classes - FIXED to match Demo_Frontend logic
   const mainContentClasses = computed(() => {
-    const classes = ['layout-main', 'flex', 'flex-col', 'flex-1', 'transition-all', 'duration-300']
+    const classes = ['layout-main', 'min-h-screen', 'transition-all', 'duration-300']
     
-    if (isHorizontal.value) {
-      classes.push('ml-0')
-    } else if (isStatic.value && !layoutState.value.staticMenuDesktopInactive && isDesktop.value) {
-      classes.push('ml-64')
-    } else if (isSlim.value && !layoutState.value.menuHoverActive && isDesktop.value) {
-      classes.push('ml-16')
-    } else if (isCompact.value && !layoutState.value.menuHoverActive && isDesktop.value) {
-      classes.push('ml-20')
-    } else if (isReveal.value && isDesktop.value) {
-      classes.push('ml-0')
-    } else if (isDrawer.value && isDesktop.value) {
-      classes.push('ml-0')
-    } else {
-      classes.push('ml-0')
+    // Fix static mode - should push content
+    if (isStatic.value) {
+      if (isDesktop.value && !layoutState.value.staticMenuDesktopInactive) {
+        classes.push('lg:ml-64')
+      } else if (!isDesktop.value && layoutState.value.staticMenuMobileActive) {
+        classes.push('ml-64')
+      }
+    }
+    
+    // Fix slim/compact - should push content when expanded
+    else if ((isSlim.value || isCompact.value) && isDesktop.value) {
+      if (layoutState.value.menuHoverActive) {
+        classes.push('lg:ml-64')
+      } else {
+        classes.push(isSlim.value ? 'lg:ml-16' : 'lg:ml-20')
+      }
+    }
+    
+    // Horizontal has no margin but needs space for menu
+    else if (isHorizontal.value) {
+      classes.push('pt-16') // Space for horizontal menu
     }
 
     return classes
@@ -172,28 +179,32 @@ export function useLayoutEnhanced() {
     return classes
   })
 
-  // Mouse interaction handlers for reveal mode
+  // Mouse interaction handlers - FIXED to match Demo_Frontend
   function handleSidebarMouseEnter() {
-    if ((isReveal.value || isSlim.value) && !layoutState.value.anchored) {
+    if (isReveal.value && !layoutState.value.anchored) {
       if (layoutState.value.mouseLeaveTimeout) {
         clearTimeout(layoutState.value.mouseLeaveTimeout)
         layoutState.value.mouseLeaveTimeout = null
       }
-      
       layoutState.value.sidebarActive = true
-      if (isSlim.value) {
-        layoutState.value.menuHoverActive = true
+    } else if (isSlim.value || isCompact.value) {
+      if (layoutState.value.mouseLeaveTimeout) {
+        clearTimeout(layoutState.value.mouseLeaveTimeout)
+        layoutState.value.mouseLeaveTimeout = null
       }
+      layoutState.value.menuHoverActive = true
     }
   }
 
   function handleSidebarMouseLeave() {
-    if ((isReveal.value || isSlim.value) && !layoutState.value.anchored) {
+    if (isReveal.value && !layoutState.value.anchored) {
       layoutState.value.mouseLeaveTimeout = window.setTimeout(() => {
         layoutState.value.sidebarActive = false
-        if (isSlim.value) {
-          layoutState.value.menuHoverActive = false
-        }
+        layoutState.value.mouseLeaveTimeout = null
+      }, 300)
+    } else if (isSlim.value || isCompact.value) {
+      layoutState.value.mouseLeaveTimeout = window.setTimeout(() => {
+        layoutState.value.menuHoverActive = false
         layoutState.value.mouseLeaveTimeout = null
       }, 300)
     }
@@ -212,7 +223,7 @@ export function useLayoutEnhanced() {
     }
   }
 
-  // Enhanced menu toggle
+  // Enhanced menu toggle - FIXED to match Demo_Frontend logic
   function toggleMenu() {
     if (isOverlay.value || isDrawer.value) {
       layoutState.value.overlayMenuActive = !layoutState.value.overlayMenuActive
@@ -223,11 +234,10 @@ export function useLayoutEnhanced() {
         layoutState.value.staticMenuMobileActive = !layoutState.value.staticMenuMobileActive
       }
     } else if (isReveal.value) {
-      if (layoutState.value.anchored) {
-        toggleAnchor()
-      } else {
-        layoutState.value.sidebarActive = !layoutState.value.sidebarActive
-      }
+      layoutState.value.sidebarActive = !layoutState.value.sidebarActive
+    } else if (isSlim.value || isCompact.value) {
+      // Don't toggle for slim/compact - they work on hover
+      layoutState.value.menuHoverActive = !layoutState.value.menuHoverActive
     }
   }
 

@@ -70,12 +70,16 @@
     </div>
   </aside>
 
-  <!-- Mobile Overlay -->
-  <div
-    v-if="isSidebarActive && (isMobile || isOverlay || isDrawer)"
-    class="fixed inset-0 bg-black bg-opacity-50 z-30 backdrop-blur-sm"
-    @click="toggleMenu"
-  ></div>
+  <!-- Mobile Overlay - FIXED -->
+  <Teleport to="body">
+    <Transition name="fade">
+      <div
+        v-if="showOverlay"
+        class="layout-mask"
+        @click="toggleMenu"
+      ></div>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -95,6 +99,7 @@ const {
   isMobile,
   isOverlay,
   isDrawer,
+  isDesktop,
   layoutState,
   layoutConfig,
   handleSidebarMouseEnter,
@@ -107,6 +112,11 @@ const {
 const menuHoverActive = computed(() => layoutState.value.menuHoverActive)
 const anchored = computed(() => layoutState.value.anchored)
 const menuProfile = computed(() => layoutConfig.value.menuProfile)
+
+const showOverlay = computed(() => {
+  return (isOverlay.value || isDrawer.value) && layoutState.value.overlayMenuActive ||
+         (!isDesktop.value && layoutState.value.staticMenuMobileActive)
+})
 </script>
 
 <style scoped>
@@ -138,5 +148,27 @@ const menuProfile = computed(() => layoutConfig.value.menuProfile)
 .layout-sidebar :deep(.p-scrollpanel-track-y) {
   background-color: transparent;
   width: 8px;
+}
+
+/* Layout mask for overlay modes */
+.layout-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 998;
+}
+
+/* Fade transition */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style> 

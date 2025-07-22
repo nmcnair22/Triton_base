@@ -8,13 +8,18 @@
       :class="menuLinkClasses"
       @click="handleItemClick"
     >
-      <i v-if="item.icon" :class="item.icon" class="menu-icon"></i>
-      <span 
-        v-show="showLabel" 
-        class="menu-label transition-opacity duration-300"
-      >
-        {{ item.label }}
-      </span>
+      <div class="flex items-center min-w-0 flex-1">
+        <i 
+          v-if="item.icon" 
+          :class="[item.icon, iconClasses]"
+        ></i>
+        <span 
+          v-if="showLabel"
+          class="menu-label"
+        >
+          {{ item.label }}
+        </span>
+      </div>
     </router-link>
 
     <!-- Menu Item Button (with submenu) -->
@@ -113,7 +118,6 @@ const itemKey = ref('')
 
 // Access layout state properties
 const menuHoverActive = computed(() => layoutState.value.menuHoverActive)
-const activeMenuItem = computed(() => layoutState.value.activeMenuItem)
 
 // Fixed padding map instead of dynamic classes
 const paddingMap: Record<number, string> = {
@@ -136,10 +140,15 @@ const showLabel = computed(() => {
 })
 
 const isActive = computed(() => {
-  if (props.item.to) {
-    return route.path === props.item.to
-  }
-  return activeMenuItem.value === itemKey.value
+  if (!props.item.to) return false
+  
+  // Exact match
+  if (route.path === props.item.to) return true
+  
+  // Parent match (but not for home)
+  if (props.item.to !== '/' && route.path.startsWith(props.item.to)) return true
+  
+  return false
 })
 
 const hasActiveChild = computed(() => {
@@ -161,34 +170,37 @@ const forceShowSubmenu = computed(() => {
 const menuLinkClasses = computed(() => {
   const { layoutConfig } = useLayoutEnhanced()
   const classes = [
-    'w-full', 'flex', 'items-center', 'px-3', 'py-2.5', 'rounded-lg',
-    'no-underline', 'transition-all', 'duration-200',
-    'focus:outline-none', 'focus:ring-2', 'focus:ring-opacity-20'
+    'flex', 'items-center', 'px-4', 'py-2.5', 'rounded-lg',
+    'transition-colors', 'duration-200',
+    'no-underline', 'relative', 'min-w-0', 'flex-1'
   ]
   
-  // Theme-specific colors for proper visibility
-  if (layoutConfig.value.menuTheme === 'dark') {
-    classes.push('text-slate-300', 'hover:text-white', 'hover:bg-white/10', 'focus:ring-white/20')
-    if (isActive.value) {
-      classes.push('bg-white/10', 'text-white', 'font-medium')
-    }
-  } else if (layoutConfig.value.menuTheme === 'primary') {
-    classes.push('text-primary-100', 'hover:text-white', 'hover:bg-white/20', 'focus:ring-white/20')
-    if (isActive.value) {
-      classes.push('bg-white/20', 'text-white', 'font-medium')
-    }
+  // Active state styling - matching Demo_Frontend with left border
+  if (isActive.value) {
+    classes.push('bg-primary-500/10', 'text-primary-500', 'font-semibold')
+    // Add left border for active state
+    classes.push('before:absolute', 'before:left-0', 'before:top-0', 
+                 'before:bottom-0', 'before:w-1', 'before:bg-primary-500',
+                 'before:rounded-l-lg')
   } else {
-    classes.push('text-slate-700', 'hover:text-slate-900', 'hover:bg-slate-100', 'focus:ring-slate-400')
-    if (isActive.value) {
-      classes.push('bg-slate-100', 'text-slate-900', 'font-medium')
+    // Theme-specific colors for proper visibility
+    if (layoutConfig.value.menuTheme === 'dark') {
+      classes.push('text-slate-300', 'hover:text-white', 'hover:bg-white/10')
+    } else if (layoutConfig.value.menuTheme === 'primary') {
+      classes.push('text-primary-100', 'hover:text-white', 'hover:bg-white/20')
+    } else {
+      classes.push('text-gray-600', 'dark:text-gray-400', 
+                   'hover:bg-gray-100', 'dark:hover:bg-gray-800',
+                   'hover:text-gray-900', 'dark:hover:text-gray-100')
     }
   }
   
-  if ((isSlim.value || isCompact.value) && !menuHoverActive.value && !props.item.items) {
-    classes.push('justify-center')
+  // Center content for slim/compact when collapsed
+  if ((isSlim.value || isCompact.value) && !menuHoverActive.value) {
+    classes.push('justify-center', 'px-0')
   }
   
-  // Use padding map instead of dynamic class
+  // Use padding map for nested items
   if (props.level > 0 && showLabel.value) {
     classes.push(paddingMap[Math.min(props.level, 4)])
   }
@@ -247,6 +259,19 @@ const submenuIcon = computed(() =>
   isSubmenuOpen.value ? 'pi pi-chevron-down' : 'pi pi-chevron-right'
 )
 
+const iconClasses = computed(() => {
+  const classes = ['text-xl', 'w-6', 'flex-shrink-0', 'text-center']
+  
+  // Center icon when label is hidden
+  if ((isSlim.value || isCompact.value) && !menuHoverActive.value) {
+    classes.push('m-0')
+  } else {
+    classes.push('mr-3')
+  }
+  
+  return classes
+})
+
 // Methods
 function handleItemClick() {
   if (props.item.to) {
@@ -289,20 +314,46 @@ watch(() => route.path, (newPath) => {
 
 <style scoped>
 .menu-icon {
-  width: 1.25rem;
-  height: 1.25rem;
+  font-size: 1.25rem;
+  width: 1.5rem;
   flex-shrink: 0;
+  text-align: center;
 }
 
 .menu-label {
-  flex: 1;
-  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
 }
 
 .submenu-icon {
   width: 1rem;
   height: 1rem;
   flex-shrink: 0;
+}
+
+/* Center icon when label is hidden */
+.justify-center .menu-icon {
+  margin: 0;
+}
+
+/* Enhanced active state */
+.menu-link.bg-primary-500\/10 {
+  font-weight: 600;
+}
+
+/* Submenu styling */
+.submenu {
+  margin-top: 0.25rem;
+}
+
+.submenu .menu-item {
+  margin-top: 0.25rem;
+}
+
+.submenu .menu-link {
+  font-size: 0.875rem;
 }
 
 .menu-button,
