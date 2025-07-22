@@ -159,15 +159,29 @@ const forceShowSubmenu = computed(() => {
 })
 
 const menuLinkClasses = computed(() => {
+  const { layoutConfig } = useLayoutEnhanced()
   const classes = [
     'w-full', 'flex', 'items-center', 'px-3', 'py-2.5', 'rounded-lg',
-    'text-current', 'no-underline', 'transition-all', 'duration-200',
-    'hover:bg-current', 'hover:bg-opacity-10',
-    'focus:outline-none', 'focus:ring-2', 'focus:ring-current', 'focus:ring-opacity-20'
+    'no-underline', 'transition-all', 'duration-200',
+    'focus:outline-none', 'focus:ring-2', 'focus:ring-opacity-20'
   ]
   
-  if (isActive.value) {
-    classes.push('bg-current', 'bg-opacity-10', 'font-medium')
+  // Theme-specific colors for proper visibility
+  if (layoutConfig.value.menuTheme === 'dark') {
+    classes.push('text-slate-300', 'hover:text-white', 'hover:bg-white/10', 'focus:ring-white/20')
+    if (isActive.value) {
+      classes.push('bg-white/10', 'text-white', 'font-medium')
+    }
+  } else if (layoutConfig.value.menuTheme === 'primary') {
+    classes.push('text-primary-100', 'hover:text-white', 'hover:bg-white/20', 'focus:ring-white/20')
+    if (isActive.value) {
+      classes.push('bg-white/20', 'text-white', 'font-medium')
+    }
+  } else {
+    classes.push('text-slate-700', 'hover:text-slate-900', 'hover:bg-slate-100', 'focus:ring-slate-400')
+    if (isActive.value) {
+      classes.push('bg-slate-100', 'text-slate-900', 'font-medium')
+    }
   }
   
   if ((isSlim.value || isCompact.value) && !menuHoverActive.value && !props.item.items) {
@@ -183,16 +197,30 @@ const menuLinkClasses = computed(() => {
 })
 
 const menuButtonClasses = computed(() => {
+  const { layoutConfig } = useLayoutEnhanced()
   const classes = [
     'w-full', 'flex', 'items-center', 'px-3', 'py-2.5', 'rounded-lg',
-    'text-current', 'bg-transparent', 'border-none', 'cursor-pointer',
+    'bg-transparent', 'border-none', 'cursor-pointer',
     'transition-all', 'duration-200',
-    'hover:bg-current', 'hover:bg-opacity-10',
-    'focus:outline-none', 'focus:ring-2', 'focus:ring-current', 'focus:ring-opacity-20'
+    'focus:outline-none', 'focus:ring-2', 'focus:ring-opacity-20'
   ]
   
-  if (hasActiveChild.value) {
-    classes.push('bg-current', 'bg-opacity-10', 'font-medium')
+  // Theme-specific colors for proper visibility
+  if (layoutConfig.value.menuTheme === 'dark') {
+    classes.push('text-slate-300', 'hover:text-white', 'hover:bg-white/10', 'focus:ring-white/20')
+    if (hasActiveChild.value) {
+      classes.push('bg-white/10', 'text-white', 'font-medium')
+    }
+  } else if (layoutConfig.value.menuTheme === 'primary') {
+    classes.push('text-primary-100', 'hover:text-white', 'hover:bg-white/20', 'focus:ring-white/20')
+    if (hasActiveChild.value) {
+      classes.push('bg-white/20', 'text-white', 'font-medium')
+    }
+  } else {
+    classes.push('text-slate-700', 'hover:text-slate-900', 'hover:bg-slate-100', 'focus:ring-slate-400')
+    if (hasActiveChild.value) {
+      classes.push('bg-slate-100', 'text-slate-900', 'font-medium')
+    }
   }
   
   if ((isSlim.value || isCompact.value) && !menuHoverActive.value) {

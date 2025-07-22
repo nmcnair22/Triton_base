@@ -12,8 +12,8 @@
         class="flex items-center space-x-3 text-current no-underline"
         :class="{ 'justify-center': (isSlim && !menuHoverActive) || (isCompact && !menuHoverActive) }"
       >
-        <div class="w-8 h-8 bg-current rounded-lg flex items-center justify-center text-surface-0">
-          <i class="pi pi-prime text-lg"></i>
+        <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
+          <i class="pi pi-prime text-lg text-white"></i>
         </div>
         <span 
           v-show="!((isSlim || isCompact) && !menuHoverActive)"
@@ -82,6 +82,9 @@
 import { computed } from 'vue'
 import { useLayoutEnhanced } from '@/composables/layout/useLayoutEnhanced'
 import AppSidebarMenu from './AppSidebarMenu.vue'
+import Button from 'primevue/button'
+import ScrollPanel from 'primevue/scrollpanel'
+import Avatar from 'primevue/avatar'
 
 const {
   sidebarClasses,

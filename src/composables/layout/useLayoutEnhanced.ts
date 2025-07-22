@@ -160,13 +160,13 @@ export function useLayoutEnhanced() {
       classes.push('translate-x-0')
     }
 
-    // Theme classes
+    // Theme classes - Fixed for proper contrast
     if (layoutConfig.value.menuTheme === 'dark') {
-      classes.push('bg-surface-900', 'text-surface-0', 'border-surface-700')
+      classes.push('bg-slate-800', 'text-slate-200', 'border-r', 'border-slate-700')
     } else if (layoutConfig.value.menuTheme === 'primary') {
-      classes.push('bg-primary-600', 'text-primary-0', 'border-primary-700')
+      classes.push('bg-primary-600', 'text-white', 'border-r', 'border-primary-700')
     } else {
-      classes.push('bg-surface-0', 'text-surface-700', 'border-surface-200')
+      classes.push('bg-white', 'text-slate-700', 'border-r', 'border-slate-200')
     }
 
     return classes

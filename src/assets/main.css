@@ -257,3 +257,55 @@
     transform: translateY(0);
   }
 }
+
+/* 🔧 CRITICAL SIDEBAR VISIBILITY FIXES */
+
+/* ScrollPanel fixes for sidebar visibility */
+.p-scrollpanel {
+  height: 100%;
+  width: 100%;
+}
+
+.p-scrollpanel-content {
+  height: 100%;
+  width: 100%;
+}
+
+/* Fix scrollbar visibility in sidebar */
+.layout-sidebar .p-scrollpanel-bar {
+  background-color: rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.layout-sidebar .p-scrollpanel:hover .p-scrollpanel-bar {
+  opacity: 1;
+}
+
+/* Essential sidebar shadow and contrast fixes */
+.layout-sidebar {
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Fix text visibility for dark theme */
+.layout-sidebar.bg-slate-800 .menu-icon,
+.layout-sidebar.bg-slate-800 .menu-label {
+  color: #cbd5e1 !important; /* slate-300 */
+}
+
+.layout-sidebar.bg-slate-800 .menu-item:hover .menu-icon,
+.layout-sidebar.bg-slate-800 .menu-item:hover .menu-label {
+  color: #f1f5f9 !important; /* slate-100 */
+}
+
+/* Fix text visibility for light theme */
+.layout-sidebar.bg-white .menu-icon,
+.layout-sidebar.bg-white .menu-label {
+  color: #374151 !important; /* slate-700 */
+}
+
+/* Fix text visibility for primary theme */
+.layout-sidebar.bg-primary-600 .menu-icon,
+.layout-sidebar.bg-primary-600 .menu-label {
+  color: #dbeafe !important; /* primary-100 */
+}
