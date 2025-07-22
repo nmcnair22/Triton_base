@@ -32,7 +32,12 @@ export default defineConfig({
     Components({
       resolvers: [PrimeVueResolver()],
       dts: true,
-      dirs: ['src/components', 'src/components/ui']
+      dirs: [
+        'src/components', 
+        'src/components/ui',
+        'src/components/layout',
+        'src/components/layout/sidebar'
+      ]
     })
   ],
   resolve: {
@@ -49,12 +54,13 @@ export default defineConfig({
             if (id.includes('vue')) return 'vue-vendor'
             if (id.includes('primevue')) return 'primevue-vendor'
             if (id.includes('@vueuse')) return 'vueuse-vendor'
-            if (id.includes('lodash') || id.includes('dayjs')) return 'utils-vendor'
             return 'vendor'
           }
         }
       }
     },
+    sourcemap: false,
+    target: 'esnext',
     minify: 'terser',
     terserOptions: {
       compress: {
@@ -63,17 +69,34 @@ export default defineConfig({
       }
     }
   },
-  // Development optimization
+  // Dev server optimizations
+  server: {
+    hmr: {
+      overlay: false
+    }
+  },
+  // Dependency optimization for faster dev cold start
   optimizeDeps: {
     include: [
       'vue',
       'vue-router',
       '@vueuse/core',
+      'primevue/config',
       'primevue/button',
-      'primevue/card',
       'primevue/inputtext',
       'primevue/dropdown',
-      'primevue/datatable'
+      'primevue/calendar',
+      'primevue/checkbox',
+      'primevue/radiobutton',
+      'primevue/textarea',
+      'primevue/slider',
+      'primevue/selectbutton',
+      'primevue/togglebutton',
+      'primevue/multiselect',
+      'primevue/datatable',
+      'primevue/column',
+      'primevue/toast',
+      'primevue/usetoast'
     ]
   }
 })
