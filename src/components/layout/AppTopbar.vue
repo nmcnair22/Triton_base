@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import { useLayoutEnhanced } from '@/composables/layout/useLayoutEnhanced'
-import { useThemeStore } from '@/stores/theme.store'
+import { useThemeUIStore } from '@/stores/theme'
 import AppHorizontalMenu from './sidebar/AppHorizontalMenu.vue'
 
 const {
@@ -70,7 +70,7 @@ const {
   isHorizontal,
   isDesktop
 } = useLayoutEnhanced()
-const themeStore = useThemeStore()
+const themeUIStore = useThemeUIStore()
 
 // Add debug functions for troubleshooting
 function handleMenuToggle() {
@@ -86,7 +86,7 @@ function handleConfigToggle() {
 }
 
 function toggleThemeConfig() {
-  themeStore.toggleConfig()
+  themeUIStore.toggleConfig()
 }
 </script>
 

@@ -36,14 +36,16 @@
 <script setup lang="ts">
 import { computed, useId } from 'vue'
 import { TokenFactory } from '@/themes/token-factory'
+import { useFormEvents } from '@/composables/forms'
 import InputText from 'primevue/inputtext'
+import type { InputState } from '@/composables/forms'
 
 interface Props {
   label?: string
   placeholder?: string
   helpText?: string
   errorMessage?: string
-  state?: 'default' | 'error' | 'success'
+  state?: InputState
   required?: boolean
   disabled?: boolean
   fullWidth?: boolean
@@ -68,6 +70,9 @@ const emit = defineEmits<Emits>()
 const modelValue = defineModel<string>()
 const inputId = useId()
 
+// Use the form events composable
+const { handleInput, handleBlur, handleFocus } = useFormEvents(emit, modelValue)
+
 const computedTokens = computed(() => {
   return TokenFactory.input(props.state)
 })
@@ -76,20 +81,6 @@ const computedClasses = computed(() => [
   props.fullWidth ? 'w-full' : '',
   'transition-all duration-200 ease-smooth',
 ])
-
-const handleInput = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  modelValue.value = target.value
-  emit('input', event)
-}
-
-const handleBlur = (event: FocusEvent) => {
-  emit('blur', event)
-}
-
-const handleFocus = (event: FocusEvent) => {
-  emit('focus', event)
-}
 </script>
 
 

@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { onMounted, watch } from 'vue'
 import { useLayoutEnhanced } from '@/composables/layout/useLayoutEnhanced'
-import { useThemeStore } from '@/stores/theme.store'
+import { useThemeConfigStore } from '@/stores/theme'
 import { useDarkMode } from '@/composables'
 import AppSidebarEnhanced from './sidebar/AppSidebarEnhanced.vue'
 import AppTopbar from './AppTopbar.vue'
@@ -48,7 +48,7 @@ const {
   layoutConfig 
 } = useLayoutEnhanced()
 
-const themeStore = useThemeStore()
+const themeConfigStore = useThemeConfigStore()
 const { initialize: initializeDarkMode } = useDarkMode()
 
 // Initialize both systems on mount
@@ -59,7 +59,7 @@ onMounted(async () => {
   initializeDarkMode()
   
   // Initialize theme store
-  await themeStore.initialize()
+  await themeConfigStore.initialize()
   
   // Apply initial layout configuration
   applyLayoutConfig()

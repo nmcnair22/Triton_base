@@ -14,7 +14,7 @@
             Manage your theme presets. Create, edit, duplicate, and delete custom themes.
           </p>
           <div class="text-xs text-muted mt-1">
-            {{ themeStore.userPresets.length }} custom / {{ themeStore.builtInPresets.length }} built-in presets
+            {{ presetStore.userPresets.length }} custom / {{ presetStore.builtInPresets.length }} built-in presets
           </div>
         </div>
         
@@ -47,7 +47,7 @@
           <TabPanel value="all">
             <PresetGrid 
               :presets="allPresets"
-              :active-preset-id="themeStore.activePreset?.id"
+              :active-preset-id="presetStore.activePreset?.id"
               @activate="activatePreset"
               @edit="editPreset"
               @duplicate="duplicatePreset"
@@ -57,8 +57,8 @@
           
           <TabPanel value="builtin">
             <PresetGrid 
-              :presets="themeStore.builtInPresets"
-              :active-preset-id="themeStore.activePreset?.id"
+              :presets="presetStore.builtInPresets"
+              :active-preset-id="presetStore.activePreset?.id"
               @activate="activatePreset"
               @edit="editPreset"
               @duplicate="duplicatePreset"
@@ -68,13 +68,13 @@
           
           <TabPanel value="custom">
             <PresetGrid 
-              :presets="themeStore.userPresets"
-              :active-preset-id="themeStore.activePreset?.id"
+              :presets="presetStore.userPresets"
+              :active-preset-id="presetStore.activePreset?.id"
               @activate="activatePreset"
               @edit="editPreset"
               @duplicate="duplicatePreset"
               @delete="deletePreset"
-              :show-empty-state="themeStore.userPresets.length === 0"
+              :show-empty-state="presetStore.userPresets.length === 0"
             />
           </TabPanel>
         </TabPanels>
@@ -168,7 +168,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useThemeStore } from '@/stores/theme.store'
+import { useThemePresetStore, useThemeConfigStore } from '@/stores/theme'
 import { useToast } from 'primevue/usetoast'
 import type { ThemePreset } from '@/themes/presets/preset.types'
 import PresetGrid from './PresetGrid.vue'
@@ -185,7 +185,8 @@ interface Emits {
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
-const themeStore = useThemeStore()
+const presetStore = useThemePresetStore()
+const configStore = useThemeConfigStore()
 const toast = useToast()
 
 // Local state
@@ -201,14 +202,14 @@ const localVisible = computed({
 
 // Computed data
 const allPresets = computed(() => [
-  ...themeStore.builtInPresets,
-  ...themeStore.userPresets
+  ...presetStore.builtInPresets,
+  ...presetStore.userPresets
 ])
 
 const storageInfo = computed(() => {
-  const totalPresets = themeStore.userPresets.length + themeStore.builtInPresets.length
-  const maxPresets = themeStore.config.maxSavedPresets
-  const usedPercentage = Math.round((themeStore.userPresets.length / maxPresets) * 100)
+  const totalPresets = presetStore.userPresets.length + presetStore.builtInPresets.length
+  const maxPresets = configStore.config.maxSavedPresets || 30
+  const usedPercentage = Math.round((presetStore.userPresets.length / maxPresets) * 100)
   
   return {
     used: usedPercentage,
@@ -226,7 +227,7 @@ watch(() => editingPreset.value, (preset) => {
 // Event handlers
 async function activatePreset(preset: ThemePreset) {
   try {
-    await themeStore.activatePreset(preset)
+    await presetStore.activatePreset(preset)
     emit('preset-changed')
     
     toast.add({
@@ -262,7 +263,7 @@ function editPreset(preset: ThemePreset) {
 
 async function duplicatePreset(preset: ThemePreset) {
   try {
-    const duplicatedPreset = await themeStore.duplicatePreset(preset.id, `${preset.name} Copy`)
+    const duplicatedPreset = await presetStore.duplicatePreset(preset.id, `${preset.name} Copy`)
     emit('preset-changed')
     
     toast.add({
@@ -296,7 +297,7 @@ async function deletePreset(preset: ThemePreset) {
   }
   
   try {
-    await themeStore.deletePreset(preset.id)
+    await presetStore.deletePreset(preset.id)
     emit('preset-changed')
     
     toast.add({
@@ -317,7 +318,7 @@ async function deletePreset(preset: ThemePreset) {
 
 async function createNewPreset() {
   try {
-    const newPreset = await themeStore.createPreset('New Theme', 'Custom theme preset')
+    const newPreset = await presetStore.createPreset('New Theme', 'Custom theme preset')
     emit('preset-changed')
     
     toast.add({
@@ -350,7 +351,7 @@ async function handleFileImport(event: Event) {
   if (!file) return
   
   try {
-    await themeStore.importPreset(file)
+    await presetStore.importPreset(file)
     emit('preset-changed')
     
     toast.add({
@@ -386,7 +387,7 @@ async function saveEdit() {
     
     editingPreset.value.metadata.tags = tags
     
-    await themeStore.updatePreset(editingPreset.value)
+    await presetStore.updatePreset(editingPreset.value)
     emit('preset-changed')
     
     toast.add({

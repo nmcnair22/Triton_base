@@ -8,7 +8,7 @@
         size="small"
         class="w-full"
         @click="exportTheme"
-        :disabled="!themeStore.activePreset"
+        :disabled="!presetStore.activePreset"
       />
     </div>
     
@@ -32,16 +32,16 @@
 </template>
 
 <script setup lang="ts">
-import { useThemeStore } from '@/stores/theme.store'
+import { useThemePresetStore } from '@/stores/theme'
 import { useToast } from 'primevue/usetoast'
 
-const themeStore = useThemeStore()
+const presetStore = useThemePresetStore()
 const toast = useToast()
 
 async function exportTheme() {
   try {
-    if (themeStore.activePreset) {
-      await themeStore.exportPreset(themeStore.activePreset.id)
+    if (presetStore.activePreset) {
+      await presetStore.exportPreset(presetStore.activePreset.id)
       toast.add({
         severity: 'success',
         summary: 'Theme Exported',
@@ -63,7 +63,7 @@ async function importTheme(event: any) {
   try {
     const file = event.files[0]
     if (file) {
-      await themeStore.importPreset(file)
+      await presetStore.importPreset(file)
       toast.add({
         severity: 'success',
         summary: 'Theme Imported',

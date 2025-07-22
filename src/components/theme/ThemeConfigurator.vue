@@ -1,6 +1,6 @@
 <template>
   <Drawer
-    :visible="themeStore.isConfigOpen"
+    :visible="uiStore.isConfigOpen"
     @update:visible="handleVisibilityChange"
     position="right"
     :style="{ width: '420px' }"
@@ -17,8 +17,8 @@
           <i class="pi pi-palette text-xl" />
           <div>
             <h3 class="text-lg font-semibold m-0">Theme Configuration</h3>
-            <p class="text-sm text-muted m-0" v-if="themeStore.activePreset">
-              {{ themeStore.activePreset.name }}
+            <p class="text-sm text-muted m-0" v-if="presetStore.activePreset">
+              {{ presetStore.activePreset.name }}
             </p>
           </div>
         </div>
@@ -26,7 +26,7 @@
         <div class="flex items-center gap-2">
           <!-- Save indicator -->
           <Badge 
-            v-if="themeStore.canSave" 
+            v-if="editorStore.canSave" 
             value="●" 
             severity="warning" 
             v-tooltip="'Unsaved changes'"
@@ -34,7 +34,7 @@
           
           <!-- Quick actions -->
           <Button
-            v-if="themeStore.canSave"
+            v-if="editorStore.canSave"
             label="Save"
             size="small"
             severity="success"
@@ -59,7 +59,7 @@
             text
             rounded
             size="small"
-            @click="themeStore.toggleConfig"
+            @click="uiStore.toggleConfig"
             v-tooltip="'Close theme configurator'"
           />
         </div>
@@ -81,14 +81,14 @@
         
         <Select
           v-model="selectedPresetId"
-          :options="themeStore.availablePresets"
+          :options="presetStore.availablePresets"
           optionLabel="name"
           optionValue="id"
           placeholder="Select a theme"
           class="w-full text-sm"
           size="small"
           @change="onPresetChange"
-          :loading="themeStore.state.isLoading"
+          :loading="uiStore.isLoading"
         >
           <template #option="{ option }">
             <div class="flex items-center justify-between w-full">
@@ -116,7 +116,7 @@
                   severity="info"
                 />
                 <i 
-                  v-if="themeStore.activePreset?.id === option.id" 
+                  v-if="presetStore.activePreset?.id === option.id" 
                   class="pi pi-check text-success"
                 />
               </div>
@@ -179,7 +179,7 @@
                   v-for="token in themeConfig.tokensByCategory.value[category.id] || []"
                   :key="token.id"
                   :token="token"
-                  :value="themeStore.getTokenValue(token.id)"
+                  :value="editorStore.getTokenValue(token.id)"
                   :is-edited="isTokenEdited(token.id)"
                   @update="updateTokenColor"
                   @reset="resetToken"
@@ -235,17 +235,17 @@
             <div class="space-y-3">
               <div class="flex items-center justify-between">
                 <span class="text-xs">Auto-save changes</span>
-                <ToggleSwitch v-model="themeStore.config.autoSave" size="small" />
+                <ToggleSwitch v-model="configStore.config.autoSave" size="small" />
               </div>
               
               <div class="flex items-center justify-between">
                 <span class="text-xs">Sync across tabs</span>
-                <ToggleSwitch v-model="themeStore.config.syncAcrossTabs" size="small" />
+                <ToggleSwitch v-model="configStore.config.syncAcrossTabs" size="small" />
               </div>
               
               <div class="flex items-center justify-between">
                 <span class="text-xs">Smooth transitions</span>
-                <ToggleSwitch v-model="themeStore.config.smoothTransitions" size="small" />
+                <ToggleSwitch v-model="configStore.config.smoothTransitions" size="small" />
               </div>
             </div>
           </AccordionContent>
@@ -264,11 +264,11 @@
             <div class="space-y-1 text-xs">
               <div class="flex justify-between">
                 <span>User Presets:</span>
-                <span>{{ themeStore.userPresets.length }} / {{ themeStore.config.maxSavedPresets }}</span>
+                <span>{{ presetStore.userPresets.length }} / {{ configStore.config.maxSavedPresets || 20 }}</span>
               </div>
               <div class="flex justify-between">
                 <span>Built-in Presets:</span>
-                <span>{{ themeStore.builtInPresets.length }}</span>
+                <span>{{ presetStore.builtInPresets.length }}</span>
               </div>
             </div>
           </AccordionContent>
@@ -289,7 +289,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useThemeStore } from '@/stores/theme.store'
+import { useThemeConfigStore, useThemeUIStore, useThemePresetStore, useThemeEditorStore } from '@/stores/theme'
 import { useThemeConfig } from '@/themes/composables/useThemeConfig'
 import { useDarkMode } from '@/composables/useDarkMode'
 import { colorCategories, baseThemes } from '@/themes/config/theme.config'
@@ -300,7 +300,10 @@ import ThemeExporter from './ThemeExporter.vue'
 import { useToast } from 'primevue/usetoast'
 import type { BaseTheme } from '@/themes/presets/preset.types'
 
-const themeStore = useThemeStore()
+const configStore = useThemeConfigStore()
+const uiStore = useThemeUIStore()
+const presetStore = useThemePresetStore()
+const editorStore = useThemeEditorStore()
 const themeConfig = useThemeConfig()
 const darkMode = useDarkMode()
 const toast = useToast()
@@ -317,7 +320,7 @@ const baseThemeOptions = baseThemes.map(theme => ({
 }))
 
 // Watch for active preset changes
-watch(() => themeStore.activePreset, (preset) => {
+watch(() => presetStore.activePreset, (preset) => {
   if (preset) {
     selectedPresetId.value = preset.id
     baseTheme.value = preset.baseTheme
@@ -331,7 +334,7 @@ function getPresetPrimaryColor(preset: any): string {
 }
 
 function isTokenEdited(tokenId: string): boolean {
-  return themeStore.editingColors.some(c => c.tokenId === tokenId)
+  return editorStore.editingColors.some((c: any) => c.tokenId === tokenId)
 }
 
 // Event handlers
@@ -342,9 +345,9 @@ function handleVisibilityChange(visible: boolean) {
 }
 
 async function onPresetChange(event: any) {
-  const preset = themeStore.availablePresets.find(p => p.id === event.value)
+  const preset = presetStore.availablePresets.find((p: any) => p.id === event.value)
   if (preset) {
-    await themeStore.activatePreset(preset)
+    await presetStore.activatePreset(preset)
     toast.add({
       severity: 'success',
       summary: 'Theme Changed',
@@ -355,7 +358,7 @@ async function onPresetChange(event: any) {
 }
 
 async function onBaseThemeChange() {
-  if (themeStore.editingPreset) {
+  if (editorStore.editingPreset) {
     await themeConfig.switchBaseTheme(baseTheme.value)
     toast.add({
       severity: 'info',
@@ -399,8 +402,8 @@ function startEditingToken(tokenId: string) {
 
 async function saveCurrentPreset() {
   try {
-    if (themeStore.editingPreset && !themeStore.editingPreset.metadata.isBuiltIn) {
-      await themeStore.updateCurrentPreset()
+    if (editorStore.editingPreset && !editorStore.editingPreset.metadata.isBuiltIn) {
+      await editorStore.saveChanges()
       toast.add({
         severity: 'success',
         summary: 'Preset Saved',
@@ -429,7 +432,7 @@ async function resetToDefaults() {
 }
 
 async function applyColorHarmony(type: 'monochromatic' | 'complementary' | 'triadic' | 'analogous') {
-  const primaryColor = themeStore.getTokenValue('primary')
+  const primaryColor = editorStore.getTokenValue('primary')
   const harmony = themeConfig.generateColorHarmony(primaryColor, type)
   
   if (Object.keys(harmony).length > 0) {
@@ -445,7 +448,7 @@ async function applyColorHarmony(type: 'monochromatic' | 'complementary' | 'tria
 
 function onPresetChanged() {
   // Refresh when presets are modified
-  selectedPresetId.value = themeStore.activePreset?.id || ''
+  selectedPresetId.value = presetStore.activePreset?.id || ''
 }
 </script>
 

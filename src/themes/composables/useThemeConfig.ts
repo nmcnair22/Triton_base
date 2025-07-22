@@ -1,5 +1,5 @@
 import { computed, watch, nextTick } from 'vue'
-import { useThemeStore } from '@/stores/theme.store'
+import { useThemeConfigStore, useThemePresetStore, useThemeEditorStore } from '@/stores/theme'
 import { editableColorTokens, colorCategories } from '../config/theme.config'
 import type { ColorToken, ColorOverride, BaseTheme } from '../presets/preset.types'
 import { palette } from '@primeuix/themes'
@@ -9,7 +9,9 @@ import { palette } from '@primeuix/themes'
  * Bridges our theme store with PrimeVue's theme system for real-time updates
  */
 export function useThemeConfig() {
-  const themeStore = useThemeStore()
+  const configStore = useThemeConfigStore()
+  const presetStore = useThemePresetStore()
+  const editorStore = useThemeEditorStore()
   
   // Reactive token organization for UI
   const tokensByCategory = computed(() => {
@@ -24,7 +26,7 @@ export function useThemeConfig() {
   
   // Current theme values with fallbacks
   function getTokenValue(tokenId: string): string {
-    return themeStore.getTokenValue(tokenId)
+    return editorStore.getTokenValue(tokenId)
   }
   
   // Get current CSS variable value from document
@@ -44,7 +46,7 @@ export function useThemeConfig() {
     console.log(`🎨 Updating token: ${tokenId} = ${value}`)
     
     // Update in store (triggers reactivity)
-    themeStore.updateColor(tokenId, value)
+    editorStore.updateColor(tokenId, value)
     
     // Apply to PrimeVue theme system immediately
     await applyColorUpdate(tokenId, value)
@@ -147,16 +149,16 @@ export function useThemeConfig() {
     
     try {
       // Update store
-      if (themeStore.editingPreset) {
-        themeStore.editingPreset.baseTheme = newBaseTheme
-        themeStore.config.baseTheme = newBaseTheme
+      if (editorStore.editingPreset) {
+        editorStore.editingPreset.baseTheme = newBaseTheme
+        configStore.config.baseTheme = newBaseTheme
       }
       
       // Load new base theme
       const baseTheme = await loadBaseTheme(newBaseTheme)
       
       // Apply current color overrides to new base
-      const overrides = buildThemeOverrides(themeStore.editingColors)
+      const overrides = buildThemeOverrides(editorStore.editingColors)
       
       // Switch PrimeVue to new theme with overrides
       const { usePreset } = await import('@primeuix/themes')
@@ -166,7 +168,7 @@ export function useThemeConfig() {
       usePreset(newPreset)
       
       // Trigger store update
-      await themeStore.applyTheme()
+      await editorStore.applyColors()
       
       console.log(`✅ Switched to ${newBaseTheme} base theme`)
     } catch (error) {
@@ -209,15 +211,15 @@ export function useThemeConfig() {
   
   // Reset to preset defaults
   async function resetToPresetDefaults() {
-    if (!themeStore.activePreset) return
+    if (!presetStore.activePreset) return
     
     console.log('🔄 Resetting to preset defaults')
     
     // Clear editing colors to show original preset
-    themeStore.editingColors.splice(0)
+    editorStore.editingColors.splice(0)
     
     // Reapply original preset
-    await themeStore.applyTheme()
+    await editorStore.applyColors()
     
     console.log('✅ Reset to defaults')
   }
@@ -344,7 +346,7 @@ export function useThemeConfig() {
   }
   
   // Watch for theme changes and ensure consistency
-  watch(() => themeStore.config.darkMode, (isDark) => {
+  watch(() => configStore.config.darkMode, (isDark) => {
     document.documentElement.classList.toggle('dark', isDark)
   }, { immediate: true })
   

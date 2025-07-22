@@ -1,15 +1,17 @@
 import { ref, computed, watch } from 'vue'
-import { useThemeStore } from '@/stores/theme.store'
+import { useThemeConfigStore, useThemePresetStore, useThemeEditorStore } from '@/stores/theme'
 
 /**
  * Enhanced dark mode composable with smooth transitions
  * Integrates with our theme system and provides visual feedback
  */
 export function useDarkMode() {
-  const themeStore = useThemeStore()
+  const configStore = useThemeConfigStore()
+  const presetStore = useThemePresetStore()
+  const editorStore = useThemeEditorStore()
   
   // Reactive dark mode state
-  const isDark = computed(() => themeStore.config.darkMode)
+  const isDark = computed(() => configStore.config.darkMode)
   const isTransitioning = ref(false)
   const supportsViewTransitions = ref('startViewTransition' in document)
   
@@ -50,7 +52,7 @@ export function useDarkMode() {
     console.log(`🌗 Setting dark mode: ${dark}`)
     
     // Use View Transitions API if available and not skipped
-    if (supportsViewTransitions.value && !skipTransition && themeStore.config.smoothTransitions) {
+    if (supportsViewTransitions.value && !skipTransition && configStore.config.smoothTransitions) {
       isTransitioning.value = true
       
       try {
@@ -76,7 +78,7 @@ export function useDarkMode() {
   // Execute the actual dark mode change
   function executeDarkModeToggle(dark: boolean) {
     // Update theme store (this triggers all reactive updates)
-    themeStore.config.darkMode = dark
+    configStore.config.darkMode = dark
     
     // Apply CSS classes
     applyDarkModeClasses(dark)
@@ -100,7 +102,7 @@ export function useDarkMode() {
     }
     
     // Add transition class if smooth transitions are enabled
-    if (themeStore.config.smoothTransitions) {
+    if (configStore.config.smoothTransitions) {
       htmlElement.classList.add('theme-transitioning')
       
       // Remove transition class after transition completes
@@ -122,8 +124,8 @@ export function useDarkMode() {
       }
       
       // Use theme-aware colors
-      const lightColor = themeStore.getTokenValue('primary') || '#0B2244'
-      const darkColor = themeStore.getTokenValue('surface-900') || '#171717'
+      const lightColor = editorStore.getTokenValue('primary') || '#0B2244'
+      const darkColor = editorStore.getTokenValue('surface-900') || '#171717'
       
       metaThemeColor.setAttribute('content', dark ? darkColor : lightColor)
     } catch (error) {
@@ -208,13 +210,13 @@ export function useDarkMode() {
     
     if (preference === 'high') {
       // Switch to high contrast preset if available
-      const highContrastPreset = themeStore.availablePresets.find(
+      const highContrastPreset = presetStore.availablePresets.find(
         p => p.id === 'triton-high-contrast'
       )
       
-      if (highContrastPreset && themeStore.activePreset?.id !== 'triton-high-contrast') {
+      if (highContrastPreset && presetStore.activePreset?.id !== 'triton-high-contrast') {
         console.log('♿ Applying high contrast theme for accessibility')
-        themeStore.activatePreset(highContrastPreset)
+        presetStore.activatePreset(highContrastPreset)
       }
     }
   }
@@ -240,7 +242,7 @@ export function useDarkMode() {
   }
   
   // Watch for theme store changes and apply them
-  watch(() => themeStore.config.darkMode, (newDark) => {
+  watch(() => configStore.config.darkMode, (newDark) => {
     if (newDark !== isDark.value) {
       applyDarkModeClasses(newDark)
       updateThemeColorMeta(newDark)

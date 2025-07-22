@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { PrimeVueResolver } from '@primevue/auto-import-resolver'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -38,7 +39,15 @@ export default defineConfig({
         'src/components/layout',
         'src/components/layout/sidebar'
       ]
-    })
+    }),
+    // Bundle analyzer - only in analyze mode
+    ...(process.env.ANALYZE ? [visualizer({
+      open: true,
+      filename: 'dist/stats.html',
+      gzipSize: true,
+      brotliSize: true,
+      template: 'treemap' // or 'sunburst', 'network'
+    })] : [])
   ],
   resolve: {
     alias: {
