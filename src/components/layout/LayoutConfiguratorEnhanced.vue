@@ -49,7 +49,7 @@
         <!-- Sidebar Theme -->
         <div class="config-section">
           <h3 class="config-section-title">Sidebar Theme</h3>
-          <SelectButton
+          <Select
             :model-value="sidebarTheme"
             :options="sidebarThemeOptions"
             option-label="label"
@@ -91,7 +91,7 @@
           <div class="space-y-4">
             <div class="flex items-center justify-between">
               <label class="text-sm font-medium">Menu Profile</label>
-              <InputSwitch 
+              <ToggleSwitch 
                 :model-value="menuProfile" 
                 @update:model-value="setMenuProfile"
               />
@@ -99,7 +99,7 @@
             
             <div class="flex items-center justify-between">
               <label class="text-sm font-medium">Menu Anchored</label>
-              <InputSwitch 
+              <ToggleSwitch 
                 :model-value="layoutState.anchored" 
                 :disabled="!canToggleAnchor"
                 v-tooltip.bottom="canToggleAnchor ? 'Pin/unpin sidebar' : 'Not available in this mode'"
