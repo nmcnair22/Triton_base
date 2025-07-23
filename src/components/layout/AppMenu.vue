@@ -27,6 +27,7 @@ const menuItems: MenuItem[] = [
   { label: 'Components', to: '/components', icon: 'pi pi-palette' },
   { label: 'Forms', to: '/forms', icon: 'pi pi-file-edit' },
   { label: 'Tables', to: '/tables', icon: 'pi pi-table' },
+  { label: 'Theme Advanced', to: '/theme-advanced', icon: 'pi pi-sparkles' },
   { label: 'Charts', to: '/charts', icon: 'pi pi-chart-bar' },
   { label: 'Settings', to: '/settings', icon: 'pi pi-cog' },
 ]

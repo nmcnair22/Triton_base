@@ -29,14 +29,6 @@ const router = createRouter({
       },
     },
     {
-      path: '/forms-comparison',
-      name: 'forms-comparison',
-      component: () => import('../views/FormsDemoComparison.vue'),
-      meta: {
-        title: 'Forms Migration Comparison - Triton Design System',
-      },
-    },
-    {
       path: '/forms-primevue',
       name: 'forms-primevue',
       component: () => import('../views/FormsDemoPrimeVue.vue'),
@@ -50,6 +42,14 @@ const router = createRouter({
       component: () => import('../views/TablesDemo.vue'),
       meta: {
         title: 'Tables - Triton Design System',
+      },
+    },
+    {
+      path: '/theme-advanced',
+      name: 'theme-advanced',
+      component: () => import('../views/ThemeAdvancedDemo.vue'),
+      meta: {
+        title: 'Advanced Theme Configuration - Triton Design System',
       },
     },
     // Redirect old routes

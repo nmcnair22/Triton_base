@@ -13,6 +13,7 @@ export type { ThemeUIState } from './ui.store'
 
 export { useThemePresetStore } from './preset.store'
 export { useThemeEditorStore } from './editor.store'
+export { useThemeAdvancedStore } from './advanced.store'
 
 // Re-export types for convenience
 export type {

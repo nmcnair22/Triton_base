@@ -2,7 +2,7 @@
   <div class="space-y-2">
     <label
       v-if="label"
-      :for="inputId"
+      :for="computedId"
       class="block text-sm font-medium text-surface-700 dark:text-surface-300"
     >
       {{ label }}
@@ -10,25 +10,20 @@
     </label>
 
     <InputText
-      :id="inputId"
+      :id="computedId"
       v-bind="$attrs"
       :dt="computedTokens"
       :class="computedClasses"
       :placeholder="placeholder"
       :disabled="disabled"
-      :invalid="state === 'error'"
+      :invalid="isInvalid"
+      :name="name"
       v-model="modelValue"
-      @input="handleInput"
-      @blur="handleBlur"
-      @focus="handleFocus"
     />
 
-    <div v-if="helpText || errorMessage" class="min-h-[1.25rem]">
-      <span v-if="state === 'error' && errorMessage" class="text-red-500 text-sm">
-        {{ errorMessage }}
-      </span>
-      <span v-else-if="state === 'success'" class="text-green-500 text-sm">
-        <i class="pi pi-check mr-1"></i>Valid
+    <div v-if="shouldShowMessage" class="min-h-[1.25rem]">
+      <span v-if="isInvalid && displayErrorMessage" class="text-red-500 text-sm">
+        {{ displayErrorMessage }}
       </span>
       <span v-else-if="helpText" class="text-surface-600 dark:text-surface-400 text-sm">
         {{ helpText }}
@@ -38,47 +33,57 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useId } from 'vue'
+import { computed, inject, useId } from 'vue'
 import { TokenFactory } from '@/themes/token-factory'
-import { useFormEvents } from '@/composables/forms'
 import InputText from 'primevue/inputtext'
-import type { InputState } from '@/composables/forms'
 
 interface Props {
+  name?: string
   label?: string
   placeholder?: string
   helpText?: string
-  errorMessage?: string
-  state?: InputState
   required?: boolean
   disabled?: boolean
   fullWidth?: boolean
 }
 
-interface Emits {
-  'update:modelValue': [value: string]
-  input: [event: Event]
-  blur: [event: FocusEvent]
-  focus: [event: FocusEvent]
-}
-
 const props = withDefaults(defineProps<Props>(), {
-  state: 'default',
   required: false,
   disabled: false,
   fullWidth: true,
 })
 
-const emit = defineEmits<Emits>()
-
+// Model value for v-model support
 const modelValue = defineModel<string>()
-const inputId = useId()
 
-// Use the form events composable
-const { handleInput, handleBlur, handleFocus } = useFormEvents(emit, modelValue)
+// Generate unique ID
+const generatedId = useId()
+const computedId = computed(() => props.name || generatedId)
 
+// Check if we're in a PrimeVue Form context
+const formContext = inject('$pv_form_resolver', null)
+const formField = computed(() => {
+  if (!formContext || !props.name) return null
+  // Access form field state from PrimeVue Forms
+  return (inject('$pv_form_state', null) as any)?.[props.name]
+})
+
+// State management for PrimeVue Forms
+const isInvalid = computed(() => {
+  return formField.value?.invalid || false
+})
+
+const displayErrorMessage = computed(() => {
+  return formField.value?.error?.message || formField.value?.errors?.[0]?.message
+})
+
+const shouldShowMessage = computed(() => {
+  return props.helpText || displayErrorMessage.value
+})
+
+// Styling
 const computedTokens = computed(() => {
-  return TokenFactory.input(props.state)
+  return TokenFactory.input(isInvalid.value ? 'error' : 'default')
 })
 
 const computedClasses = computed(() => [

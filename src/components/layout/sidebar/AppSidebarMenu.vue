@@ -54,7 +54,7 @@ const menuItems = ref([
       {
         label: 'Theme Configurator',
         icon: 'pi pi-fw pi-paint-bucket',
-        to: '/theme-config',
+        to: '/theme-advanced',
       },
       {
         label: 'Color Tokens',

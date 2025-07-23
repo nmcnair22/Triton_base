@@ -250,7 +250,7 @@ export function checkContrast(foreground: string, background: string): ContrastR
 
   let level: 'AAA' | 'AA' | 'fail'
   let score: number
-  let suggestions: string[] = []
+  const suggestions: string[] = []
 
   if (ratio >= 7) {
     level = 'AAA'

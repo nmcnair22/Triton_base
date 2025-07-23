@@ -27,14 +27,14 @@
         class="space-y-6"
       >
         <div class="grid md:grid-cols-2 gap-6">
-          <AppInputEnhanced
+          <AppInput
             name="firstName"
             label="First Name"
             placeholder="Enter your first name"
             required
           />
 
-          <AppInputEnhanced
+          <AppInput
             name="lastName"
             label="Last Name"
             placeholder="Enter your last name"
@@ -42,7 +42,7 @@
           />
         </div>
 
-        <AppInputEnhanced
+        <AppInput
           name="email"
           label="Email Address"
           placeholder="Enter your email"
@@ -50,7 +50,7 @@
           required
         />
 
-        <AppInputEnhanced
+        <AppInput
           name="phone"
           label="Phone Number"
           placeholder="(555) 123-4567"
@@ -115,7 +115,7 @@
         @submit="onPasswordSubmit"
         class="space-y-6"
       >
-        <AppInputEnhanced
+        <AppInput
           name="password"
           label="Password"
           type="password"
@@ -123,7 +123,7 @@
           help-text="Must be at least 8 characters with uppercase, lowercase, and numbers"
         />
 
-        <AppInputEnhanced
+        <AppInput
           name="confirmPassword"
           label="Confirm Password"
           type="password"
@@ -164,7 +164,7 @@
             :resolver="usernameResolver"
             class="space-y-4"
           >
-            <AppInputEnhanced
+            <AppInput
               name="username"
               label="Username"
               placeholder="Choose a username"
@@ -192,7 +192,7 @@
               <Checkbox name="requireShipping" input-id="req-ship" />
               <label for="req-ship">Require shipping address</label>
             </div>
-            <AppInputEnhanced
+            <AppInput
               name="address"
               label="Shipping Address"
               placeholder="Enter your address"
@@ -340,7 +340,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { AppButton, AppCard } from '@/components/ui'
-import AppInputEnhanced from '@/components/ui/AppInputEnhanced.vue'
+import { AppInput } from '@/components/ui'
 import { Form, FormField } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { z } from 'zod'

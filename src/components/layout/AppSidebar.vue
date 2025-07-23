@@ -55,7 +55,7 @@ import AppTopbar from './AppTopbar.vue'
 
 const { layoutState, isHorizontal, isCompact } = useLayout()
 
-let timeout: number | null = null
+let timeout: ReturnType<typeof setTimeout> | null = null
 
 function onMouseEnter() {
   if (!layoutState.value.anchored) {
